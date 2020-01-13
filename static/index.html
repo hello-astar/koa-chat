@@ -20,7 +20,9 @@
         }
     })()
    // 实例化websoscket websocket有两种协议ws(不加密)和wss(加密)
-    var webSocket = CreateWebSocket("ws://192.168.56.1:3000");
+    var host = window.location.host
+    var webSocket = CreateWebSocket(`ws://${host}`);
+
     webSocket.onopen = function (evt) {
         // 一旦连接成功，就发送第一条数据
          webSocket.send("第一条数据")
