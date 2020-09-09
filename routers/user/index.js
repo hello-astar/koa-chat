@@ -2,14 +2,17 @@ const Router = require('koa-router');
 let router = new Router();
 
 // 登录页面
-router.all('/', async ctx => {
-  // ctx.status = 200
-  console.log(ctx)
+router.post('/login', async ctx => {
+  console.log(ctx.request.body)
   ctx.response.body = {
-    message: 'dd'
+    result: 1,
+    msg: 'success',
+    data: {
+      message: 'dd'
+    }
   }
   console.log(ctx);
 });
 
 
-module.exports = router.routes();//暴露路由的routes方法
+module.exports = router.routes();
