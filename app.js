@@ -2,7 +2,7 @@ const Koa = require('koa');
 const koaStatic = require('koa-static');
 const path = require('path');
 const config = require('./config');
-
+const bodyParser = require('koa-bodyparser')
 
 // 路由
 const router = require('koa-router');
@@ -14,7 +14,7 @@ const wsRoute = new router();
 const websockify = require('koa-websocket')
 const app = websockify(new Koa());
 
-
+app.use(bodyParser())
 // 托管静态文件
 app.use(koaStatic(path.resolve(__dirname, 'static')))
 

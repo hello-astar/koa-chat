@@ -1,19 +1,17 @@
 const Router = require('koa-router');
-const uuidv1 = require('uuid').v1;
-
-
-console.log(uuidv1());
-
-
 let router = new Router();
+let onLineList = require('../user').userList;
 
-let onLineList = []; // 当前在线人
 
 router.all('/', async ctx => {
   // 判断参数中是否有uuid且该uuid在onLineList中，符合条件则是在线用户，没有则新建user
-  console.log(ctx.request.body, '1')
+  console.log(ctx, '1')
+  console.log(userList)
+  ctx.websocket.send(userList);
+  
   ctx.websocket.on('message', function(request) {
     const req = JSON.parse(request);
+    console.log(req)
     if (req.uuid) {
 
     }

@@ -26,6 +26,7 @@
   "homepage": "https://github.com/hello-astar/koa-chat#readme",
   "dependencies": {
     "koa": "^2.7.0",
+    "koa-bodyparser": "^4.3.0",
     "koa-router": "^9.4.0",
     "koa-static": "^5.0.0",
     "koa-websocket": "^6.0.0",
