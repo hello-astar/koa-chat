@@ -9,7 +9,7 @@ let router = new Router();
 
 let onLineList = []; // 当前在线人
 
-router.all('/room', async ctx => {
+router.all('/', async ctx => {
   // 判断参数中是否有uuid且该uuid在onLineList中，符合条件则是在线用户，没有则新建user
   console.log(ctx.request.body, '1')
   ctx.websocket.on('message', function(request) {

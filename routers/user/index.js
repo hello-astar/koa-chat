@@ -11,7 +11,7 @@ router.post('/login', async ctx => {
       message: 'dd'
     }
   }
-  console.log(ctx);
+  // console.log(ctx);
 });
 
 

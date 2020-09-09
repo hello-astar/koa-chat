@@ -1,5 +1,5 @@
 exports.PORT = 3000;
-exports.BASE_URL = 'http://192.168.0.105'
+exports.BASE_URL = 'http://localhost'
 exports.DATABASE = {
   dbName: 'koa_chat_db',
   host: 'localhost',
