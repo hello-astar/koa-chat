@@ -2,7 +2,7 @@
  * @author: cmx
  * @Date: 2020-09-09 10:19:58
  * @LastEditors: cmx
- * @LastEditTime: 2020-09-14 16:37:19
+ * @LastEditTime: 2020-09-14 18:13:35
  * @Description: 文件描述
  * @FilePath: \koa-chat\routers\chat\index.js
  */
@@ -10,7 +10,7 @@ const Router = require('koa-router');
 let router = new Router();
 let onlineList = require('../../onlineList').userList;
 const { successModel } = require('../../model').response;
-
+let records = [];
 
 router.all('/room', async ctx => {
   // 连接websocket
@@ -18,7 +18,7 @@ router.all('/room', async ctx => {
   let currentUser = onlineList.find(item => item.uuid === uuid);
   if (currentUser) {
     // 新增用户
-    broadcastToSend({ type: 0, onlineList: onlineList.filter(item => item.socket) });
+    broadcastToSend({ type: 0, onlineList: onlineList });
     currentUser.initSocket(
       ctx.websocket,
       {
@@ -29,16 +29,19 @@ router.all('/room', async ctx => {
           if (type === 0) {
             broadcastToSend({ type: 0, onlineList: onlineList });
           } else if (type === 1) {
-            broadcastToSend({
+            records.push({
               type: 1,
               uuid,
               avatar: currentUser.avatar,
-              name: currentUser.name,content,
+              name: currentUser.name,
+              content,
               id: new Date().toISOString()
-            });
+            })
+            broadcastToSend({ records });
           }
         },
-        onClose: (request) => {
+        onClose: () => {
+          onlineList = onlineList.filter(item => item.uuid !== uuid);
           // 删除当前socket
           console.log('客户端关闭socket')
         }
