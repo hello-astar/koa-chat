@@ -2,7 +2,8 @@ const Koa = require('koa');
 const koaStatic = require('koa-static');
 const path = require('path');
 const config = require('./config');
-const bodyParser = require('koa-bodyparser')
+const bodyParser = require('koa-bodyparser');
+// const ModelDb = require('./db');
 
 // 路由
 const router = require('koa-router');
@@ -11,7 +12,7 @@ const wsRoute = new router();
 
 
 // koa封装的websocket这是官网（很简单有时间去看一下https://www.npmjs.com/package/koa-websocket）
-const websockify = require('koa-websocket')
+const websockify = require('koa-websocket');
 const app = websockify(new Koa());
 
 app.use(bodyParser())
@@ -30,6 +31,12 @@ app.use(async (ctx, next)=> {
     await next();
   }
 });
+
+// app.use(async ctx => {
+//   let data = await ModelDb.query()
+//   console.log('====================', data);
+//   next();
+// })
 
 app.ws.use(function (ctx, next) {
     return next(ctx)
