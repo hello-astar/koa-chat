@@ -2,14 +2,14 @@
  * @author: cmx
  * @Date: 2020-09-09 15:26:39
  * @LastEditors: cmx
- * @LastEditTime: 2020-09-14 16:40:40
+ * @LastEditTime: 2020-09-15 17:47:55
  * @Description: 用户数据定义
  * @FilePath: \koa-chat\model\user.js
  */
 const uuidv1 = require('uuid').v1;
 class userModel {
-  constructor ({ name, avatar }) {
-    this.uuid = uuidv1();
+  constructor ({ uuid, name, avatar }) {
+    this.uuid = uuid || uuidv1();
     this.name = name;
     this.avatar = avatar;
   }

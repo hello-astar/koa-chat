@@ -32,9 +32,9 @@ app.use(async (ctx, next)=> {
   ctx.set('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
   ctx.set('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
   if (ctx.method == 'OPTIONS') {
-    ctx.body = 200; 
+    ctx.body = 200;
   } else {
-    next(); // 执行下一个中间件
+    await next();
   }
 });
 
@@ -48,6 +48,26 @@ wsRoute.use('/chat', require('./routers/chat')); // websocket连接
 app.use(route.routes());
 app.ws.use(wsRoute.routes());
 
+app.use(async ctx => {
+  ctx.verifyParams({
+    uuid: { type: 'string', required: true }
+  })
+  const { uuid } = ctx.request.body;
+  try {
+    let res = await userController.query({ uuid });
+    if (res.length === 1) {
+      next();
+    } else {
+      ctx.response.body = new errorModel({
+        msg: '登录失败'
+      });
+    }
+  } catch (e) {
+    ctx.response.body = new errorModel({
+      msg: '登录失败'
+    });
+  }
+})
 app.on('error', (err, ctx) =>
   console.error('server error', err)
 )
