@@ -1,9 +1,10 @@
 const Koa = require('koa');
-const koaStatic = require('koa-static');
+const koaStatic = require('koa-static'); // 静态文件
 const path = require('path');
 const config = require('./config');
-const bodyParser = require('koa-bodyparser');
-// const ModelDb = require('./db');
+const bodyParser = require('koa-bodyparser'); // 解析post请求body
+const parameter = require('koa-parameter'); // 校验接口参数
+const error = require('koa-json-error'); // 错误处理并返回json格式
 
 // 路由
 const router = require('koa-router');
@@ -15,36 +16,35 @@ const wsRoute = new router();
 const websockify = require('koa-websocket');
 const app = websockify(new Koa());
 
-app.use(bodyParser())
+app.use(bodyParser());
+app.use(parameter(app));
+app.use(error());
 // 托管静态文件
-app.use(koaStatic(path.resolve(__dirname, 'static')))
+app.use(koaStatic(path.resolve(__dirname, 'static')));
 
 
 // 主要解决跨域问题
 app.use(async (ctx, next)=> {
-  ctx.set('Access-Control-Allow-Origin', '*');
+  const allowHost = ['192.168.23.179:3000', 'localhost:3000'];
+  if (allowHost.includes(ctx.request.header.host)) {
+    ctx.set('Access-Control-Allow-Origin', ctx.request.header.origin);
+  }
   ctx.set('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
   ctx.set('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
   if (ctx.method == 'OPTIONS') {
     ctx.body = 200; 
   } else {
-    await next();
+    next(); // 执行下一个中间件
   }
 });
 
-// app.use(async ctx => {
-//   let data = await ModelDb.query()
-//   console.log('====================', data);
-//   next();
-// })
-
 app.ws.use(function (ctx, next) {
-    return next(ctx)
+    return next(ctx);
 });
 
 
-route.use('/user',require('./routers/user')); // 普通请求
-wsRoute.use('/chat',require('./routers/chat')); // websocket连接
+route.use('/user', require('./routers/user')); // 普通请求
+wsRoute.use('/chat', require('./routers/chat')); // websocket连接
 app.use(route.routes());
 app.ws.use(wsRoute.routes());
 
