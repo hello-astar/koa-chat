@@ -5,7 +5,8 @@ const config = require('./config');
 const bodyParser = require('koa-bodyparser'); // 解析post请求body
 const parameter = require('koa-parameter'); // 校验接口参数
 const error = require('koa-json-error'); // 错误处理并返回json格式
-
+const { userController } = require('./db');
+const { errorModel } = require('./model/response');
 // 路由
 const router = require('koa-router');
 const route = new router();
@@ -38,16 +39,6 @@ app.use(async (ctx, next)=> {
   }
 });
 
-app.ws.use(function (ctx, next) {
-    return next(ctx);
-});
-
-
-route.use('/user', require('./routers/user')); // 普通请求
-wsRoute.use('/chat', require('./routers/chat')); // websocket连接
-app.use(route.routes());
-app.ws.use(wsRoute.routes());
-
 // app.use(async ctx => {
 //   ctx.verifyParams({
 //     uuid: { type: 'string', required: true }
@@ -68,6 +59,32 @@ app.ws.use(wsRoute.routes());
 //     });
 //   }
 // })
+
+app.ws.use(async function (ctx, next) {
+  ctx.verifyParams({
+    uuid: { type: 'string', required: true }
+  });
+  const { uuid } = ctx.request.query;
+  try {
+    let res = await userController.query({ uuid });
+    if (res.length === 1) {
+      next(ctx);
+    } else {
+      ctx.websocket.send(JSON.stringify(new errorModel({ msg: '校验失败' })));
+    }
+  } catch (e) {
+    console.log(e)
+    ctx.websocket.send(JSON.stringify(new errorModel({ msg: '校验失败' })));
+  }
+  await next();
+});
+
+
+route.use('/user', require('./routers/user')); // 普通请求
+wsRoute.use('/chat', require('./routers/chat')); // websocket连接
+app.use(route.routes());
+app.ws.use(wsRoute.routes());
+
 app.on('error', (err, ctx) =>
   console.error('server error', err)
 )
