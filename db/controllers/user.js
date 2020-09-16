@@ -1,8 +1,8 @@
 /*
  * @author: cmx
  * @Date: 2020-09-09 13:53:55
- * @LastEditors: cmx
- * @LastEditTime: 2020-09-16 15:05:06
+ * @LastEditors: astar
+ * @LastEditTime: 2020-09-16 20:41:23
  * @Description: 文件描述
  * @FilePath: \koa-chat\db\controllers\user.js
  */
@@ -26,7 +26,14 @@ class UserController extends BaseController {
   }
 
   register ({ name, avatar, uuid}) {
-    return this.add({name, avatar, uuid});
+    return this.add({ name, avatar, uuid }).then(res => {
+      return res;
+    }, _ => {
+      if (_.code === 11000) {
+        return Promise.reject('该名称已存在');
+      }
+      return Promise.reject(_);
+    });
   }
 
   login ({ name }) {

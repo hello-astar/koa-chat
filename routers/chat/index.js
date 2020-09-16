@@ -1,8 +1,8 @@
 /*
  * @author: cmx
  * @Date: 2020-09-09 10:19:58
- * @LastEditors: cmx
- * @LastEditTime: 2020-09-16 15:43:54
+ * @LastEditors: astar
+ * @LastEditTime: 2020-09-16 20:46:28
  * @Description: 文件描述
  * @FilePath: \koa-chat\routers\chat\index.js
  */
@@ -29,7 +29,7 @@ router.all('/room', async ctx => {
         const { type, uuid, content } = req;
         let currentUser = onlineList.find(item => item.uuid === uuid);
         if (type === 0) {
-          broadcastToSend(new successModel({ data: { type: 0, onlineList: onlineList } }));
+          broadcastToSend(new successModel({ data: { type: 0, onlineList: onlineList.map(item => ({ name: item.name, avatar: item.avatar, uuid: item.uuid })) } }));
         } else if (type === 1) {
           try {
             records.push({
@@ -51,11 +51,11 @@ router.all('/room', async ctx => {
         if (index !== -1) {
           onlineList.splice(index, 1)
         }
-        broadcastToSend(new successModel({ data: { type: 0, onlineList: onlineList } }));
+        broadcastToSend(new successModel({ data: { type: 0, onlineList: onlineList.map(item => ({ name: item.name, avatar: item.avatar, uuid: item.uuid })) } }));
       }
     }
   );
-  broadcastToSend(new successModel({ data: { type: 0, onlineList }}));
+  broadcastToSend(new successModel({ data: { type: 0, onlineList: onlineList.map(item => ({ name: item.name, avatar: item.avatar, uuid: item.uuid })) }}));
   broadcastToSend(new successModel({ data: { type: 1, records: records }}));
 });
 
