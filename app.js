@@ -48,26 +48,26 @@ wsRoute.use('/chat', require('./routers/chat')); // websocket连接
 app.use(route.routes());
 app.ws.use(wsRoute.routes());
 
-app.use(async ctx => {
-  ctx.verifyParams({
-    uuid: { type: 'string', required: true }
-  })
-  const { uuid } = ctx.request.body;
-  try {
-    let res = await userController.query({ uuid });
-    if (res.length === 1) {
-      next();
-    } else {
-      ctx.response.body = new errorModel({
-        msg: '登录失败'
-      });
-    }
-  } catch (e) {
-    ctx.response.body = new errorModel({
-      msg: '登录失败'
-    });
-  }
-})
+// app.use(async ctx => {
+//   ctx.verifyParams({
+//     uuid: { type: 'string', required: true }
+//   })
+//   const { uuid } = ctx.request.body;
+//   try {
+//     let res = await userController.query({ uuid });
+//     if (res.length === 1) {
+//       next();
+//     } else {
+//       ctx.response.body = new errorModel({
+//         msg: '登录失败'
+//       });
+//     }
+//   } catch (e) {
+//     ctx.response.body = new errorModel({
+//       msg: '登录失败'
+//     });
+//   }
+// })
 app.on('error', (err, ctx) =>
   console.error('server error', err)
 )
