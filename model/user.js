@@ -1,8 +1,8 @@
 /*
  * @author: cmx
  * @Date: 2020-09-09 15:26:39
- * @LastEditors: cmx
- * @LastEditTime: 2020-09-15 17:47:55
+ * @LastEditors: astar
+ * @LastEditTime: 2020-09-20 16:08:48
  * @Description: 用户数据定义
  * @FilePath: \koa-chat\model\user.js
  */
@@ -37,7 +37,7 @@ class onlineUserModel extends userModel {
 
   send (msg) {
     if (this.socket) {
-      this.socket.send(msg);
+      this.socket.send(JSON.stringify(msg));
     }
   }
 }

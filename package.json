@@ -25,14 +25,17 @@
   },
   "homepage": "https://github.com/hello-astar/koa-chat#readme",
   "dependencies": {
+    "jsonwebtoken": "^8.5.1",
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.3.0",
     "koa-json-error": "^3.1.2",
+    "koa-jwt": "^4.0.0",
     "koa-parameter": "^3.0.1",
     "koa-router": "^9.4.0",
     "koa-static": "^5.0.0",
     "koa-websocket": "^6.0.0",
     "mongoose": "^5.10.5",
+    "qiniu": "^7.3.2",
     "uuid": "^8.3.0"
   }
 }

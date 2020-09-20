@@ -2,18 +2,20 @@
  * @author: cmx
  * @Date: 2020-09-09 13:53:55
  * @LastEditors: astar
- * @LastEditTime: 2020-09-16 20:41:23
+ * @LastEditTime: 2020-09-21 01:28:25
  * @Description: 文件描述
  * @FilePath: \koa-chat\db\controllers\user.js
  */
 const mongoose = require('../connect');
 const { Schema, model } = mongoose;
 const BaseController = require('./base');
-
+const jwt = require("jsonwebtoken");
+const config = require('../../config');
 
 const userSchema = new Schema({
   uuid: { type: String, required: true, unique: true },
   name: { type: String, required: true, unique: true },
+  password: { type: String, required: true, unique: true },
   avatar: { type: String, required: true },
   addTime: { type: Date, default: Date.now }
 });
@@ -25,8 +27,8 @@ class UserController extends BaseController {
     super(UserModel);
   }
 
-  register ({ name, avatar, uuid}) {
-    return this.add({ name, avatar, uuid }).then(res => {
+  register ({ uuid, name, avatar, password}) {
+    return this.add({ uuid, name, avatar, password }).then(res => {
       return res;
     }, _ => {
       if (_.code === 11000) {
@@ -36,19 +38,34 @@ class UserController extends BaseController {
     });
   }
 
-  login ({ name }) {
-    return this.query({ name }).then(res => {
-      if (res.length === 1) return res[0];
+  login ({ name, password }) {
+    return this.query({ name, password }).then(res => {
+      if (res.length === 1) {
+        let token = jwt.sign({
+            name,
+            avatar: res[0].avatar,
+            uuid: res[0].uuid
+          },
+          config.JWT_SECRET,
+          { expiresIn: "24h" }
+        );
+        return { token };
+      };
       return Promise.reject('当前用户不存在');
     }, _ => {
+      return Promise.reject('内部错误');
+    }).catch(e => {
       return Promise.reject('内部错误');
     });
   }
 
-  getUserInfo (uuid) {
-    return new Promise((resolve, reject) => {
-      this.query({ uuid })
-    })
+  getUserInfo ({ token }) {
+    try {
+      let { name, avatar, uuid } = jwt.verify(token, config.JWT_SECRET);
+      return { name, avatar, uuid };
+    } catch (e) {
+      return Promise.reject('内部错误');
+    }
   }
 };
 

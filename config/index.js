@@ -1,5 +1,5 @@
 exports.PORT = 3000;
-exports.BASE_URL = 'http://192.168.23.179'
+exports.BASE_URL = 'http://192.168.0.105'
 exports.DATABASE = {
   dbName: 'chat_db',
   host: 'localhost',
@@ -7,3 +7,4 @@ exports.DATABASE = {
   user: 'root',
   password: '123456'
 }
+exports.JWT_SECRET = 'JWT_SECRET'
