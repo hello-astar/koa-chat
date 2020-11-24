@@ -2,15 +2,15 @@
  * @Description: 
  * @Author: astar
  * @Date: 2020-09-09 20:53:41
- * @LastEditTime: 2020-09-21 01:04:02
- * @LastEditors: astar
+ * @LastEditTime: 2020-11-24 16:45:03
+ * @LastEditors: cmx
  */
 const Router = require('koa-router');
 const { user, response } = require('../../model');
 const { successModel, errorModel } = response;
 const { onlineUserModel } = user;
-let { userController } = require('../../db');
-let router = new Router();
+const { userController } = require('../../db');
+const router = new Router();
 
 async function dealWithRes (ctx, callback) {
   try {
@@ -19,7 +19,6 @@ async function dealWithRes (ctx, callback) {
       data: res
     });
   } catch (e) {
-    console.log(e)
     ctx.response.body = new errorModel({
       msg: e
     });
@@ -51,4 +50,5 @@ router.post('/login', ctx => {
 router.post('/getUserInfo', ctx => {
   return dealWithRes(ctx, userController.getUserInfo.bind(userController, { token: ctx.headers.authorization.split(' ')[1] }))
 })
+
 module.exports = router.routes();

@@ -28,6 +28,7 @@
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.3.0",
+    "koa-conditional-get": "^3.0.0",
     "koa-json-error": "^3.1.2",
     "koa-jwt": "^4.0.0",
     "koa-parameter": "^3.0.1",
@@ -36,6 +37,7 @@
     "koa-websocket": "^6.0.0",
     "mongoose": "^5.10.5",
     "qiniu": "^7.3.2",
+    "svg-captcha": "^1.4.0",
     "uuid": "^8.3.0"
   }
 }

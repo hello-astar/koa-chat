@@ -1,5 +1,6 @@
 const Koa = require('koa');
 const koaStatic = require('koa-static'); // 静态文件
+const koaConditional = require('koa-conditional-get'); // 协商缓存
 const path = require('path');
 const config = require('./config');
 const bodyParser = require('koa-bodyparser'); // 解析post请求body
@@ -18,10 +19,11 @@ const app = websockify(new Koa());
 app.use(bodyParser());
 app.use(parameter(app));
 app.use(error());
+app.use(koaConditional()); // 10smaxage后走last-modified(协商缓存)
 // 托管静态文件
-app.use(koaStatic(path.resolve(__dirname, 'static')));
+app.use(koaStatic(path.resolve(__dirname, 'static'), { maxage: 10 * 1000 })); // 强缓存10s // cache-control
 app.use(async (ctx, next)=> {
-    const allowHost = ['192.168.23.179:3000', 'localhost:3000', '192.168.0.105:3000'];
+    const allowHost = ['192.168.23.179:3000', 'localhost:3000', '192.168.0.105:3000']; // 白名单
     if (allowHost.includes(ctx.request.header.host)) {
       ctx.set('Access-Control-Allow-Origin', ctx.request.header.origin);
     }
@@ -40,11 +42,13 @@ app.use(
     path: [
       /^\/user\/login/,
       /^\/user\/register/,
-      /^\/qiniu\/getToken/
+      /^\/qiniu\/getToken/,
+      /^\/captcha\/get/
     ]
   })
 );
 
+route.use('/captcha', require('./routers/captcha'));
 route.use('/user', require('./routers/user')); // 普通请求
 route.use('/qiniu', require('./routers/qiniu'));
 wsRoute.use('/chat', require('./routers/chat')); // websocket连接

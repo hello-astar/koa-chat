@@ -2,14 +2,14 @@
  * @Description: 七牛云
  * @Author: astar
  * @Date: 2020-09-20 20:03:22
- * @LastEditTime: 2020-09-20 22:53:02
- * @LastEditors: astar
+ * @LastEditTime: 2020-11-24 16:45:11
+ * @LastEditors: cmx
  */
 const Router = require('koa-router');
 const { successModel, errorModel } = require('../../model').response;
 const qiniu = require('qiniu');
 
-let router = new Router();
+const router = new Router();
 
 // 获取七牛云token
 router.post('/getToken', async ctx => {

@@ -1,14 +1,14 @@
 /*
  * @author: cmx
  * @Date: 2020-09-09 10:19:58
- * @LastEditors: astar
- * @LastEditTime: 2020-09-21 01:42:25
+ * @LastEditors: cmx
+ * @LastEditTime: 2020-11-24 16:45:23
  * @Description: 文件描述
  * @FilePath: \koa-chat\routers\chat\index.js
  */
 const Router = require('koa-router');
-let router = new Router();
-let { userController, chatController } = require('../../db');
+const router = new Router();
+const { userController, chatController } = require('../../db');
 const { successModel, errorModel } = require('../../model').response;
 const { onlineUserModel } = require('../../model').user;
 let records = [];

@@ -1,8 +1,8 @@
 /*
  * @author: cmx
  * @Date: 2020-09-09 13:53:55
- * @LastEditors: astar
- * @LastEditTime: 2020-09-21 01:28:25
+ * @LastEditors: cmx
+ * @LastEditTime: 2020-11-20 13:47:57
  * @Description: 文件描述
  * @FilePath: \koa-chat\db\controllers\user.js
  */
@@ -31,6 +31,7 @@ class UserController extends BaseController {
     return this.add({ uuid, name, avatar, password }).then(res => {
       return res;
     }, _ => {
+      console.log('register_error: ', _)
       if (_.code === 11000) {
         return Promise.reject('该名称已存在');
       }
@@ -51,11 +52,13 @@ class UserController extends BaseController {
         );
         return { token };
       };
-      return Promise.reject('当前用户不存在');
+      return Promise.reject('当前用户不存在或密码错误');
     }, _ => {
+      console.log('login_error: ', _)
       return Promise.reject('内部错误');
     }).catch(e => {
-      return Promise.reject('内部错误');
+      console.log('login_error: ', e)
+      return Promise.reject(e);
     });
   }
 
@@ -64,7 +67,8 @@ class UserController extends BaseController {
       let { name, avatar, uuid } = jwt.verify(token, config.JWT_SECRET);
       return { name, avatar, uuid };
     } catch (e) {
-      return Promise.reject('内部错误');
+      console.log('get_user_info_error: ', e)
+      return Promise.reject(e);
     }
   }
 };
