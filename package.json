@@ -33,6 +33,7 @@
     "koa-jwt": "^4.0.0",
     "koa-parameter": "^3.0.1",
     "koa-router": "^9.4.0",
+    "koa-session": "^6.1.0",
     "koa-static": "^5.0.0",
     "koa-websocket": "^6.0.0",
     "mongoose": "^5.10.5",
