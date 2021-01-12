@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: astar
  * @Date: 2020-09-09 20:53:41
- * @LastEditTime: 2021-01-11 18:15:16
+ * @LastEditTime: 2021-01-12 17:45:30
  * @LastEditors: cmx
  */
 const Router = require('koa-router');
@@ -62,7 +62,7 @@ router.post('/getUserInfo', ctx => {
 // 获取验证码图片
 router.get('/getCaptcha', ctx => {
   try {
-    const cap = svgCaptcha.create({
+    const cap = svgCaptcha.createMathExpr({
       size: 4, // 验证码长度
       width:160,
       height:60,
