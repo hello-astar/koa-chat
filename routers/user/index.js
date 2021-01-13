@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: astar
  * @Date: 2020-09-09 20:53:41
- * @LastEditTime: 2021-01-12 17:45:30
+ * @LastEditTime: 2021-01-13 18:20:54
  * @LastEditors: cmx
  */
 const Router = require('koa-router');
@@ -12,6 +12,8 @@ const { onlineUserModel } = user;
 const { userController } = require('../../db');
 const router = new Router();
 const svgCaptcha = require('svg-captcha');
+const privateDecrypt = require('../../utils').privateDecrypt;
+const fs = require('fs');
 
 async function dealWithRes (ctx, callback) {
   try {
@@ -34,6 +36,14 @@ router.post('/register', async ctx => {
     captcha: { type: 'string', required: true }
   });
   const { name, avatar, password, captcha } = ctx.request.body;
+  let pass;
+  try {
+    const privateKey = fs.readFileSync(__dirname + '/private.pem').toString('utf8');
+    pass = privateDecrypt(privateKey, 'astar', Buffer.from(password, 'base64'));
+    console.log(pass)
+  } catch (e) {
+    console.log('error', e)
+  }
   if (captcha.toLowerCase() !== ctx.session.captcha.toLowerCase()) {
     return ctx.response.body = new errorModel({
       msg: '验证码错误'

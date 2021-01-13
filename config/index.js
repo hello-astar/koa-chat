@@ -10,3 +10,5 @@ exports.DATABASE = {
 exports.JWT_SECRET = 'JWT_SECRET';
 
 exports.WHITE_WEBSITES = ['http://192.168.22.173:8080', 'http://localhost:8080', 'http://192.168.0.105:8080'];
+
+exports.PASSPHRASE = 'astar'
