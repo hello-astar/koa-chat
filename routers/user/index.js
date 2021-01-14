@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: astar
  * @Date: 2020-09-09 20:53:41
- * @LastEditTime: 2021-01-13 18:20:54
+ * @LastEditTime: 2021-01-14 11:38:09
  * @LastEditors: cmx
  */
 const Router = require('koa-router');
@@ -14,6 +14,8 @@ const router = new Router();
 const svgCaptcha = require('svg-captcha');
 const privateDecrypt = require('../../utils').privateDecrypt;
 const fs = require('fs');
+const crypto = require('crypto');
+
 
 async function dealWithRes (ctx, callback) {
   try {
@@ -35,23 +37,30 @@ router.post('/register', async ctx => {
     password: { type: 'string', required: true },
     captcha: { type: 'string', required: true }
   });
+
   const { name, avatar, password, captcha } = ctx.request.body;
-  let pass;
-  try {
-    const privateKey = fs.readFileSync(__dirname + '/private.pem').toString('utf8');
-    pass = privateDecrypt(privateKey, 'astar', Buffer.from(password, 'base64'));
-    console.log(pass)
-  } catch (e) {
-    console.log('error', e)
-  }
+
   if (captcha.toLowerCase() !== ctx.session.captcha.toLowerCase()) {
     return ctx.response.body = new errorModel({
       msg: '验证码错误'
     });
   }
+  
+  let realPassword;
+  try {
+    const privateKey = fs.readFileSync(__dirname + '/private.pem').toString('utf8');
+    realPassword = privateDecrypt(privateKey, 'astar', Buffer.from(password, 'base64')).password;
+  } catch (e) {
+    console.log('error', e);
+    return ctx.response.body = new errorModel({
+      msg: e
+    });
+  }
 
   let user = new onlineUserModel({ name, avatar });
-  return dealWithRes(ctx, userController.register.bind(userController, { uuid: user.uuid, name, avatar, password }));
+  const hash = crypto.createHash('sha256');
+  let sha256Pass = hash.update(realPassword).digest('hex');
+  return dealWithRes(ctx, userController.register.bind(userController, { uuid: user.uuid, name, avatar, password: sha256Pass }));
 });
 
 // 登录页面
@@ -61,7 +70,9 @@ router.post('/login', ctx => {
     password: { type: 'string', required: true }
   });
   const { name, password } = ctx.request.body;
-  return dealWithRes(ctx, userController.login.bind(userController, { ctx, name, password }));
+  const hash = crypto.createHash('sha256');
+  let sha256Pass = hash.update(password).digest('hex');
+  return dealWithRes(ctx, userController.login.bind(userController, { ctx, name, password: sha256Pass }));
 });
 
 // 获取用户信息
