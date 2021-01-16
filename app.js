@@ -11,12 +11,25 @@ const koaSession = require('koa-session'); // 使用session
 // 路由
 const router = require('koa-router');
 const route = new router();
-const wsRoute = new router();
+// const wsRoute = new router();
 
 const koaJwt = require('koa-jwt');
+const socketioJwt = require('socketio-jwt');
 // koa封装的websocket这是官网（很简单有时间去看一下https://www.npmjs.com/package/koa-websocket）
-const websockify = require('koa-websocket');
-const app = websockify(new Koa());
+// const websockify = require('koa-websocket');
+const app = new Koa();
+
+const server = require('http').createServer(app.callback());
+const io = require('socket.io')(server);
+
+io.on('connection', client => {
+  console.log(client, 'connected')
+})
+
+io.use(socketioJwt.authorize({
+  secret: config.JWT_SECRET,
+  handshake: true
+}));
 
 // session
 app.keys = ['koaChatApplication'];
@@ -68,17 +81,18 @@ app.use(
   })
 );
 
+// app.ws.use();
 route.use('/user', require('./routers/user')); // 普通请求
 route.use('/qiniu', require('./routers/qiniu'));
-wsRoute.use('/chat', require('./routers/chat')); // websocket连接
+// wsRoute.use('/chat', require('./routers/chat')); // websocket连接
 app.use(route.routes());
-app.ws.use(wsRoute.routes());
+// app.ws.use(wsRoute.routes());
 
 app.on('error', (err, ctx) =>
   console.error('server error', err)
 )
 
 
-app.listen(config.PORT, () => {
+server.listen(config.PORT, () => {
   console.log(`${config.BASE_URL}:${config.PORT}`)
 })
