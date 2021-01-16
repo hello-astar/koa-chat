@@ -20,16 +20,25 @@ const socketioJwt = require('socketio-jwt');
 const app = new Koa();
 
 const server = require('http').createServer(app.callback());
-const io = require('socket.io')(server);
-
-io.on('connection', client => {
-  console.log(client, 'connected')
-})
+const io = require('socket.io')(server, {
+  // allowEIO3: true,
+  cors: {
+    origin: "http://localhost:8080", // from the screenshot you provided
+    methods: ["GET", "POST"],
+    allowedHeaders: ["my-custom-header"],
+    credentials: true
+  }
+});
 
 io.use(socketioJwt.authorize({
   secret: config.JWT_SECRET,
   handshake: true
 }));
+
+io.on('connection', client => {
+  console.log(client, 'connected')
+})
+
 
 // session
 app.keys = ['koaChatApplication'];
