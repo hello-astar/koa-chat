@@ -2,7 +2,7 @@
  * @author: cmx
  * @Date: 2020-09-09 13:53:55
  * @LastEditors: cmx
- * @LastEditTime: 2020-11-20 13:47:57
+ * @LastEditTime: 2021-01-18 18:04:53
  * @Description: 文件描述
  * @FilePath: \koa-chat\db\controllers\user.js
  */
@@ -15,7 +15,7 @@ const config = require('../../config');
 const userSchema = new Schema({
   uuid: { type: String, required: true, unique: true },
   name: { type: String, required: true, unique: true },
-  password: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
   avatar: { type: String, required: true },
   addTime: { type: Date, default: Date.now }
 });

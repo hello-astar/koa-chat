@@ -6,8 +6,8 @@ const config = require('./config');
 const bodyParser = require('koa-bodyparser'); // 解析post请求body
 const parameter = require('koa-parameter'); // 校验接口参数
 const error = require('koa-json-error'); // 错误处理并返回json格式
-const koaSession = require('koa-session'); // 使用session
-
+const koaSession = require('koa-session'); // 使用session,保存验证码数据
+const { errorModel } = require('./model').response;
 // 路由
 const router = require('koa-router');
 const route = new router();
@@ -21,23 +21,46 @@ const app = new Koa();
 
 const server = require('http').createServer(app.callback());
 const io = require('socket.io')(server, {
-  // allowEIO3: true,
   cors: {
-    origin: "http://localhost:8080", // from the screenshot you provided
+    origin: config.WHITE_WEBSITES, // from the screenshot you provided
     methods: ["GET", "POST"],
-    allowedHeaders: ["my-custom-header"],
+    allowedHeaders: ["authorization"],
     credentials: true
   }
 });
+let onlineList = [];
+let record = [];
 
 io.use(socketioJwt.authorize({
   secret: config.JWT_SECRET,
   handshake: true
 }));
 
-io.on('connection', client => {
-  console.log(client, 'connected')
-})
+io.on('connection', socket => {
+  // console.log(socket.decoded_token, socket.rooms)
+  const index = onlineList.findIndex(item => item.decoded_token.uuid === socket.decoded_token.uuid);
+  if (index !== -1) {
+    socket.to(socket.id).emit('logout', new errorModel({ msg: '该用户已在别处登录' }));
+    onlineList.splice(index, 1);
+  };
+  onlineList.push(socket);
+  io.emit("online-list", onlineList.map(item => item.decoded_token));
+  io.emit('message', record);
+
+  socket.on("message", msg => {
+    record.push({ ...socket.decoded_token,content: String(msg) });
+    io.emit('message', record);
+  });
+
+  socket.on("disconnect", reason => {
+    console.log('有人断开了', reason)
+    const index = onlineList.findIndex(item => item.id === socket.id);
+    if (index !== -1) {
+      onlineList.splice(index, 1);
+    }
+    io.emit("online-list", onlineList.map(item => item.decoded_token));
+  })
+});
 
 
 // session
