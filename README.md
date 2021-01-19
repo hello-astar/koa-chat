@@ -12,3 +12,4 @@ socket demo
 - [x] 七牛云存储
 - [x] 设置缓存,性能优化
 - [ ] 实现jwt下的同端互踢
+- [x] 配置koa-logger，启用日志

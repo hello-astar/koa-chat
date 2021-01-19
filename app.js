@@ -7,17 +7,18 @@ const bodyParser = require('koa-bodyparser'); // 解析post请求body
 const parameter = require('koa-parameter'); // 校验接口参数
 const error = require('koa-json-error'); // 错误处理并返回json格式
 const koaSession = require('koa-session'); // 使用session,保存验证码数据
-const { errorModel } = require('./model').response;
+const logger = require('koa-logger');
+const Moment = require("moment");
 // 路由
 const router = require('koa-router');
 const route = new router();
-// const wsRoute = new router();
 
 const koaJwt = require('koa-jwt');
 const socketioJwt = require('socketio-jwt');
-// koa封装的websocket这是官网（很简单有时间去看一下https://www.npmjs.com/package/koa-websocket）
-// const websockify = require('koa-websocket');
 const app = new Koa();
+app.use(logger(str => {
+  console.log(Moment().format('YYYY-MM-DD HH:mm:ss')+str);
+}));
 
 const server = require('http').createServer(app.callback());
 const io = require('socket.io')(server, {
@@ -33,23 +34,23 @@ let record = [];
 
 io.use(socketioJwt.authorize({
   secret: config.JWT_SECRET,
-  handshake: true
+  handshake: true,
+  auth_header_required: true
 }));
 
 io.on('connection', socket => {
-  // console.log(socket.decoded_token, socket.rooms)
   const index = onlineList.findIndex(item => item.decoded_token.uuid === socket.decoded_token.uuid);
   if (index !== -1) {
-    socket.to(socket.id).emit('logout', new errorModel({ msg: '该用户已在别处登录' }));
+    socket.emit('logout', '该用户已在别处登录');
     onlineList.splice(index, 1);
   };
   onlineList.push(socket);
   io.emit("online-list", onlineList.map(item => item.decoded_token));
-  io.emit('message', record);
+  socket.emit('record-list', record);
 
   socket.on("message", msg => {
     record.push({ ...socket.decoded_token,content: String(msg) });
-    io.emit('message', record);
+    io.emit('record-list', record);
   });
 
   socket.on("disconnect", reason => {
@@ -116,9 +117,7 @@ app.use(
 // app.ws.use();
 route.use('/user', require('./routers/user')); // 普通请求
 route.use('/qiniu', require('./routers/qiniu'));
-// wsRoute.use('/chat', require('./routers/chat')); // websocket连接
 app.use(route.routes());
-// app.ws.use(wsRoute.routes());
 
 app.on('error', (err, ctx) =>
   console.error('server error', err)
