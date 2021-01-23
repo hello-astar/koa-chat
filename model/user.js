@@ -1,15 +1,15 @@
 /*
  * @author: cmx
  * @Date: 2020-09-09 15:26:39
- * @LastEditors: astar
- * @LastEditTime: 2020-09-20 16:08:48
+ * @LastEditors: cmx
+ * @LastEditTime: 2021-01-23 16:50:40
  * @Description: 用户数据定义
  * @FilePath: \koa-chat\model\user.js
  */
-const uuidv1 = require('uuid').v1;
+// const uuidv1 = require('uuid').v1;
 class userModel {
   constructor ({ uuid, name, avatar }) {
-    this.uuid = uuid || uuidv1();
+    // this.uuid = uuid || uuidv1();
     this.name = name;
     this.avatar = avatar;
   }

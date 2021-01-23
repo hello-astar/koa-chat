@@ -2,7 +2,7 @@
  * @author: cmx
  * @Date: 2020-09-09 13:53:55
  * @LastEditors: cmx
- * @LastEditTime: 2021-01-18 18:04:53
+ * @LastEditTime: 2021-01-23 17:00:55
  * @Description: 文件描述
  * @FilePath: \koa-chat\db\controllers\user.js
  */
@@ -11,13 +11,17 @@ const { Schema, model } = mongoose;
 const BaseController = require('./base');
 const jwt = require("jsonwebtoken");
 const config = require('../../config');
+const privateDecrypt = require('../../utils').privateDecrypt;
+const fs = require('fs');
+const crypto = require('crypto');
 
 const userSchema = new Schema({
-  uuid: { type: String, required: true, unique: true },
+  // uuid: { type: String, required: true, unique: true },
   name: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   avatar: { type: String, required: true },
-  addTime: { type: Date, default: Date.now }
+  addTime: { type: Date, default: Date.now },
+  lastOnlineTime: { type: Date, default: Date.now }
 });
 
 const UserModel = model('userModel', userSchema);
@@ -27,8 +31,12 @@ class UserController extends BaseController {
     super(UserModel);
   }
 
-  register ({ uuid, name, avatar, password}) {
-    return this.add({ uuid, name, avatar, password }).then(res => {
+  register (registerData) {
+    const privateKey = fs.readFileSync(__dirname + '../../config/private.pem').toString('utf8');
+    let { name, avatar, password } = privateDecrypt(privateKey, 'astar', Buffer.from(registerData, 'base64'));
+    const hash = crypto.createHash('sha256');
+    let sha256Pass = hash.update(password).digest('hex');
+    return this.add({ name, avatar, password: sha256Pass }).then(res => {
       return res;
     }, _ => {
       console.log('register_error: ', _)
@@ -40,18 +48,26 @@ class UserController extends BaseController {
   }
 
   login ({ name, password }) {
-    return this.query({ name, password }).then(res => {
-      if (res.length === 1) {
+    const hash = crypto.createHash('sha256');
+    let sha256Pass = hash.update(password).digest('hex');
+    
+    return this.query({ name, password: sha256Pass }).then(res => {
+      if (res) {
+        let lastOnlineTime = new Date();
         let token = jwt.sign({
+            _id: res._id,
             name,
-            avatar: res[0].avatar,
-            uuid: res[0].uuid
+            avatar: res.avatar,
+            // uuid: res.uuid,
+            lastOnlineTime
           },
           config.JWT_SECRET,
           { expiresIn: "24h" }
         );
+        // 更新最后在线时间
+        this.update({ _id: res._id }, { lastOnlineTime });
         return { token };
-      };
+      }
       return Promise.reject('当前用户不存在或密码错误');
     }, _ => {
       console.log('login_error: ', _)
@@ -62,10 +78,14 @@ class UserController extends BaseController {
     });
   }
 
+  logout ({ token }) {
+
+  }
+
   getUserInfo ({ token }) {
     try {
-      let { name, avatar, uuid } = jwt.verify(token, config.JWT_SECRET);
-      return { name, avatar, uuid };
+      let { _id, name, avatar, uuid, lastOnlineTime } = jwt.verify(token, config.JWT_SECRET);
+      return { _id, name, avatar, uuid, lastOnlineTime };
     } catch (e) {
       console.log('get_user_info_error: ', e)
       return Promise.reject(e);

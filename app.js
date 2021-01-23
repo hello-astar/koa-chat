@@ -9,6 +9,8 @@ const error = require('koa-json-error'); // 错误处理并返回json格式
 const koaSession = require('koa-session'); // 使用session,保存验证码数据
 const logger = require('koa-logger');
 const Moment = require("moment");
+const { userController } = require('./db');
+const { errorModel } = require('./model/response');
 // 路由
 const router = require('koa-router');
 const route = new router();
@@ -39,7 +41,7 @@ io.use(socketioJwt.authorize({
 }));
 
 io.on('connection', socket => {
-  const index = onlineList.findIndex(item => item.decoded_token.uuid === socket.decoded_token.uuid);
+  const index = onlineList.findIndex(item => item.decoded_token._id === socket.decoded_token._id);
   if (index !== -1) {
     socket.emit('logout', '该用户已在别处登录');
     onlineList.splice(index, 1);
@@ -114,6 +116,25 @@ app.use(
   })
 );
 
+app.use(async (ctx, next) => {
+  if (ctx.headers.authorization) {
+    const token = ctx.headers.authorization.split(' ')[1];
+    const userInfoByToken = userController.getUserInfo({ token });
+    const userInfo = await userController.query({ _id: userInfoByToken._id });
+    console.log(userInfoByToken, userInfo)
+    if(new Date(userInfoByToken.lastOnlineTime).getTime() !== new Date(userInfo.lastOnlineTime).getTime()) {
+      ctx.response.status = 401;
+      ctx.response.body = new errorModel({
+        result: 401,
+        msg: '登录过期，请重新登录'
+      });
+    } else {
+      await next();
+    }
+  } else {
+    await next();
+  }
+});
 // app.ws.use();
 route.use('/user', require('./routers/user')); // 普通请求
 route.use('/qiniu', require('./routers/qiniu'));

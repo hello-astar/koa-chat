@@ -2,19 +2,14 @@
  * @Description: 
  * @Author: astar
  * @Date: 2020-09-09 20:53:41
- * @LastEditTime: 2021-01-16 15:02:21
+ * @LastEditTime: 2021-01-23 17:01:32
  * @LastEditors: cmx
  */
 const Router = require('koa-router');
-const { user, response } = require('../../model');
-const { successModel, errorModel } = response;
-const { onlineUserModel } = user;
+const { successModel, errorModel } = require('../../model').response;
 const { userController } = require('../../db');
 const router = new Router();
 const svgCaptcha = require('svg-captcha');
-const privateDecrypt = require('../../utils').privateDecrypt;
-const fs = require('fs');
-const crypto = require('crypto');
 
 
 async function dealWithRes (ctx, callback) {
@@ -43,20 +38,7 @@ router.post('/register', async ctx => {
       msg: '验证码错误'
     });
   }
-  
-  try {
-    const privateKey = fs.readFileSync(__dirname + '/private.pem').toString('utf8');
-    let { name, avatar, password } = privateDecrypt(privateKey, 'astar', Buffer.from(registerData, 'base64'));
-    let user = new onlineUserModel({ name, avatar });
-    const hash = crypto.createHash('sha256');
-    let sha256Pass = hash.update(password).digest('hex');
-    return dealWithRes(ctx, userController.register.bind(userController, { uuid: user.uuid, name, avatar, password: sha256Pass }));
-  } catch (e) {
-    console.log('error', e);
-    return ctx.response.body = new errorModel({
-      msg: e
-    });
-  }
+  return dealWithRes(ctx, userController.register.bind(userController, registerData));
 });
 
 // 登录页面
@@ -66,9 +48,7 @@ router.post('/login', ctx => {
     password: { type: 'string', required: true }
   });
   const { name, password } = ctx.request.body;
-  const hash = crypto.createHash('sha256');
-  let sha256Pass = hash.update(password).digest('hex');
-  return dealWithRes(ctx, userController.login.bind(userController, { ctx, name, password: sha256Pass }));
+  return dealWithRes(ctx, userController.login.bind(userController, { name, password }));
 });
 
 // 获取用户信息

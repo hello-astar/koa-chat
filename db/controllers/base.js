@@ -2,7 +2,7 @@
  * @author: cmx
  * @Date: 2020-09-16 14:06:54
  * @LastEditors: cmx
- * @LastEditTime: 2020-09-16 14:59:29
+ * @LastEditTime: 2021-01-23 14:43:13
  * @Description: 基础controller
  * @FilePath: \koa-chat\db\controllers\base.js
  */
@@ -28,7 +28,7 @@ class BaseController {
   // 查找数据
   query (obj) {
     return new Promise((resolve, reject) => {
-      this.Model.find(obj, (err, res) => {
+      this.Model.findOne(obj, (err, res) => {
         if(err) {
           reject(err);
         } else {
@@ -36,6 +36,19 @@ class BaseController {
         }
       });
     });
+  }
+
+  // 更新数据
+  update (query, obj) {
+    return new Promise((resolve, reject) => {
+      this.Model.updateOne(query, obj, (err, res) => {
+        if(err) {
+          reject(err);
+        } else {
+          resolve(res);
+        }
+      })
+    })
   }
 };
 
