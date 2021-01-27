@@ -3,7 +3,7 @@
  * @Author: astar
  * @Date: 2020-09-09 20:53:41
  * @LastEditTime: 2021-01-27 11:15:18
- * @LastEditors: cmx
+ * @LastEditors: astar
  */
 const Router = require('koa-router');
 const { userController } = require('../../db');

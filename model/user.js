@@ -1,7 +1,7 @@
 /*
- * @author: cmx
+ * @author: astar
  * @Date: 2020-09-09 15:26:39
- * @LastEditors: cmx
+ * @LastEditors: astar
  * @LastEditTime: 2021-01-23 16:50:40
  * @Description: 用户数据定义
  * @FilePath: \koa-chat\model\user.js

@@ -1,7 +1,7 @@
 /*
- * @author: cmx
+ * @author: astar
  * @Date: 2021-01-26 17:39:28
- * @LastEditors: cmx
+ * @LastEditors: astar
  * @LastEditTime: 2021-01-27 10:49:47
  * @Description: 统一返回数据
  * @FilePath: \koa-chat\middlewares\handleResponse.js

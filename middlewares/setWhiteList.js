@@ -1,7 +1,7 @@
 /*
- * @author: cmx
+ * @author: astar
  * @Date: 2021-01-26 18:22:14
- * @LastEditors: cmx
+ * @LastEditors: astar
  * @LastEditTime: 2021-01-27 10:52:28
  * @Description: 设置白名单
  * @FilePath: \koa-chat\middlewares\setWhiteList.js

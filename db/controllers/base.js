@@ -1,7 +1,7 @@
 /*
- * @author: cmx
+ * @author: astar
  * @Date: 2020-09-16 14:06:54
- * @LastEditors: cmx
+ * @LastEditors: astar
  * @LastEditTime: 2021-01-23 14:43:13
  * @Description: 基础controller
  * @FilePath: \koa-chat\db\controllers\base.js

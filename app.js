@@ -18,6 +18,14 @@ const route = new router();
 const koaJwt = require('koa-jwt');
 const socketioJwt = require('socketio-jwt');
 const app = new Koa();
+app.use(error(function (err) {
+  console.log(err)
+  return {
+    result: err.status,
+    msg: err.message,
+    data: null
+  }
+}));
 app.use(logger(str => {
   console.log(Moment().format('YYYY-MM-DD HH:mm:ss')+str);
 }));
@@ -124,14 +132,6 @@ route.use('/user', require('./routers/user')); // 普通请求
 route.use('/qiniu', require('./routers/qiniu'));
 app.use(route.routes());
 
-app.use(error(function (err) {
-  console.log(err)
-  return {
-    result: err.status,
-    msg: err.message,
-    data: null
-  }
-}));
 app.on('error', (err, ctx) =>
   console.error('server error', err)
 )

@@ -1,8 +1,8 @@
 /*
- * @author: cmx
+ * @author: astar
  * @Date: 2020-09-09 13:53:55
- * @LastEditors: cmx
- * @LastEditTime: 2020-09-15 17:40:32
+ * @LastEditors: astar
+ * @LastEditTime: 2021-01-27 11:23:50
  * @Description: 后期扩展，展示用不上数据库
  * @FilePath: \koa-chat\db\connect.js
  */

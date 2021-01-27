@@ -3,7 +3,7 @@
  * @Author: astar
  * @Date: 2020-09-20 20:03:22
  * @LastEditTime: 2021-01-27 10:48:14
- * @LastEditors: cmx
+ * @LastEditors: astar
  */
 const Router = require('koa-router');
 const qiniu = require('qiniu');

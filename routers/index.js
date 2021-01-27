@@ -1,7 +1,7 @@
 /*
- * @author: cmx
+ * @author: astar
  * @Date: 2020-09-09 14:18:07
- * @LastEditors: cmx
+ * @LastEditors: astar
  * @LastEditTime: 2020-09-09 14:19:54
  * @Description: 文件描述
  * @FilePath: \koa-chat\routers\index.js

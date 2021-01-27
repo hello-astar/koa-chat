@@ -1,7 +1,7 @@
 /*
- * @author: cmx
+ * @author: astar
  * @Date: 2021-01-26 17:50:33
- * @LastEditors: cmx
+ * @LastEditors: astar
  * @LastEditTime: 2021-01-27 10:32:08
  * @Description: 文件描述
  * @FilePath: \koa-chat\middlewares\index.js
