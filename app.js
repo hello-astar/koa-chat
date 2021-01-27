@@ -10,7 +10,7 @@ const koaSession = require('koa-session'); // 使用session,保存验证码数�
 const logger = require('koa-logger');
 const Moment = require("moment");
 const { userController } = require('./db');
-const { errorModel } = require('./model/response');
+const { handleResponse, setWhiteList } = require('./middlewares');
 // 路由
 const router = require('koa-router');
 const route = new router();
@@ -85,25 +85,11 @@ app.use(koaSession({
 }, app));
 app.use(bodyParser());
 app.use(parameter(app));
-app.use(error());
 app.use(koaConditional()); // 10smaxage后走last-modified(协商缓存)
 // 托管静态文件
 app.use(koaStatic(path.resolve(__dirname, 'static'), { maxage: 10 * 1000 })); // 强缓存10s // cache-control
-app.use(async (ctx, next)=> {
-    const allowHost = config.WHITE_WEBSITES; // 白名单
-    if (allowHost.includes(ctx.request.header.origin)) {
-      ctx.set('Access-Control-Allow-Origin', ctx.request.header.origin);
-      ctx.set('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With');
-      ctx.set('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
-      ctx.set('Access-Control-Allow-Credentials', true);
-    }
-    if (ctx.method == 'OPTIONS') {
-      ctx.body = 200;
-    } else {
-      await next();
-    }
-  }
-)
+// 白名单
+app.use(setWhiteList(config.WHITE_WEBSITES));
 
 app.use(
   koaJwt({ secret: config.JWT_SECRET }).unless({
@@ -116,6 +102,7 @@ app.use(
   })
 );
 
+// 互踢
 app.use(async (ctx, next) => {
   if (ctx.headers.authorization) {
     const token = ctx.headers.authorization.split(' ')[1];
@@ -123,11 +110,7 @@ app.use(async (ctx, next) => {
     const userInfo = await userController.query({ _id: userInfoByToken._id });
     console.log(userInfoByToken, userInfo)
     if(new Date(userInfoByToken.lastOnlineTime).getTime() !== new Date(userInfo.lastOnlineTime).getTime()) {
-      ctx.response.status = 401;
-      ctx.response.body = new errorModel({
-        result: 401,
-        msg: '登录过期，请重新登录'
-      });
+      ctx.throw(401, '登录过期，请重新登录');
     } else {
       await next();
     }
@@ -135,11 +118,20 @@ app.use(async (ctx, next) => {
     await next();
   }
 });
-// app.ws.use();
+
+app.use(handleResponse());
 route.use('/user', require('./routers/user')); // 普通请求
 route.use('/qiniu', require('./routers/qiniu'));
 app.use(route.routes());
 
+app.use(error(function (err) {
+  console.log(err)
+  return {
+    result: err.status,
+    msg: err.message,
+    data: null
+  }
+}));
 app.on('error', (err, ctx) =>
   console.error('server error', err)
 )

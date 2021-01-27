@@ -2,7 +2,7 @@
  * @author: cmx
  * @Date: 2020-09-09 13:53:55
  * @LastEditors: cmx
- * @LastEditTime: 2021-01-23 17:00:55
+ * @LastEditTime: 2021-01-27 11:04:11
  * @Description: 文件描述
  * @FilePath: \koa-chat\db\controllers\user.js
  */
@@ -14,6 +14,7 @@ const config = require('../../config');
 const privateDecrypt = require('../../utils').privateDecrypt;
 const fs = require('fs');
 const crypto = require('crypto');
+const path = require('path');
 
 const userSchema = new Schema({
   // uuid: { type: String, required: true, unique: true },
@@ -32,7 +33,7 @@ class UserController extends BaseController {
   }
 
   register (registerData) {
-    const privateKey = fs.readFileSync(__dirname + '../../config/private.pem').toString('utf8');
+    const privateKey = fs.readFileSync(path.join(__dirname, '../../config/private.pem')).toString('utf8');
     let { name, avatar, password } = privateDecrypt(privateKey, 'astar', Buffer.from(registerData, 'base64'));
     const hash = crypto.createHash('sha256');
     let sha256Pass = hash.update(password).digest('hex');
@@ -47,7 +48,9 @@ class UserController extends BaseController {
     });
   }
 
-  login ({ name, password }) {
+  login (loginData) {
+    const privateKey = fs.readFileSync(path.join(__dirname, '../../config/private.pem')).toString('utf8');
+    let { name, password } = privateDecrypt(privateKey, 'astar', Buffer.from(loginData, 'base64'));
     const hash = crypto.createHash('sha256');
     let sha256Pass = hash.update(password).digest('hex');
     
@@ -76,10 +79,6 @@ class UserController extends BaseController {
       console.log('login_error: ', e)
       return Promise.reject(e);
     });
-  }
-
-  logout ({ token }) {
-
   }
 
   getUserInfo ({ token }) {
