@@ -4,7 +4,7 @@
   "description": "node koa chat koa-websocket",
   "main": "app.js",
   "scripts": {
-    "dev": "node app.js",
+    "dev": "nodemon node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -38,6 +38,7 @@
     "koa-static": "^5.0.0",
     "moment": "^2.29.1",
     "mongoose": "^5.10.5",
+    "nodemon": "^2.0.7",
     "qiniu": "^7.3.2",
     "socket.io": "^3.1.0",
     "socketio-jwt": "^4.6.2",

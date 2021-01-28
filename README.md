@@ -14,3 +14,4 @@ socket demo
 - [x] 实现jwt下的同端互踢，增加最后登录时间进行对比
 - [ ] 密码加密加盐
 - [x] 配置koa-logger，启用日志
+- [x] 热更新nodemon
