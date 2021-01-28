@@ -2,7 +2,7 @@
  * @author: astar
  * @Date: 2020-09-09 13:53:55
  * @LastEditors: astar
- * @LastEditTime: 2021-01-27 11:04:11
+ * @LastEditTime: 2021-01-27 16:22:55
  * @Description: 文件描述
  * @FilePath: \koa-chat\db\controllers\user.js
  */
@@ -17,7 +17,6 @@ const crypto = require('crypto');
 const path = require('path');
 
 const userSchema = new Schema({
-  // uuid: { type: String, required: true, unique: true },
   name: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   avatar: { type: String, required: true },
@@ -61,7 +60,6 @@ class UserController extends BaseController {
             _id: res._id,
             name,
             avatar: res.avatar,
-            // uuid: res.uuid,
             lastOnlineTime
           },
           config.JWT_SECRET,
@@ -81,10 +79,10 @@ class UserController extends BaseController {
     });
   }
 
-  getUserInfo ({ token }) {
+  getUserInfoByToken ({ token }) {
     try {
-      let { _id, name, avatar, uuid, lastOnlineTime } = jwt.verify(token, config.JWT_SECRET);
-      return { _id, name, avatar, uuid, lastOnlineTime };
+      let { _id, name, avatar, lastOnlineTime } = jwt.verify(token, config.JWT_SECRET);
+      return { _id, name, avatar, lastOnlineTime };
     } catch (e) {
       console.log('get_user_info_error: ', e)
       return Promise.reject(e);

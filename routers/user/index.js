@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: astar
  * @Date: 2020-09-09 20:53:41
- * @LastEditTime: 2021-01-27 11:15:18
+ * @LastEditTime: 2021-01-28 10:44:08
  * @LastEditors: astar
  */
 const Router = require('koa-router');
@@ -48,8 +48,8 @@ router.post('/login', ctx => {
 });
 
 // 获取用户信息
-router.post('/getUserInfo', ctx => {
-  return dealWithRes(ctx, userController.getUserInfo.bind(userController, { token: ctx.headers.authorization.split(' ')[1] }))
+router.get('/getUserInfo', ctx => {
+  return dealWithRes(ctx, userController.getUserInfoByToken.bind(userController, { token: ctx.headers.authorization.split(' ')[1] }))
 });
 
 // 获取验证码图片
@@ -69,4 +69,5 @@ router.get('/getCaptcha', ctx => {
   ctx.set('Content-Type', 'image/svg+xml');
   ctx.response.body = cap.data;
 });
+
 module.exports = router.routes();
