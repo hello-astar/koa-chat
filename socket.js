@@ -2,7 +2,7 @@
  * @author: astar
  * @Date: 2021-01-27 14:09:56
  * @LastEditors: astar
- * @LastEditTime: 2021-01-27 16:21:48
+ * @LastEditTime: 2021-01-30 14:51:41
  * @Description: 聊天室
  * @FilePath: \koa-chat\socket.js
  */
@@ -22,14 +22,14 @@ module.exports = function handleSocket (io) {
   
     socket.on("message", msg => {
       const { avatar, name, _id } = socket.decoded_token;
-      const chat = { avatar, name, userId: _id, content: String(msg) }
+      const chat = { avatar, name, userId: _id, content: String(msg) };
       record.push(chat);
-      chatController.add(chat)
+      chatController.add(chat);
       io.emit('record-list', record);
     });
   
     socket.on("disconnect", reason => {
-      console.log('有人断开了', reason)
+      console.log('有人断开了', reason);
       const index = onlineList.findIndex(item => item.id === socket.id);
       if (index !== -1) {
         onlineList.splice(index, 1);

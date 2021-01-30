@@ -15,3 +15,4 @@ socket demo
 - [ ] 密码加密加盐
 - [x] 配置koa-logger，启用日志
 - [x] 热更新nodemon
+- [ ] 增加发送表情包功能
