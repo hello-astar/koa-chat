@@ -16,3 +16,4 @@ socket demo
 - [x] 配置koa-logger，启用日志
 - [x] 热更新nodemon
 - [ ] 增加发送表情包功能
+- [ ] 优化当前在线人功能

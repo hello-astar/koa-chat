@@ -1,7 +1,7 @@
 {
   "name": "koa-chat",
   "version": "1.0.0",
-  "description": "node koa chat koa-websocket",
+  "description": "node koa chat socket.io",
   "main": "app.js",
   "scripts": {
     "dev": "nodemon node app.js",
@@ -15,7 +15,7 @@
     "node",
     "koa",
     "chat",
-    "koa-websocket",
+    "socket.io",
     "koa-chat"
   ],
   "author": "astar",

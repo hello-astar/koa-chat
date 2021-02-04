@@ -2,11 +2,11 @@
  * @author: astar
  * @Date: 2020-09-16 10:47:02
  * @LastEditors: astar
- * @LastEditTime: 2021-02-03 15:36:29
+ * @LastEditTime: 2021-02-04 17:27:50
  * @Description: 文件描述
- * @FilePath: \koa-chat\db\controllers\chat.js
+ * @FilePath: \koa-chat\controllers\chat.js
  */
-const mongoose = require('../connect');
+const mongoose = require('../db/connect');
 const { Schema, model } = mongoose;
 const BaseController = require('./base');
 
