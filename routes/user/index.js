@@ -2,11 +2,11 @@
  * @Description: 
  * @Author: astar
  * @Date: 2020-09-09 20:53:41
- * @LastEditTime: 2021-02-04 18:17:34
+ * @LastEditTime: 2021-02-05 18:03:14
  * @LastEditors: astar
  */
 const Router = require('koa-router');
-const { userController } = require('../../db');
+const userController = require('../../controllers').user;
 const router = new Router();
 const svgCaptcha = require('svg-captcha');
 

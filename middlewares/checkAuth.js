@@ -2,12 +2,12 @@
  * @Author: astar
  * @Date: 2021-01-27 17:27:32
  * @LastEditors: astar
- * @LastEditTime: 2021-01-27 18:16:13
+ * @LastEditTime: 2021-02-05 16:05:21
  * @Description: 互踢
  * @FilePath: \koa-chat\middlewares\checkAuth.js
  */
 module.exports = function checkAuth () {
-  const { userController } = require('../db');
+  const userController = require('../controllers').user;
   return async function (ctx, next) {
     if (ctx.headers.authorization) {
       const token = ctx.headers.authorization.split(' ')[1];

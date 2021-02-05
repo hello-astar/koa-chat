@@ -2,12 +2,10 @@
  * @author: astar
  * @Date: 2020-09-09 13:53:55
  * @LastEditors: astar
- * @LastEditTime: 2021-02-04 18:23:11
+ * @LastEditTime: 2021-02-05 16:50:15
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\user.js
  */
-const mongoose = require('../db/connect');
-const { Schema, model } = mongoose;
 const BaseController = require('./base');
 const jwt = require("jsonwebtoken");
 const config = require('../config');
@@ -15,16 +13,7 @@ const privateDecrypt = require('../utils').privateDecrypt;
 const fs = require('fs');
 const crypto = require('crypto');
 const path = require('path');
-
-const userSchema = new Schema({
-  name: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  avatar: { type: String, required: true },
-  addTime: { type: Date, default: Date.now },
-  lastOnlineTime: { type: Date, default: Date.now }
-});
-
-const UserModel = model('userModel', userSchema);
+const UserModel = require('../models').getModel('usermodel');
 
 class UserController extends BaseController {
   constructor () {
@@ -38,15 +27,7 @@ class UserController extends BaseController {
     // const pepper = 'astar'; // 服务器存一个固定盐，数据库存一个随机盐
     // let sha256Pass = hash.update(hash.update(password) + salt).digest('hex');
     let sha256Pass = hash.update(password).digest('hex');
-    return this.add({ name, avatar, password: sha256Pass }).then(res => {
-      return res;
-    }, _ => {
-      console.log('register_error: ', _)
-      if (_.code === 11000) {
-        return Promise.reject('该名称已存在');
-      }
-      return Promise.reject(_);
-    });
+    return this.addOne({ name, avatar, password: sha256Pass });
   }
 
   login (loginData) {

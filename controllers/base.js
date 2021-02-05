@@ -2,26 +2,25 @@
  * @author: astar
  * @Date: 2020-09-16 14:06:54
  * @LastEditors: astar
- * @LastEditTime: 2021-01-23 14:43:13
+ * @LastEditTime: 2021-02-05 16:49:48
  * @Description: 基础controller
- * @FilePath: \koa-chat\db\controllers\base.js
+ * @FilePath: \koa-chat\controllers\base.js
  */
 class BaseController {
   constructor (Model) {
-    this.Model = Model
+    this.Model = Model;
   }
 
   // 插入一条数据
-  add(obj) {
-    return new Promise((resolve, reject) => {
-      const model = new this.Model(obj);
-      model.save(function(err, res) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(res);
-        }
-      });
+  addOne (obj) {
+    const model = new this.Model(obj);
+    return model.save().then(res => {
+      return res;
+    }, _ => {
+      if (_.code === 11000) {
+        return Promise.reject('重复数据');
+      }
+      return Promise.reject(_);
     });
   }
 
