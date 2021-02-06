@@ -1,13 +1,14 @@
 /*
- * @Description: 
  * @Author: astar
- * @Date: 2020-09-09 20:53:41
- * @LastEditTime: 2021-02-05 18:03:14
+ * @Date: 2021-02-06 15:43:45
  * @LastEditors: astar
+ * @LastEditTime: 2021-02-06 15:51:15
+ * @Description: 文件描述
+ * @FilePath: \koa-chat\routes\user.js
  */
 const Router = require('koa-router');
-const userController = require('../../controllers').user;
 const router = new Router();
+const userController = require('../controllers').user;
 const svgCaptcha = require('svg-captcha');
 
 

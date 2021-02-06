@@ -1,9 +1,10 @@
 /*
- * @Description: 七牛云
  * @Author: astar
- * @Date: 2020-09-20 20:03:22
- * @LastEditTime: 2021-01-28 10:44:16
+ * @Date: 2021-02-06 15:44:41
  * @LastEditors: astar
+ * @LastEditTime: 2021-02-06 15:44:51
+ * @Description: 文件描述
+ * @FilePath: \koa-chat\routes\qiniu.js
  */
 const Router = require('koa-router');
 const qiniu = require('qiniu');

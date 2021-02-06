@@ -2,7 +2,7 @@
  * @author: astar
  * @Date: 2020-09-16 10:47:02
  * @LastEditors: astar
- * @LastEditTime: 2021-02-05 17:49:10
+ * @LastEditTime: 2021-02-06 14:20:36
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\chat.js
  */
@@ -13,11 +13,11 @@ class ChatController extends BaseController {
     super(ChatModel);
   }
 
-  getChatRecordByPage ({ pageNo, pageSize }) {
-    return this.Model.find().limit(pageSize).skip((pageNo - 1) * pageSize).then(res => {
-      return res;
+  getHistoryChatByCount ({ exitsCount, fetchCount }) {
+    return this.Model.find().skip(exitsCount).limit(fetchCount).sort({ addTime: -1 }).then(res => {
+      return res.reverse();
     }, _ => {
-      console.log(_)
+      console.log(_);
     });
   }
 };

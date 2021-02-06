@@ -8,9 +8,8 @@ const parameter = require('koa-parameter'); // 校验接口参数
 const koaSession = require('koa-session'); // 使用session,保存验证码数据
 const { handleResponse, setWhiteList, checkAuth, logger, handleError } = require('./middlewares');
 const handleSocket = require('./socket');
-const router = require('koa-router');
+const route = require('./routes');
 
-const route = new router();
 const koaJwt = require('koa-jwt');
 const socketioJwt = require('socketio-jwt');
 const app = new Koa();
@@ -54,8 +53,6 @@ app.use(checkAuth()); // 多处登录互踢
 app.use(handleResponse());
 
 // 路由
-route.use('/user', require('./routes/user')); // 普通请求
-route.use('/qiniu', require('./routes/qiniu'));
 app.use(route.routes());
 app.use(route.allowedMethods());
 
