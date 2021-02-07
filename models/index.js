@@ -6,7 +6,7 @@
  * @Description: 连接数据库
  * @FilePath: \koa-chat\models\index.js
  */
-const { host, port, dbName } = require('../config').DATABASE;
+const { host, port, dbName } = require('@config').DATABASE;
 const mongoose = require('mongoose');
 const Moment = require("moment");
 const fs = require('fs');

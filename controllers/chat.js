@@ -2,12 +2,12 @@
  * @author: astar
  * @Date: 2020-09-16 10:47:02
  * @LastEditors: astar
- * @LastEditTime: 2021-02-06 14:20:36
+ * @LastEditTime: 2021-02-07 10:12:55
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\chat.js
  */
 const BaseController = require('./base');
-const ChatModel = require('../models').getModel('chatmodel');
+const ChatModel = require('@models').getModel('chatmodel');
 class ChatController extends BaseController {
   constructor () {
     super(ChatModel);

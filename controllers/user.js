@@ -2,18 +2,18 @@
  * @author: astar
  * @Date: 2020-09-09 13:53:55
  * @LastEditors: astar
- * @LastEditTime: 2021-02-05 16:50:15
+ * @LastEditTime: 2021-02-07 10:16:12
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\user.js
  */
 const BaseController = require('./base');
 const jwt = require("jsonwebtoken");
-const config = require('../config');
-const privateDecrypt = require('../utils').privateDecrypt;
+const config = require('@config');
+const privateDecrypt = require('@utils').privateDecrypt;
 const fs = require('fs');
 const crypto = require('crypto');
 const path = require('path');
-const UserModel = require('../models').getModel('usermodel');
+const UserModel = require('@models').getModel('usermodel');
 
 class UserController extends BaseController {
   constructor () {

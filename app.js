@@ -1,14 +1,14 @@
+require('module-alias/register');
 const Koa = require('koa');
 const koaStatic = require('koa-static'); // 静态文件
 const koaConditional = require('koa-conditional-get'); // 协商缓存
 const path = require('path');
-const config = require('./config');
+const config = require('@config');
 const bodyParser = require('koa-bodyparser'); // 解析post请求body
 const parameter = require('koa-parameter'); // 校验接口参数
 const koaSession = require('koa-session'); // 使用session,保存验证码数据
-const { handleResponse, setWhiteList, checkAuth, logger, handleError } = require('./middlewares');
-const handleSocket = require('./socket');
-const route = require('./routes');
+const { handleResponse, setWhiteList, checkAuth, logger, handleError, handleSocket } = require('@middlewares');
+const route = require('@routes');
 
 const koaJwt = require('koa-jwt');
 const socketioJwt = require('socketio-jwt');

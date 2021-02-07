@@ -8,7 +8,7 @@
  */
 const Router = require('koa-router');
 const router = new Router();
-const userController = require('../controllers').user;
+const userController = require('@controllers').user;
 const svgCaptcha = require('svg-captcha');
 
 

@@ -1,14 +1,14 @@
 /*
- * @author: astar
- * @Date: 2021-01-27 14:09:56
+ * @Author: astar
+ * @Date: 2021-02-07 09:58:06
  * @LastEditors: astar
- * @LastEditTime: 2021-02-06 17:38:30
- * @Description: 聊天室
- * @FilePath: \koa-chat\socket.js
+ * @LastEditTime: 2021-02-07 10:13:54
+ * @Description: 文件描述
+ * @FilePath: \koa-chat\middlewares\handleSocket.js
  */
 module.exports = function handleSocket (io) {
   let onlineList = [];
-  const chatController = require('./controllers').chat;
+  const chatController = require('@controllers').chat;
   
   return function (socket) {
     const index = onlineList.findIndex(item => item.decoded_token._id === socket.decoded_token._id);
