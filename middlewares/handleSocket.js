@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-02-07 09:58:06
  * @LastEditors: astar
- * @LastEditTime: 2021-02-07 10:13:54
+ * @LastEditTime: 2021-02-09 15:56:20
  * @Description: 文件描述
  * @FilePath: \koa-chat\middlewares\handleSocket.js
  */
@@ -32,10 +32,10 @@ module.exports = function handleSocket (io) {
     });
     // 客户端断开连接
     socket.on("disconnect", reason => {
-      console.log('有人断开了', reason);
       const index = onlineList.findIndex(item => item.decoded_token._id === socket.decoded_token._id);
       if (index !== -1) {
         onlineList.splice(index, 1);
+        console.log(`${socket.decoded_token.name}断开了`, reason);
       }
       io.emit("online-list", onlineList.map(item => item.decoded_token));
     });

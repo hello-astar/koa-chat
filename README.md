@@ -1,7 +1,20 @@
+<!--
+ * @Description: 
+ * @Author: astar
+ * @Date: 2021-02-06 22:09:28
+ * @LastEditTime: 2021-02-10 23:25:54
+ * @LastEditors: astar
+-->
 # koa-chat
-socket demo
+`koa-chat`是一个使用koa实现的在线聊天应用服务端，该项目基于nodejs、koa、socket.io等技术开发。
 
-# to-do-list
+[前端项目(vue-chat)](https://github.com/hello-astar/vue-chat)
+
+# 功能
+1. 用户-登陆注册、用户信息获取、JWT校验
+2. 聊天室-在线通信、获取聊天历史记录、获取在线用户列表
+
+# To-Do-List
 - [x] 基本websocket通信 
 - [x] 在线用户通信
 - [x] mongodb
@@ -15,5 +28,20 @@ socket demo
 - [ ] 密码加密加盐
 - [x] 配置koa-logger，启用日志
 - [x] 热更新nodemon
-- [ ] 增加发送表情包功能
+- [x] 增加发送表情包功能
+- [ ] redis缓存
 - [ ] 优化当前在线人功能
+
+# 安装运行
+1. 拉取项目
+```
+git clone git@github.com:hello-astar/koa-chat.git
+```
+2. 安装依赖
+```
+npm install
+```
+3. 运行项目
+```
+npm run dev
+```
