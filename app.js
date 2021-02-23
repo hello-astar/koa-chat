@@ -24,7 +24,10 @@ const io = require('socket.io')(server, {
   }
 });
 
+parameter(app); // 参数校验
+
 // 中间件
+app.use(handleError());
 app.use(koaStatic(path.resolve(__dirname, 'static'), { maxage: 10 * 1000 })); // 强缓存10s // cache-control // 托管静态文件
 app.use(koaConditional()); // 10smaxage后走last-modified(协商缓存)
 app.use(logger());
@@ -36,7 +39,6 @@ io.use(socketioJwt.authorize({
 io.on('connection', handleSocket(io));
 app.use(koaSession(config.KOA_SESSION, app));
 app.use(bodyParser()); // 解析body参数
-app.use(parameter(app)); // 参数校验
 app.use(setWhiteList(config.WHITE_WEBSITES)); // 白名单
 app.use(
   koaJwt({ secret: config.JWT_SECRET }).unless({
@@ -50,7 +52,6 @@ app.use(
 );
 app.use(checkAuth()); // 多处登录互踢
 app.use(handleResponse());
-app.use(handleError());
 // 路由
 app.use(route.routes());
 app.use(route.allowedMethods());
