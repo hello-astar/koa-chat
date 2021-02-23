@@ -2,7 +2,7 @@
  * @author: astar
  * @Date: 2020-09-16 14:06:54
  * @LastEditors: astar
- * @LastEditTime: 2021-02-05 16:49:48
+ * @LastEditTime: 2021-02-21 15:19:01
  * @Description: 基础controller
  * @FilePath: \koa-chat\controllers\base.js
  */
@@ -17,9 +17,6 @@ class BaseController {
     return model.save().then(res => {
       return res;
     }, _ => {
-      if (_.code === 11000) {
-        return Promise.reject('重复数据');
-      }
       return Promise.reject(_);
     });
   }

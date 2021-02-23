@@ -53,7 +53,8 @@ function privateDecrypt(privateKey, passphrase, encryptBuffer) {
       padding: crypto.constants.RSA_PKCS1_PADDING
   }, encryptBuffer);
 
-  return JSON.parse(msgBuffer.toString('utf8'));
+  // return JSON.parse(msgBuffer.toString('utf8'));
+  return msgBuffer.toString('utf8'); // 前端加密不一定是json数据
 }
 
 // 使用私钥签名数据

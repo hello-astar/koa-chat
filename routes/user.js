@@ -1,8 +1,8 @@
 /*
  * @Author: astar
  * @Date: 2021-02-06 15:43:45
- * @LastEditors: astar
- * @LastEditTime: 2021-02-06 15:51:15
+ * @LastEditors: cmx
+ * @LastEditTime: 2021-02-21 15:40:22
  * @Description: 文件描述
  * @FilePath: \koa-chat\routes\user.js
  */
@@ -17,35 +17,42 @@ async function dealWithRes (ctx, callback) {
     let res = await callback();
     ctx.send(res);
   } catch (e) {
-    ctx.sendError(e);
+    if (typeof e === 'string') {
+      ctx.sendError(e);
+    } else {
+      ctx.throw(500, e);
+    }
   }
 }
 // 注册
 router.post('/register', async ctx => {
   ctx.verifyParams({
-    registerData: { type: 'string', required: true },
+    name: { type: 'string', required: true },
+    avatar: { type: 'string', required: true },
+    password: { type: 'string', required: true },
     captcha: { type: 'string', required: true }
   });
 
-  const { registerData, captcha } = ctx.request.body;
+  const { name, avatar, password, captcha } = ctx.request.body;
 
   if (captcha.toLowerCase() !== ctx.session.captcha.toLowerCase()) {
     return ctx.sendError('验证码错误');
   }
-  return dealWithRes(ctx, userController.register.bind(userController, registerData));
+  return dealWithRes(ctx, userController.register.bind(userController, { name, avatar, password }));
 });
 
 // 登录页面
 router.post('/login', ctx => {
   ctx.verifyParams({
-    loginData: { type: 'string', required: true },
+    name: { type: 'string', required: true },
+    password: { type: 'string', required: true },
     captcha: { type: 'string', required: true }
   });
-  const { captcha, loginData } = ctx.request.body;
+  const { captcha, name, password } = ctx.request.body;
   if (captcha.toLowerCase() !== ctx.session.captcha.toLowerCase()) {
     return ctx.sendError('验证码错误');
   }
-  return dealWithRes(ctx, userController.login.bind(userController, loginData));
+  return dealWithRes(ctx, userController.login.bind(userController, { name, password }));
 });
 
 // 获取用户信息

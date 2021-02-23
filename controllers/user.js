@@ -1,8 +1,8 @@
 /*
  * @author: astar
  * @Date: 2020-09-09 13:53:55
- * @LastEditors: astar
- * @LastEditTime: 2021-02-07 10:16:12
+ * @LastEditors: cmx
+ * @LastEditTime: 2021-02-21 15:39:28
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\user.js
  */
@@ -20,21 +20,21 @@ class UserController extends BaseController {
     super(UserModel);
   }
 
-  register (registerData) {
+  register ({ name, avatar, password }) {
     const privateKey = fs.readFileSync(path.join(__dirname, '../config/private.pem')).toString('utf8');
-    let { name, avatar, password } = privateDecrypt(privateKey, 'astar', Buffer.from(registerData, 'base64'));
+    let originPassword = privateDecrypt(privateKey, 'astar', Buffer.from(password, 'base64'));
     const hash = crypto.createHash('sha256');
     // const pepper = 'astar'; // 服务器存一个固定盐，数据库存一个随机盐
     // let sha256Pass = hash.update(hash.update(password) + salt).digest('hex');
-    let sha256Pass = hash.update(password).digest('hex');
+    let sha256Pass = hash.update(originPassword).digest('hex');
     return this.addOne({ name, avatar, password: sha256Pass });
   }
 
-  login (loginData) {
+  login ({ name, password }) {
     const privateKey = fs.readFileSync(path.join(__dirname, '../config/private.pem')).toString('utf8');
-    let { name, password } = privateDecrypt(privateKey, 'astar', Buffer.from(loginData, 'base64'));
+    let originPassword = privateDecrypt(privateKey, 'astar', Buffer.from(password, 'base64'));
     const hash = crypto.createHash('sha256');
-    let sha256Pass = hash.update(password).digest('hex');
+    let sha256Pass = hash.update(originPassword).digest('hex');
     
     return this.query({ name, password: sha256Pass }).then(res => {
       if (res) {
@@ -53,11 +53,7 @@ class UserController extends BaseController {
         return { token };
       }
       return Promise.reject('当前用户不存在或密码错误');
-    }, _ => {
-      console.log('login_error: ', _)
-      return Promise.reject('内部错误');
     }).catch(e => {
-      console.log('login_error: ', e)
       return Promise.reject(e);
     });
   }

@@ -27,7 +27,6 @@ const io = require('socket.io')(server, {
 // 中间件
 app.use(koaStatic(path.resolve(__dirname, 'static'), { maxage: 10 * 1000 })); // 强缓存10s // cache-control // 托管静态文件
 app.use(koaConditional()); // 10smaxage后走last-modified(协商缓存)
-app.use(handleError());
 app.use(logger());
 io.use(socketioJwt.authorize({
   secret: config.JWT_SECRET,
@@ -51,14 +50,14 @@ app.use(
 );
 app.use(checkAuth()); // 多处登录互踢
 app.use(handleResponse());
-
+app.use(handleError());
 // 路由
 app.use(route.routes());
 app.use(route.allowedMethods());
 
-app.on('error', (err) =>
-  console.error('server error', err)
-);
+// app.on('error', () =>
+//   console.error('server error')
+// );
 
 server.listen(config.PORT, () => {
   console.log(`${config.BASE_URL}:${config.PORT}`)

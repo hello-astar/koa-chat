@@ -2,7 +2,7 @@
  * @author: astar
  * @Date: 2020-09-16 10:47:02
  * @LastEditors: astar
- * @LastEditTime: 2021-02-07 10:12:55
+ * @LastEditTime: 2021-02-21 15:19:25
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\chat.js
  */
@@ -17,7 +17,7 @@ class ChatController extends BaseController {
     return this.Model.find().skip(exitsCount).limit(fetchCount).sort({ addTime: -1 }).then(res => {
       return res.reverse();
     }, _ => {
-      console.log(_);
+      return Promise.reject(_);
     });
   }
 };
