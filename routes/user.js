@@ -1,7 +1,7 @@
 /*
  * @Author: astar
  * @Date: 2021-02-06 15:43:45
- * @LastEditors: cmx
+ * @LastEditors: astar
  * @LastEditTime: 2021-02-23 14:46:16
  * @Description: 文件描述
  * @FilePath: \koa-chat\routes\user.js

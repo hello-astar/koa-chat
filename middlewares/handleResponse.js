@@ -2,7 +2,7 @@
  * @author: astar
  * @Date: 2021-01-26 17:39:28
  * @LastEditors: astar
- * @LastEditTime: 2021-01-27 10:49:47
+ * @LastEditTime: 2021-02-24 15:03:47
  * @Description: 统一返回数据
  * @FilePath: \koa-chat\middlewares\handleResponse.js
  */
@@ -11,7 +11,7 @@ const sendHandle = () => {
   const render = ctx => {
       return (data, msg) => {
           ctx.response.body = {
-              result: 1,
+              code: 1,
               data: data,
               msg: msg || '请求成功'
           }
@@ -20,9 +20,9 @@ const sendHandle = () => {
 
   // 处理请求失败方法
   const renderError = ctx => {
-      return (msg, result = -1) => {
+      return (msg, code = -1) => {
           ctx.response.body = {
-              result: result,
+              code: code,
               data: null,
               msg: msg || '请求失败'
           }

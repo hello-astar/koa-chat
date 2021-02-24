@@ -1,7 +1,7 @@
 /*
  * @author: astar
  * @Date: 2020-09-09 13:53:55
- * @LastEditors: cmx
+ * @LastEditors: astar
  * @LastEditTime: 2021-02-21 15:39:28
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\user.js
