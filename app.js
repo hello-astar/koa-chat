@@ -7,6 +7,7 @@ const config = require('@config');
 const bodyParser = require('koa-bodyparser'); // 解析post请求body
 const parameter = require('koa-parameter'); // 校验接口参数
 const koaSession = require('koa-session'); // 使用session,保存验证码数据
+const koaCompress = require('koa-compress'); // 开启gzip
 const { handleResponse, setWhiteList, checkAuth, logger, handleError, handleSocket } = require('@middlewares');
 const route = require('@routes');
 
@@ -28,7 +29,21 @@ parameter(app); // 参数校验
 
 // 中间件
 app.use(handleError());
-app.use(koaStatic(path.resolve(__dirname, 'static'), { maxage: 10 * 1000 })); // 强缓存10s // cache-control // 托管静态文件
+app.use(koaCompress({
+  filter (content_type) {
+    console.log(/image/gi.test(content_type))
+    return /text|image|javascript/gi.test(content_type)
+  },
+  threshold: 0, // 压缩门槛
+  gzip: {
+    flush: require('zlib').constants.Z_SYNC_FLUSH
+  },
+  deflate: {
+    flush: require('zlib').constants.Z_SYNC_FLUSH,
+  },
+  br: false // disable brotli
+}));
+app.use(koaStatic(path.resolve(__dirname, 'static'), { maxage: 10 * 1000, gzip: true })); // 强缓存10s // cache-control // 托管静态文件
 app.use(koaConditional()); // 10smaxage后走last-modified(协商缓存)
 app.use(logger());
 io.use(socketioJwt.authorize({

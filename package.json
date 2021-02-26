@@ -5,6 +5,7 @@
   "main": "app.js",
   "scripts": {
     "dev": "nodemon node app.js",
+    "name": "node ./bin/configHeader cmx astar",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -28,6 +29,7 @@
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.3.0",
+    "koa-compress": "^5.0.1",
     "koa-conditional-get": "^3.0.0",
     "koa-json-error": "^3.1.2",
     "koa-jwt": "^4.0.0",

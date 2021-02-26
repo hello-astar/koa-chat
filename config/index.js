@@ -9,7 +9,7 @@ exports.DATABASE = {
 };
 exports.JWT_SECRET = 'JWT_SECRET';
 
-exports.WHITE_WEBSITES = ['http://192.168.22.173:2000', 'http://localhost:2000', 'http://192.168.0.105:2000'];
+exports.WHITE_WEBSITES = [];
 
 exports.PASSPHRASE = 'astar'
 

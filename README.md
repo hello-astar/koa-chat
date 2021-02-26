@@ -1,10 +1,3 @@
-<!--
- * @Description: 
- * @Author: astar
- * @Date: 2021-02-06 22:09:28
- * @LastEditTime: 2021-02-10 23:25:54
- * @LastEditors: astar
--->
 # koa-chat
 `koa-chat`是一个使用koa实现的在线聊天应用服务端，该项目基于nodejs、koa、socket.io等技术开发。
 
@@ -31,6 +24,7 @@
 - [x] 增加发送表情包功能
 - [ ] redis缓存
 - [ ] 优化当前在线人功能
+- [ ] 试下koa-compress开启gzip
 
 # 安装运行
 1. 拉取项目
