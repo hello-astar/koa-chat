@@ -31,7 +31,7 @@ parameter(app); // 参数校验
 app.use(handleError());
 app.use(koaCompress({
   filter (content_type) {
-    console.log(/image/gi.test(content_type))
+    // console.log(/image/gi.test(content_type))
     return /text|image|javascript/gi.test(content_type)
   },
   threshold: 0, // 压缩门槛
