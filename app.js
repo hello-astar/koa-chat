@@ -57,12 +57,7 @@ app.use(bodyParser()); // 解析body参数
 app.use(setWhiteList(config.WHITE_WEBSITES)); // 白名单
 app.use(
   koaJwt({ secret: config.JWT_SECRET }).unless({
-    path: [
-      /^\/user\/login/,
-      /^\/user\/register/,
-      /^\/user\/getCaptcha/,
-      /^\/qiniu\/getToken/
-    ]
+    path: config.NOT_NEED_TOKEN_PATH_REGS
   })
 );
 app.use(checkAuth()); // 多处登录互踢

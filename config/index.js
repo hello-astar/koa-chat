@@ -11,6 +11,13 @@ exports.JWT_SECRET = 'JWT_SECRET';
 
 exports.WHITE_WEBSITES = [];
 
+exports.NOT_NEED_TOKEN_PATH_REGS = [
+  /^\/user\/login/,
+  /^\/user\/register/,
+  /^\/user\/getCaptcha/,
+  /^\/qiniu\/getToken/
+]
+
 exports.PASSPHRASE = 'astar'
 
 exports.KOA_SESSION = {
