@@ -4,6 +4,7 @@ const koaStatic = require('koa-static'); // 静态文件
 const koaConditional = require('koa-conditional-get'); // 协商缓存
 const path = require('path');
 const config = require('@config');
+const { getIPAddress } = require('@utils');
 const bodyParser = require('koa-bodyparser'); // 解析post请求body
 const parameter = require('koa-parameter'); // 校验接口参数
 const koaSession = require('koa-session'); // 使用session,保存验证码数据
@@ -71,5 +72,5 @@ app.use(route.allowedMethods());
 // );
 
 server.listen(config.PORT, () => {
-  console.log(`${config.BASE_URL}:${config.PORT}`)
+  console.log(`http://${getIPAddress()}:${config.PORT}`)
 });
