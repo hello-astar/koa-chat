@@ -11,12 +11,18 @@ const koaSession = require('koa-session'); // 使用session,保存验证码数�
 const koaCompress = require('koa-compress'); // 开启gzip
 const { handleResponse, setWhiteList, checkAuth, logger, handleError, handleSocket } = require('@middlewares');
 const route = require('@routes');
+const fs = require('fs');
 
 const koaJwt = require('koa-jwt');
 const socketioJwt = require('socketio-jwt');
 const app = new Koa();
 app.keys = ['koaChatApplication'];
-const server = require('http').createServer(app.callback());
+let server = require('http').createServer(app.callback());
+const options = {
+  key: fs.readFileSync("./server.key", "utf8"),
+  cert: fs.readFileSync("./server.cert", "utf8")
+};
+const serverhttps = require('https').createServer(options, app.callback());
 const io = require('socket.io')(server, {
   cors: {
     origin: config.WHITE_WEBSITES, // from the screenshot you provided
@@ -25,6 +31,15 @@ const io = require('socket.io')(server, {
     credentials: true
   }
 });
+
+const httpsio = require('socket.io')(serverhttps, {
+  cors: {
+    origin: config.WHITE_WEBSITES, // from the screenshot you provided
+    methods: ["GET", "POST"],
+    allowedHeaders: ["authorization"],
+    credentials: true
+  }
+})
 
 parameter(app); // 参数校验
 
@@ -52,7 +67,13 @@ io.use(socketioJwt.authorize({
   handshake: true,
   auth_header_required: true
 }));
+httpsio.use(socketioJwt.authorize({
+  secret: config.JWT_SECRET,
+  handshake: true,
+  auth_header_required: true
+}));
 io.on('connection', handleSocket(io));
+httpsio.on('connection', handleSocket(httpsio));
 app.use(koaSession(config.KOA_SESSION, app));
 app.use(bodyParser()); // 解析body参数
 app.use(setWhiteList(config.WHITE_WEBSITES)); // 白名单
@@ -73,4 +94,8 @@ app.use(route.allowedMethods());
 
 server.listen(config.PORT, () => {
   console.log(`http://${getIPAddress()}:${config.PORT}`)
+});
+
+serverhttps.listen(443, () => {
+  console.log(`https://${getIPAddress()}`)
 });
