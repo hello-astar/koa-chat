@@ -4,7 +4,7 @@
   "description": "node koa chat socket.io",
   "main": "app.js",
   "scripts": {
-    "dev": "nodemon node app.js",
+    "dev": "cross-env NODE_ENV=development nodemon node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/hello-astar/koa-chat#readme",
   "dependencies": {
+    "axios": "^0.21.1",
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.3.0",
@@ -55,6 +56,7 @@
     "@utils": "./utils"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "nodemon": "^2.0.7"
   }
 }
