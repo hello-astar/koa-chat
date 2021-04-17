@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-02-06 15:44:30
  * @LastEditors: astar
- * @LastEditTime: 2021-04-17 13:37:27
+ * @LastEditTime: 2021-04-17 14:00:04
  * @Description: 文件描述
  * @FilePath: \koa-chat\routes\chat.js
  */
@@ -32,7 +32,7 @@ router.get('/searchGifs', async ctx => {
     keyword: { type: 'string', required: true }
   });
   const { keyword } = ctx.query;
-  const limit = 6;
+  const limit = 4;
   const width = 300;
   const height = 300;
   let pn = Math.abs(Math.floor(Math.random() * 21)) + 0; // 0-20随机挑选
