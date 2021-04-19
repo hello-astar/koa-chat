@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-02-06 15:44:30
  * @LastEditors: astar
- * @LastEditTime: 2021-04-16 16:54:45
+ * @LastEditTime: 2021-04-19 18:30:26
  * @Description: 文件描述
  * @FilePath: \koa-chat\routes\chat.js
  */
@@ -14,13 +14,14 @@ const { decodeBaiduImgURL } = require('@utils');
 
 router.get('/getHistoryChatByCount', async ctx => {
   ctx.verifyParams({
+    receiverId: { type: 'string', required: true },
     exitsCount: { type: 'string', required: true },
     fetchCount: { type: 'string', required: true }
   });
 
-  const { exitsCount, fetchCount } = ctx.query;
+  const { receiverId, exitsCount, fetchCount } = ctx.query;
   try {
-    let res = await chatController.getHistoryChatByCount({ exitsCount: Number(exitsCount), fetchCount: Number(fetchCount) });
+    let res = await chatController.getHistoryChatByCount({ receiverId, exitsCount: Number(exitsCount), fetchCount: Number(fetchCount) });
     ctx.send(res);
   } catch (e) {
     ctx.sendError(e);
@@ -32,7 +33,7 @@ router.get('/searchGifs', async ctx => {
     keyword: { type: 'string', required: true }
   });
   const { keyword } = ctx.query;
-  const limit = 4;
+  const limit = 3;
   const width = 300;
   const height = 300;
   let pn = Math.abs(Math.floor(Math.random() * 21)) + 0; // 0-20随机挑选

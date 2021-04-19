@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-02-07 09:58:06
  * @LastEditors: astar
- * @LastEditTime: 2021-02-09 15:56:20
+ * @LastEditTime: 2021-04-19 17:55:56
  * @Description: 文件描述
  * @FilePath: \koa-chat\middlewares\handleSocket.js
  */
@@ -21,8 +21,8 @@ module.exports = function handleSocket (io) {
     io.emit("online-list", onlineList.map(item => item.decoded_token));
     // 客户端发送消息
     socket.on("message", msg => {
-      const { avatar, name, _id } = socket.decoded_token;
-      const chat = { avatar, name, userId: _id, content: msg };
+      const { _id } = socket.decoded_token;
+      const chat = { senderId: _id, content: msg };
       chatController.addOne(chat).then(res => {
         io.emit('message', res);
       }).catch(e => {

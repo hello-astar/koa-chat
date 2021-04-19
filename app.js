@@ -9,7 +9,7 @@ const bodyParser = require('koa-bodyparser'); // 解析post请求body
 const parameter = require('koa-parameter'); // 校验接口参数
 const koaSession = require('koa-session'); // 使用session,保存验证码数据
 const koaCompress = require('koa-compress'); // 开启gzip
-const { handleResponse, setWhiteList, checkAuth, logger, handleError, handleSocket } = require('@middlewares');
+const { enhanceCtx, setWhiteList, checkAuth, logger, handleError, handleSocket } = require('@middlewares');
 const route = require('@routes');
 const fs = require('fs');
 
@@ -82,8 +82,8 @@ app.use(
     path: config.NOT_NEED_TOKEN_PATH_REGS
   })
 );
+app.use(enhanceCtx());
 app.use(checkAuth()); // 多处登录互踢
-app.use(handleResponse());
 // 路由
 app.use(route.routes());
 app.use(route.allowedMethods());

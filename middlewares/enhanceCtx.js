@@ -2,11 +2,11 @@
  * @author: astar
  * @Date: 2021-01-26 17:39:28
  * @LastEditors: astar
- * @LastEditTime: 2021-02-24 15:03:47
- * @Description: 统一返回数据
- * @FilePath: \koa-chat\middlewares\handleResponse.js
+ * @LastEditTime: 2021-04-19 14:13:16
+ * @Description: 增强context对象
+ * @FilePath: \koa-chat\middlewares\enhanceCtx.js
  */
-const sendHandle = () => {
+const enhanceCtx = () => {
   // 处理请求成功方法
   const render = ctx => {
       return (data, msg) => {
@@ -32,8 +32,9 @@ const sendHandle = () => {
   return async (ctx, next) => {
       ctx.send = render(ctx);
       ctx.sendError = renderError(ctx);
+      ctx.token =  ctx.headers.authorization ? ctx.headers.authorization.split(' ')[1] : null;
       await next();
   }
 }
 
-module.exports = sendHandle;
+module.exports = enhanceCtx;
