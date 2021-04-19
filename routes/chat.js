@@ -1,8 +1,8 @@
 /*
  * @Author: astar
  * @Date: 2021-02-06 15:44:30
- * @LastEditors: astar
- * @LastEditTime: 2021-04-19 18:30:26
+ * @LastEditors: cmx
+ * @LastEditTime: 2021-04-19 18:34:46
  * @Description: 文件描述
  * @FilePath: \koa-chat\routes\chat.js
  */
@@ -44,8 +44,7 @@ router.get('/searchGifs', async ctx => {
       'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9'
     }
   });
-  console.log(res.data)
-  if (res.data.listNum > 20) { // 数量太少的说明不热门，不推送
+  if (res.data.listNum > 50) { // 数量太少的说明不热门，不推送
     const list = res.data.data.slice(0, res.data.data.length - 1);
     ctx.send(list.map(item => ({ url: item.type === 'gif' ? decodeBaiduImgURL(item.objURL) : item.middleURL, id: item.di, type: item.type })));
   } else {
