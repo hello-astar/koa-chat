@@ -1,8 +1,8 @@
 /*
  * @Author: astar
  * @Date: 2021-02-06 15:44:30
- * @LastEditors: cmx
- * @LastEditTime: 2021-04-19 18:34:46
+ * @LastEditors: astar
+ * @LastEditTime: 2021-04-20 18:28:57
  * @Description: 文件描述
  * @FilePath: \koa-chat\routes\chat.js
  */
@@ -15,17 +15,27 @@ const { decodeBaiduImgURL } = require('@utils');
 router.get('/getHistoryChatByCount', async ctx => {
   ctx.verifyParams({
     receiverId: { type: 'string', required: true },
-    exitsCount: { type: 'string', required: true },
     fetchCount: { type: 'string', required: true }
   });
 
-  const { receiverId, exitsCount, fetchCount } = ctx.query;
+  const { receiverId, startId, fetchCount } = ctx.query;
   try {
-    let res = await chatController.getHistoryChatByCount({ receiverId, exitsCount: Number(exitsCount), fetchCount: Number(fetchCount) });
+    let res = await chatController.getHistoryChatByCount({ receiverId, startId, fetchCount: Number(fetchCount) });
     ctx.send(res);
   } catch (e) {
     ctx.sendError(e);
   }
+});
+
+router.get('/getHistoryChatSortByGroup', async ctx => {
+  ctx.verifyParams({
+    pageNo: { type: 'string', required: true },
+    pageSize: { type: 'string', required: true }
+  })
+  const userId = ctx.userInfo._id;
+  const { pageNo, pageSize } = ctx.query;
+  let res = await chatController.getHistoryChatSortByGroup({ userId, pageNo: Number(pageNo), pageSize: Number(pageSize) });
+  ctx.send(res);
 });
 
 router.get('/searchGifs', async ctx => {

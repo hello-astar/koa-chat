@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-01-27 17:27:32
  * @LastEditors: astar
- * @LastEditTime: 2021-04-19 14:09:30
+ * @LastEditTime: 2021-04-20 14:33:29
  * @Description: 互踢
  * @FilePath: \koa-chat\middlewares\checkAuth.js
  */
@@ -15,7 +15,7 @@ module.exports = function checkAuth () {
         return await next();
       }
     }
-    const userInfoByToken = userController.getUserInfoByToken({ token: ctx.token });
+    const userInfoByToken = ctx.userInfo;
     const userInfo = await userController.getUserInfoById({ _id: userInfoByToken._id });
     if(new Date(userInfoByToken.lastOnlineTime).getTime() !== new Date(userInfo.lastOnlineTime).getTime()) {
       ctx.throw(401);

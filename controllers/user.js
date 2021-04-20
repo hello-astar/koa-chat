@@ -2,11 +2,10 @@
  * @author: astar
  * @Date: 2020-09-09 13:53:55
  * @LastEditors: astar
- * @LastEditTime: 2021-03-03 17:27:48
+ * @LastEditTime: 2021-04-20 14:30:57
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\user.js
  */
-const BaseController = require('./base');
 const jwt = require("jsonwebtoken");
 const config = require('@config');
 const privateDecrypt = require('@utils').privateDecrypt;
@@ -25,17 +24,17 @@ class UserController {
    * @author astar
    * @date 2021-03-03 17:25
    */
-  register ({ name, avatar, password }) {
+  register ({ userName, avatar, password }) {
     const privateKey = fs.readFileSync(path.join(__dirname, '../config/private.pem')).toString('utf8');
     let originPassword = privateDecrypt(privateKey, 'astar', Buffer.from(password, 'base64'));
     const hash = crypto.createHash('sha256');
     // const pepper = 'astar'; // 服务器存一个固定盐，数据库存一个随机盐
     // let sha256Pass = hash.update(hash.update(password) + salt).digest('hex');
     let sha256Pass = hash.update(originPassword).digest('hex');
-    return this.Model.create({ name, avatar, password: sha256Pass }).then(res => {
+    return this.Model.create({ userName, avatar, password: sha256Pass }).then(res => {
       return {
         _id: res._id,
-        name: res.name,
+        userName: res.userName,
         avatar: res.avatar,
         addTime: res.addTime
       };
@@ -56,18 +55,18 @@ class UserController {
    * @author astar
    * @date 2021-03-03 17:25
    */
-  login ({ name, password }) {
+  login ({ userName, password }) {
     const privateKey = fs.readFileSync(path.join(__dirname, '../config/private.pem')).toString('utf8');
     let originPassword = privateDecrypt(privateKey, 'astar', Buffer.from(password, 'base64'));
     const hash = crypto.createHash('sha256');
     let sha256Pass = hash.update(originPassword).digest('hex');
     
-    return this.Model.findOne({ name, password: sha256Pass }).then(async res => {
+    return this.Model.findOne({ userName, password: sha256Pass }).then(async res => {
       if (res) {
         let lastOnlineTime = new Date();
         let token = jwt.sign({
             _id: res._id,
-            name,
+            userName,
             avatar: res.avatar,
             lastOnlineTime
           },
@@ -91,8 +90,7 @@ class UserController {
    */
   getUserInfoByToken ({ token }) {
     try {
-      let { _id, name, avatar, lastOnlineTime } = jwt.verify(token, config.JWT_SECRET);
-      return { _id, name, avatar, lastOnlineTime };
+      return jwt.verify(token, config.JWT_SECRET);
     } catch (e) {
       console.log('get_user_info_error: ', e);
       return null;

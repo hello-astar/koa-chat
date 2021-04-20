@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-02-06 15:43:45
  * @LastEditors: astar
- * @LastEditTime: 2021-04-19 15:54:17
+ * @LastEditTime: 2021-04-20 14:22:39
  * @Description: 文件描述
  * @FilePath: \koa-chat\routes\user.js
  */
@@ -27,40 +27,42 @@ async function dealWithRes (ctx, callback) {
 // 注册
 router.post('/register', async ctx => {
   ctx.verifyParams({
-    name: { type: 'string', required: true },
+    userName: { type: 'string', required: true },
     avatar: { type: 'string', required: true },
     password: { type: 'string', required: true },
     captcha: { type: 'string', required: true }
   });
 
-  const { name, avatar, password, captcha } = ctx.request.body;
-
-  if (captcha.toLowerCase() !== ctx.session.captcha.toLowerCase()) {
-    return ctx.sendError('验证码错误');
-  }
-  return dealWithRes(ctx, userController.register.bind(userController, { name, avatar, password }));
-});
-
-// 登录页面
-router.post('/login', ctx => {
-  ctx.verifyParams({
-    name: { type: 'string', required: true },
-    password: { type: 'string', required: true },
-    captcha: { type: 'string', required: true }
-  });
-  const { captcha, name, password } = ctx.request.body;
+  const { userName, avatar, password, captcha } = ctx.request.body;
 
   if (process.env.NODE_ENV !== 'development') {
     if (captcha.toLowerCase() !== ctx.session.captcha.toLowerCase()) {
       return ctx.sendError('验证码错误');
     }
   }
-  return dealWithRes(ctx, userController.login.bind(userController, { name, password }));
+  return dealWithRes(ctx, userController.register.bind(userController, { userName, avatar, password }));
+});
+
+// 登录页面
+router.post('/login', ctx => {
+  ctx.verifyParams({
+    userName: { type: 'string', required: true },
+    password: { type: 'string', required: true },
+    captcha: { type: 'string', required: true }
+  });
+  const { captcha, userName, password } = ctx.request.body;
+
+  if (process.env.NODE_ENV !== 'development') {
+    if (captcha.toLowerCase() !== ctx.session.captcha.toLowerCase()) {
+      return ctx.sendError('验证码错误');
+    }
+  }
+  return dealWithRes(ctx, userController.login.bind(userController, { userName, password }));
 });
 
 // 获取用户信息
 router.get('/getUserInfo', ctx => {
-  return dealWithRes(ctx, userController.getUserInfoByToken.bind(userController, { token: ctx.token }))
+  ctx.send(ctx.userInfo);
 });
 
 // 获取验证码图片

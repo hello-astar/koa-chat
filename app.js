@@ -62,18 +62,6 @@ app.use(koaCompress({
 app.use(koaStatic(path.resolve(__dirname, 'static'), { maxage: 10 * 1000, gzip: true })); // 强缓存10s // cache-control // 托管静态文件
 app.use(koaConditional()); // 10smaxage后走last-modified(协商缓存)
 app.use(logger());
-io.use(socketioJwt.authorize({
-  secret: config.JWT_SECRET,
-  handshake: true,
-  auth_header_required: true
-}));
-httpsio.use(socketioJwt.authorize({
-  secret: config.JWT_SECRET,
-  handshake: true,
-  auth_header_required: true
-}));
-io.on('connection', handleSocket(io));
-httpsio.on('connection', handleSocket(httpsio));
 app.use(koaSession(config.KOA_SESSION, app));
 app.use(bodyParser()); // 解析body参数
 app.use(setWhiteList(config.WHITE_WEBSITES)); // 白名单
@@ -87,6 +75,19 @@ app.use(checkAuth()); // 多处登录互踢
 // 路由
 app.use(route.routes());
 app.use(route.allowedMethods());
+
+io.use(socketioJwt.authorize({
+  secret: config.JWT_SECRET,
+  handshake: true,
+  auth_header_required: true
+}));
+httpsio.use(socketioJwt.authorize({
+  secret: config.JWT_SECRET,
+  handshake: true,
+  auth_header_required: true
+}));
+io.on('connection', handleSocket(io));
+httpsio.on('connection', handleSocket(httpsio));
 
 // app.on('error', () =>
 //   console.error('server error')

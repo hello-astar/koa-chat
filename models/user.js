@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-02-05 15:27:30
  * @LastEditors: astar
- * @LastEditTime: 2021-03-03 17:30:09
+ * @LastEditTime: 2021-04-20 14:21:20
  * @Description: 用户表
  * @FilePath: \koa-chat\models\user.js
  */
@@ -10,7 +10,7 @@
 module.exports = {
   name: 'usermodel',
   schema: {
-    name: {
+    userName: {
       type: String,
       required: [true, '用户名不能为空'],
       unique: true, // The unique Option is Not a Validator
