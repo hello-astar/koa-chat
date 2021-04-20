@@ -2,7 +2,7 @@
  * @author: astar
  * @Date: 2020-09-16 10:47:02
  * @LastEditors: astar
- * @LastEditTime: 2021-04-20 18:32:44
+ * @LastEditTime: 2021-04-21 00:24:00
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\chat.js
  */
@@ -13,13 +13,14 @@ class ChatController {
     this.Model = ChatModel;
   }
 
-  addChat ({ senderId, receiverId, content, receiverModel }) {
-    return this.Model.create({
+  async addChat ({ senderId, receiverId, content, receiverModel }) {
+    let res = await this.Model.create({
       sender: senderId,
       receiver: receiverId,
       receiverModel,
       content
     });
+    return this.Model.findOne({ _id: res._id }).populate('sender', ['userName', 'avatar']).populate('receiver', ['groupName', 'userName', 'avatar']);
   }
   /**
    * 获取历史聊天记录, 从startId获取

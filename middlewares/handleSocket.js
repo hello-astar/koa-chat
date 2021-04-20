@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-02-07 09:58:06
  * @LastEditors: astar
- * @LastEditTime: 2021-04-20 18:35:43
+ * @LastEditTime: 2021-04-21 00:26:04
  * @Description: 文件描述
  * @FilePath: \koa-chat\middlewares\handleSocket.js
  */
@@ -19,16 +19,16 @@ module.exports = function handleSocket (io) {
       // 若发送给群
       // 拥有这个群的所有在线用户都要收到消息
       if (msg.isGroup) {
-        let group = await groupController.Model.find({ _id: msg.receiverId, members: { $in: onlineList.map(item => item.decoded_token._id) } }, { members: 1 })
+        let group = await groupController.Model.findOne({ _id: msg.receiverId, members: { $in: onlineList.map(item => item.decoded_token._id) } }, { members: 1 });
         if (group) {
           group.members.forEach(item => {
-            let online = onlineList.find(ele => ele.decoded_token._id === item)
-            online && online.emit('message', 'hhh')
-          })
+            let online = onlineList.find(ele => String(ele.decoded_token._id) === String(item));
+            online && online.emit('message', res);
+          });
         }
       } else { // 发送给个人
-        let online = onlineList.find(item => item.decoded_token._id === res.receiverId)
-        online && online.emit('message', 'hhh')
+        let online = onlineList.find(item => String(item.decoded_token._id) === String(msg.receiverId));
+        online && online.emit('message', res);
       }
     } catch (e) {
         console.log('---------------------------', e)
