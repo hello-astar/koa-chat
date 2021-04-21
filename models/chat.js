@@ -11,7 +11,11 @@ const { Schema } = require('mongoose');
 module.exports = {
   name: 'chatmodel',
   schema: {
-    sender: { type: Schema.Types.ObjectId, ref: 'usermodel', required: true }, // 发送者
+    sender: {
+      type: Schema.Types.ObjectId,
+      ref: 'usermodel',
+      required: true
+    }, // 发送者
     receiver: {
       type: Schema.Types.ObjectId,
       required: true,

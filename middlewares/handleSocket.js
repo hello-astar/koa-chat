@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-02-07 09:58:06
  * @LastEditors: astar
- * @LastEditTime: 2021-04-21 00:26:04
+ * @LastEditTime: 2021-04-21 15:47:16
  * @Description: 文件描述
  * @FilePath: \koa-chat\middlewares\handleSocket.js
  */
@@ -37,7 +37,13 @@ module.exports = function handleSocket (io) {
   }
 
   function handleDisconnect (reason) {
-
+    const socket = this;
+    const index = onlineList.findIndex(item => item.decoded_token._id === socket.decoded_token._id);
+    if (index !== -1) {
+      onlineList.splice(index, 1);
+      console.log(`${socket.decoded_token.userName}断开了`, reason);
+    }
+    // io.emit("online-list", onlineList.map(item => item.decoded_token));
   }
   
   return function (socket) {
@@ -48,17 +54,9 @@ module.exports = function handleSocket (io) {
     };
     onlineList.push(socket);
     console.log(`${socket.decoded_token.userName}连接`);
-    // io.emit("online-list", onlineList.map(item => item.decoded_token));
     // 客户端发送消息
     socket.on("message", handleMessage);
     // 客户端断开连接
-    socket.on("disconnect", reason => {
-      const index = onlineList.findIndex(item => item.decoded_token._id === socket.decoded_token._id);
-      if (index !== -1) {
-        onlineList.splice(index, 1);
-        console.log(`${socket.decoded_token.userName}断开了`, reason);
-      }
-      // io.emit("online-list", onlineList.map(item => item.decoded_token));
-    });
+    socket.on("disconnect", handleDisconnect);
   }
 }

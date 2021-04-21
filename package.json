@@ -42,6 +42,7 @@
     "moment": "^2.29.1",
     "mongoose": "^5.10.5",
     "qiniu": "^7.3.2",
+    "sharp": "^0.28.1",
     "socket.io": "^3.1.0",
     "socketio-jwt": "^4.6.2",
     "svg-captcha": "^1.4.0"

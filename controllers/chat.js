@@ -2,7 +2,7 @@
  * @author: astar
  * @Date: 2020-09-16 10:47:02
  * @LastEditors: astar
- * @LastEditTime: 2021-04-21 00:24:00
+ * @LastEditTime: 2021-04-21 14:10:13
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\chat.js
  */
@@ -20,7 +20,9 @@ class ChatController {
       receiverModel,
       content
     });
-    return this.Model.findOne({ _id: res._id }).populate('sender', ['userName', 'avatar']).populate('receiver', ['groupName', 'userName', 'avatar']);
+    return this.Model.findOne({ _id: res._id })
+              .populate('sender', ['userName', 'avatar'])
+              .populate('receiver', ['groupName', 'userName', 'avatar']);
   }
   /**
    * 获取历史聊天记录, 从startId获取
@@ -31,7 +33,7 @@ class ChatController {
     return this.Model.find(startId ? { receiver: receiverId, _id: { $lt: startId } } : { receiver: receiverId })
               .populate('sender', ['userName', 'avatar'])
               .populate('receiver', ['groupName', 'avatar', 'userName'])
-              .limit(fetchCount)
+              .limit(fetchCount);
   }
 
   /**
@@ -77,7 +79,7 @@ class ChatController {
           _id: 0
         }
       }
-    ])
+    ]);
   }
 };
 
