@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-04-19 13:54:52
  * @LastEditors: astar
- * @LastEditTime: 2021-04-22 00:19:07
+ * @LastEditTime: 2021-04-22 01:39:07
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\group.js
  */
@@ -43,11 +43,9 @@ class ChatController {
                           requests.push(avatarBuffer)
                         });
                         let avatarBuffers = (await axios.all(requests)).map(item => item.data);
-                        let size = 150;
-                        let eachSize = 50;
-                        // let eachSize = Math.floor(Math.sqrt(size * size / avatarBuffers.length));
-                        let columns = Math.floor(size / eachSize);
-                        let x = 0, y = 0;
+                        let size = 200;
+                        let columns = Math.ceil(Math.sqrt(avatarBuffers.length));
+                        let eachSize = size / columns;
                         // 获取背景
                         const backgroundBuffer = sharp({
                           create: {
@@ -58,21 +56,26 @@ class ChatController {
                           }
                         }).raw().toBuffer();
 
-                        let composite = await (avatarBuffers.reduce((input, overlay) => {
+                        let composite = await (avatarBuffers.reduce((input, overlay, idx) => {
                           return input.then(async function (data) {
+                            let left = 0;
+                            let top = 0;
+                            let specialLen = avatarBuffers.length % columns;
+                            if (idx < specialLen) {
+                              top = 0;
+                              left = (size - eachSize * specialLen) / 2 + (idx + 1) * eachSize;
+                            } else {
+                              top = eachSize * (Math.floor((idx - specialLen) / columns) + (specialLen ? 1 : 0));
+                              left = Math.floor(avatarBuffers.length  / columns) * (idx - specialLen) * eachSize;
+                            }
                             let temp = sharp(data, { raw: { width: size, height: size, channels: 4 } })
                                         .composite([{
                                             input: await sharp(overlay).resize(eachSize, eachSize).toBuffer(),
-                                            top: eachSize * y,
-                                            left: eachSize * x
+                                            top,
+                                            left
                                           }])
                                         .raw()
                                         .toBuffer();
-                            x++;
-                            if (x === columns) {
-                              x = 0;
-                              y++;
-                            }
                             return temp;
                           })
                         }, backgroundBuffer));
@@ -82,6 +85,19 @@ class ChatController {
                           height: size,
                           channels: 4
                         }}).png().toBuffer();
+
+                        // composite = await sharp({
+                        //   create: {
+                        //     width: size,
+                        //     height: size,
+                        //     channels: 4,
+                        //     background: { r: 255, g: 255, b: 255, alpha: 128 }
+                        //   }
+                        // }).composite([{
+                        //   input: composite,
+                        //   top: (size - Math.ceil(avatarBuffers.length / columns) * eachSize) / 2,
+                        //   left: 0
+                        // }]).raw().toBuffer()
 
                         return {
                           _id: item._id,
