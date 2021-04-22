@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-04-19 13:54:52
  * @LastEditors: astar
- * @LastEditTime: 2021-04-22 18:26:57
+ * @LastEditTime: 2021-04-23 01:02:21
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\group.js
  */
@@ -18,7 +18,7 @@ class ChatController {
     return this.Model.create({ groupName, groupOwnerId, members });
   }
 
-  joinUser ({ groupId, userId }) {
+  joinMember ({ groupId, userId }) {
     return this.Model.updateOne({ _id: groupId }, { $addToSet: { 'members': userId }});
   }
 
@@ -47,6 +47,7 @@ class ChatController {
                         let columns = Math.ceil(Math.sqrt(avatarBuffers.length));
                         let rows = Math.ceil(avatarBuffers.length / columns);
                         let eachSize = size / columns;
+                        let specialLen = avatarBuffers.length % columns;
                         // 获取背景
                         const backgroundBuffer = sharp({
                           create: {
@@ -61,13 +62,12 @@ class ChatController {
                           return input.then(async function (data) {
                             let left = 0;
                             let top = 0;
-                            let specialLen = avatarBuffers.length % columns;
                             if (idx < specialLen) {
                               top = 0;
                               left = (size - eachSize * specialLen) / 2 + idx * eachSize;
                             } else {
                               top = eachSize * (Math.floor((idx - specialLen) / columns) + (specialLen ? 1 : 0));
-                              left = Math.floor(avatarBuffers.length  / columns) * (idx - specialLen) * eachSize;
+                              left = (idx - specialLen) % columns * eachSize;
                             }
                             let temp = sharp(data, { raw: { width: size, height: rows * eachSize, channels: 4 } })
                                         .composite([{
@@ -106,6 +106,14 @@ class ChatController {
                         }
                       }));
                     });
+  }
+
+  getGroupInfoByGroupId ({ groupId }) {
+    return this.Model.findOne({ _id: groupId }).populate('members')
+  }
+
+  updateGroupNameByGroupId ({ groupId, groupName }) {
+    return this.Model.updateOne({ _id: groupId }, { groupName })
   }
 };
 
