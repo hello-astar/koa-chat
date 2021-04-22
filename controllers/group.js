@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-04-19 13:54:52
  * @LastEditors: astar
- * @LastEditTime: 2021-04-22 14:21:59
+ * @LastEditTime: 2021-04-22 18:26:57
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\group.js
  */
@@ -64,7 +64,7 @@ class ChatController {
                             let specialLen = avatarBuffers.length % columns;
                             if (idx < specialLen) {
                               top = 0;
-                              left = (size - eachSize * specialLen) / 2 + (idx + 1) * eachSize;
+                              left = (size - eachSize * specialLen) / 2 + idx * eachSize;
                             } else {
                               top = eachSize * (Math.floor((idx - specialLen) / columns) + (specialLen ? 1 : 0));
                               left = Math.floor(avatarBuffers.length  / columns) * (idx - specialLen) * eachSize;
