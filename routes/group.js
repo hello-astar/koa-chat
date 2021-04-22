@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-04-19 13:58:06
  * @LastEditors: astar
- * @LastEditTime: 2021-04-20 14:20:01
+ * @LastEditTime: 2021-04-22 10:11:51
  * @Description: 文件描述
  * @FilePath: \koa-chat\routes\group.js
  */
@@ -12,7 +12,7 @@ const groupController = require('@controllers').group;
 
 router.get('/getGroups', async ctx => {
   const { _id } = ctx.userInfo;
-  let res = await groupController.getGroups({ receiverId: _id });
+  let res = await groupController.getGroups({ userId: _id });
   ctx.send(res);
 });
 

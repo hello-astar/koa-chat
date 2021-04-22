@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-04-19 13:54:52
  * @LastEditors: astar
- * @LastEditTime: 2021-04-22 01:39:07
+ * @LastEditTime: 2021-04-22 14:21:59
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\group.js
  */
@@ -22,8 +22,8 @@ class ChatController {
     return this.Model.updateOne({ _id: groupId }, { $addToSet: { 'members': userId }});
   }
 
-  getGroups ({ receiverId }) {
-    return this.Model.find({ members: { $in: receiverId } })
+  getGroups ({ userId }) {
+    return this.Model.find({ members: { $in: userId } })
                     .populate({
                       path: 'members',
                       select: 'avatar -_id',
@@ -45,12 +45,13 @@ class ChatController {
                         let avatarBuffers = (await axios.all(requests)).map(item => item.data);
                         let size = 200;
                         let columns = Math.ceil(Math.sqrt(avatarBuffers.length));
+                        let rows = Math.ceil(avatarBuffers.length / columns);
                         let eachSize = size / columns;
                         // 获取背景
                         const backgroundBuffer = sharp({
                           create: {
                             width: size,
-                            height: size,
+                            height: rows * eachSize,
                             channels: 4,
                             background: { r: 255, g: 255, b: 255, alpha: 128 }
                           }
@@ -68,7 +69,7 @@ class ChatController {
                               top = eachSize * (Math.floor((idx - specialLen) / columns) + (specialLen ? 1 : 0));
                               left = Math.floor(avatarBuffers.length  / columns) * (idx - specialLen) * eachSize;
                             }
-                            let temp = sharp(data, { raw: { width: size, height: size, channels: 4 } })
+                            let temp = sharp(data, { raw: { width: size, height: rows * eachSize, channels: 4 } })
                                         .composite([{
                                             input: await sharp(overlay).resize(eachSize, eachSize).toBuffer(),
                                             top,
@@ -82,22 +83,20 @@ class ChatController {
 
                         composite = await sharp(composite, { raw: {
                           width: size,
-                          height: size,
+                          height: eachSize * rows,
                           channels: 4
                         }}).png().toBuffer();
-
-                        // composite = await sharp({
-                        //   create: {
-                        //     width: size,
-                        //     height: size,
-                        //     channels: 4,
-                        //     background: { r: 255, g: 255, b: 255, alpha: 128 }
-                        //   }
-                        // }).composite([{
-                        //   input: composite,
-                        //   top: (size - Math.ceil(avatarBuffers.length / columns) * eachSize) / 2,
-                        //   left: 0
-                        // }]).raw().toBuffer()
+                        
+                        composite = await sharp({
+                          create: {
+                            width: size,
+                            height: size,
+                            channels: 4,
+                            background: { r: 255, g: 255, b: 255, alpha: 128 }
+                          }
+                        }).composite([{
+                          input: composite
+                        }]).png().toBuffer();
 
                         return {
                           _id: item._id,
