@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-04-19 13:54:52
  * @LastEditors: astar
- * @LastEditTime: 2021-04-23 01:02:21
+ * @LastEditTime: 2021-05-04 20:40:15
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\group.js
  */
@@ -14,14 +14,29 @@ class ChatController {
     this.Model = GroupModel;
   }
 
+  /**
+  * 新建群组
+  * @author astar
+  * @date 2021-05-04 20:11
+  */
   createGroup ({ groupName, groupOwnerId, members }) {
     return this.Model.create({ groupName, groupOwnerId, members });
   }
 
+  /**
+  * 拉人进群
+  * @author astar
+  * @date 2021-05-04 20:11
+  */
   joinMember ({ groupId, userId }) {
     return this.Model.updateOne({ _id: groupId }, { $addToSet: { 'members': userId }});
   }
 
+  /**
+  * 根据用户ID获取群组列表
+  * @author astar
+  * @date 2021-05-04 20:10
+  */
   getGroups ({ userId }) {
     return this.Model.find({ members: { $in: userId } })
                     .populate({
@@ -46,7 +61,7 @@ class ChatController {
                         let size = 200;
                         let columns = Math.ceil(Math.sqrt(avatarBuffers.length));
                         let rows = Math.ceil(avatarBuffers.length / columns);
-                        let eachSize = size / columns;
+                        let eachSize = Math.floor(size / columns);
                         let specialLen = avatarBuffers.length % columns;
                         // 获取背景
                         const backgroundBuffer = sharp({
@@ -108,12 +123,31 @@ class ChatController {
                     });
   }
 
+  /**
+  * 获取群信息
+  * @author astar
+  * @date 2021-05-04 20:10
+  */
   getGroupInfoByGroupId ({ groupId }) {
     return this.Model.findOne({ _id: groupId }).populate('members')
   }
 
+  /**
+  * 修改群名称
+  * @author astar
+  * @date 2021-05-04 20:10
+  */
   updateGroupNameByGroupId ({ groupId, groupName }) {
     return this.Model.updateOne({ _id: groupId }, { groupName })
+  }
+
+  /**
+  * 用户退出群组
+  * @author astar
+  * @date 2021-05-04 18:33
+  */
+  exitGroupByUserId ({ userId, groupId }) {
+    return this.Model.updateOne({ _id: groupId }, { $pull: { members: userId } });
   }
 };
 
