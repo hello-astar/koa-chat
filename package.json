@@ -4,7 +4,8 @@
   "description": "node koa chat socket.io",
   "main": "app.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development DEBUG=* nodemon node app.js",
+    "dev": "cross-env NODE_ENV=development nodemon node app.js",
+    "dev:debug": "cross-env NODE_ENV=development DEBUG=* nodemon node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

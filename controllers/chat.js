@@ -2,7 +2,7 @@
  * @author: astar
  * @Date: 2020-09-16 10:47:02
  * @LastEditors: astar
- * @LastEditTime: 2021-04-21 14:10:13
+ * @LastEditTime: 2021-05-04 17:53:48
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\chat.js
  */
@@ -31,19 +31,23 @@ class ChatController {
    */
   async getHistoryChatByCount ({ receiverId, startId, fetchCount }) {
     return this.Model.find(startId ? { receiver: receiverId, _id: { $lt: startId } } : { receiver: receiverId })
+              .sort({ addTime: -1 })
+              .limit(fetchCount)
               .populate('sender', ['userName', 'avatar'])
               .populate('receiver', ['groupName', 'avatar', 'userName'])
-              .limit(fetchCount);
+              .then(res => {
+                return res.reverse();
+              });
   }
 
   /**
-   * 按群组获取聊天历史
+   * 获取最近联系人列表
    * @author astar
    * @date 2021-04-19 16:53
    * @param {*}
    * @returns {*}
    */
-  getHistoryChatSortByGroup ({ userId, pageNo, pageSize }) {
+  getRecentConcats ({ userId, pageNo, pageSize }) {
     // 查询我发出的或我收到的消息
     // 分组
     // 分页

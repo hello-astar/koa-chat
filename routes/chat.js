@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-02-06 15:44:30
  * @LastEditors: astar
- * @LastEditTime: 2021-04-20 18:28:57
+ * @LastEditTime: 2021-05-04 17:53:59
  * @Description: 文件描述
  * @FilePath: \koa-chat\routes\chat.js
  */
@@ -27,14 +27,14 @@ router.get('/getHistoryChatByCount', async ctx => {
   }
 });
 
-router.get('/getHistoryChatSortByGroup', async ctx => {
+router.get('/getRecentConcats', async ctx => {
   ctx.verifyParams({
     pageNo: { type: 'string', required: true },
     pageSize: { type: 'string', required: true }
   })
   const userId = ctx.userInfo._id;
   const { pageNo, pageSize } = ctx.query;
-  let res = await chatController.getHistoryChatSortByGroup({ userId, pageNo: Number(pageNo), pageSize: Number(pageSize) });
+  let res = await chatController.getRecentConcats({ userId, pageNo: Number(pageNo), pageSize: Number(pageSize) });
   ctx.send(res);
 });
 
