@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-02-05 15:27:30
  * @LastEditors: astar
- * @LastEditTime: 2021-04-20 14:21:20
+ * @LastEditTime: 2021-05-04 21:02:47
  * @Description: 用户表
  * @FilePath: \koa-chat\models\user.js
  */
@@ -15,7 +15,7 @@ module.exports = {
       required: [true, '用户名不能为空'],
       unique: true, // The unique Option is Not a Validator
       validate: {
-        validator: (value) => /^[a-zA-Z][0-9a-zA-Z_\u4e00-\u9eff]{1,8}$/.test(value), // 字母开头，后带1-8位字母数字下划线汉字
+        validator: (value) => /^[0-9a-zA-Z_\u4e00-\u9eff]{1,8}$/.test(value), // 1-8位字母数字下划线汉字
         message: '用户名存在非法字符或长度过长'
       }
     },

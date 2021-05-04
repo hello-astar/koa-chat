@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-04-14 16:07:11
  * @LastEditors: astar
- * @LastEditTime: 2021-04-23 00:03:20
+ * @LastEditTime: 2021-05-04 23:53:38
  * @Description: 群组
  * @FilePath: \koa-chat\models\group.js
  */
@@ -18,7 +18,7 @@ module.exports = {
         message: '群名存在非法字符或长度过长'
       }
     },
-    groupOwnerId: {
+    groupOwner: {
       type: Schema.Types.ObjectId,
       ref: 'usermodel'
     },

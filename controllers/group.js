@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-04-19 13:54:52
  * @LastEditors: astar
- * @LastEditTime: 2021-05-04 20:40:15
+ * @LastEditTime: 2021-05-04 23:54:59
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\group.js
  */
@@ -19,8 +19,8 @@ class ChatController {
   * @author astar
   * @date 2021-05-04 20:11
   */
-  createGroup ({ groupName, groupOwnerId, members }) {
-    return this.Model.create({ groupName, groupOwnerId, members });
+  createGroup ({ groupName, groupOwner, members }) {
+    return this.Model.create({ groupName, groupOwner, members });
   }
 
   /**
@@ -129,7 +129,7 @@ class ChatController {
   * @date 2021-05-04 20:10
   */
   getGroupInfoByGroupId ({ groupId }) {
-    return this.Model.findOne({ _id: groupId }).populate('members')
+    return this.Model.findOne({ _id: groupId }).populate('members').populate('groupOwner')
   }
 
   /**
