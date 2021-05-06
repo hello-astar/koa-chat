@@ -2,7 +2,7 @@
  * @author: astar
  * @Date: 2020-09-16 10:47:02
  * @LastEditors: astar
- * @LastEditTime: 2021-05-04 17:53:48
+ * @LastEditTime: 2021-05-07 00:38:38
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\chat.js
  */
@@ -48,24 +48,90 @@ class ChatController {
    * @returns {*}
    */
   getRecentConcats ({ userId, pageNo, pageSize }) {
-    // 查询我发出的或我收到的消息
-    // 分组
-    // 分页
+    // 查询我发出的或我收到的消息或我所在群组收到的消息
     let key = Mongoose.Types.ObjectId(userId)
     return this.Model.aggregate([
       {
+        $project: {
+          sender: 1,
+          content: 1,
+          receiverModel: 1,
+          group: {
+            $cond: {
+              if: { $eq: [ '$receiverModel', 'groupmodel' ] },
+              then: '$receiver',
+              else: null
+            }
+          },
+          person: {
+            $cond: {
+              if: { $eq: ['$receiverModel', 'usermodel'] },
+              then: '$receiver',
+              else: null
+            }
+          }
+        }
+      },
+      {
+        $lookup: {
+          from: 'groupmodels',
+          localField: 'group',
+          foreignField: '_id',
+          as: 'group'
+        }
+      },
+      {
+        $unwind: '$group'
+      },
+      {
+        $lookup: {
+          from: 'usermodels',
+          localField: 'person',
+          foreignField: '_id',
+          as: 'person'
+        }
+      },
+      {
+        $unwind: { "path": "$person", "preserveNullAndEmptyArrays": true }
+      },
+      {
         $match: {
           $or: [
-            { 'sender': key },
-            { 'receiver': key, receiverModel: 'usermodel' }
+            { 'sender': key, receiverModel: 'usermodel' },
+            { 'person._id': key },
+            { 'group.members': key }
           ]
         }
       },
       {
         $group: {
-          _id: { receiver: "$receiver", sender: '$sender' },
-          latest: { $last: "$content" },
+          _id: { person: '$person', group: '$group' },
+          latest: { $last: '$content' },
           count: { $sum: 1 }
+        }
+      },
+      {
+        $unwind: { "path": "$latest", "preserveNullAndEmptyArrays": true }
+      },
+      {
+        $project: {
+          isGroup: {
+            $cond: {
+              if: '$_id.group',
+              then: true,
+              else: false
+            }
+          },
+          receiver: {
+            $cond: {
+              if: '$_id.group',
+              then: '$_id.group',
+              else: '$_id.person'
+            }
+          },
+          latest: 1, // 展示
+          count: 1, // 展示
+          _id: 0 // 不展示
         }
       },
       {
@@ -74,15 +140,6 @@ class ChatController {
       {
         $limit: pageSize
       },
-      {
-        $project: {
-          receiver: '$_id.receiver',
-          sender: '$_id.sender',
-          latest: '$latest',
-          count: '$count',
-          _id: 0
-        }
-      }
     ]);
   }
 };
