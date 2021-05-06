@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-04-14 16:07:11
  * @LastEditors: astar
- * @LastEditTime: 2021-05-04 23:53:38
+ * @LastEditTime: 2021-05-06 10:28:25
  * @Description: 群组
  * @FilePath: \koa-chat\models\group.js
  */
@@ -28,6 +28,10 @@ module.exports = {
         ref: 'usermodel'
       }
     ],
+    isDefault: {
+      type: Boolean,
+      default: false
+    },
     addTime: { type: Date, default: Date.now }
   }
 };

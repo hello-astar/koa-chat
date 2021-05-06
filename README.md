@@ -36,7 +36,11 @@ git clone git@github.com:hello-astar/koa-chat.git
 ```
 npm install
 ```
-3. 运行项目
+3. 初始化数据库数据 (也可忽略)
+```
+npm run init
+```
+4. 运行项目
 ```
 npm run dev
 ```
