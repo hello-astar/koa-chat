@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-04-19 13:58:06
  * @LastEditors: astar
- * @LastEditTime: 2021-05-07 17:18:08
+ * @LastEditTime: 2021-05-07 23:00:53
  * @Description: 文件描述
  * @FilePath: \koa-chat\routes\group.js
  */
@@ -10,6 +10,8 @@ const Router = require('koa-router');
 const router = new Router();
 const groupController = require('@controllers').group;
 const userController = require('@controllers').user;
+const chatController = require('@controllers').chat;
+
 const { mergePics } = require('@utils');
 
 router.get('/getGroups', async ctx => {
@@ -24,7 +26,11 @@ router.post('/addGroup', async ctx => {
   });
   const { groupName } = ctx.request.body;
   let { _id } = ctx.userInfo;
-  let res = await groupController.createGroup({ groupName, groupOwner: _id, members: [_id] });
+  let res = await groupController.createGroup({ groupName, groupOwner: _id });
+  // 自动添加管理员提醒
+  const admin = await userController.findUser({ isAdmin: true });
+  const chat = { senderId: admin._id, content: [{ kind: 'TEXT', value: '欢迎' }], receiverId: res._id, receiverModel: 'groupmodel' };
+  await chatController.addChat(chat);
   ctx.send(res);
 });
 
@@ -47,7 +53,7 @@ router.post('/updateGroupNameByGroupId', async ctx => {
 router.post('/joinMember', async ctx => {
   const { userId, groupId } = ctx.request.body;
   // 判断用户是否存在
-  let user = await userController.getUserInfoById({ _id: userId });
+  let user = await userController.findUser({ _id: userId });
   if (!user) {
     return ctx.sendError('请输入正确用户ID');
   }

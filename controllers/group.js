@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-04-19 13:54:52
  * @LastEditors: astar
- * @LastEditTime: 2021-05-07 18:45:59
+ * @LastEditTime: 2021-05-07 22:47:44
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\group.js
  */
@@ -18,8 +18,17 @@ class ChatController {
   * @author astar
   * @date 2021-05-04 20:11
   */
-  createGroup ({ groupName, groupOwner, members }) {
-    return this.Model.create({ groupName, groupOwner, members });
+  createGroup ({ groupName, groupOwner, isDefault = false }) {
+    return this.Model.create({ groupName, groupOwner, members: [groupOwner], isDefault });
+  }
+
+  /**
+  * 按条件查找群组
+  * @author astar
+  * @date 2021-05-07 20:24
+  */
+  findGroup (params) {
+    return this.Model.findOne(params);
   }
 
   /**

@@ -2,7 +2,7 @@
  * @author: astar
  * @Date: 2020-09-16 10:47:02
  * @LastEditors: astar
- * @LastEditTime: 2021-05-07 18:10:39
+ * @LastEditTime: 2021-05-07 22:25:01
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\chat.js
  */
@@ -47,7 +47,7 @@ class ChatController {
    * @param {*}
    * @returns {*}
    */
-  getRecentConcats ({ userId, pageNo, pageSize }) {
+  getRecentContacts ({ userId, pageNo, pageSize }) {
     // 查询我发出的或我收到的消息或我所在群组收到的消息
     let key = Mongoose.Types.ObjectId(userId)
     return this.Model.aggregate([
@@ -56,6 +56,7 @@ class ChatController {
           sender: 1,
           content: 1,
           receiver: 1,
+          addTime: 1,
           group: {
             $cond: {
               if: { $eq: [ '$receiverModel', 'groupmodel' ] },
@@ -115,7 +116,7 @@ class ChatController {
       {
         $match: {
           $or: [
-            { 'sender': key, isGroup: false }, // 我发送的数据
+            { 'sender._id': key, isGroup: false }, // 我发送的数据
             { 'person._id': key }, // 我接收的数据
             { 'group.members': key } // 群组中有我
           ]
@@ -124,10 +125,10 @@ class ChatController {
       {
         $project: {
           sender: 1,
-          receiver: 1,
           isGroup: 1,
           content: 1,
-          concat: { // 对方
+          addTime: 1,
+          contact: { // 对方
             $cond: {
               if: '$isGroup',
               then: '$group',
@@ -144,21 +145,35 @@ class ChatController {
       },
       {
         $group: {
-          _id: { concat: '$concat', isGroup: '$isGroup' }, // 将同一联系对象分为一组
+          _id: { contactId: '$contact._id', groupName: '$contact.groupName', userName: '$contact.userName', avatar: '$contact.avatar', isGroup: '$isGroup' }, // 将同一联系对象分为一组
+          sender: { $last: '$sender' },
           latest: { $last: '$content' },
+          sendTime: { $last: '$addTime' },
           count: { $sum: 1 }
         }
       },
       {
-        $unwind: { "path": "$latest", "preserveNullAndEmptyArrays": true }
-      },
-      {
         $project: {
           isGroup: '$_id.isGroup',
-          concat: '$_id.concat',
+          name: {
+            $cond: {
+              if: '$_id.isGroup',
+              then: '$_id.groupName',
+              else: '$_id.userName'
+            }
+          },
+          avatar: {
+            $cond: {
+              if: '$_id.isGroup',
+              then: { $concat: ['http://192.168.0.102:3000/group/avatar?groupId=', { '$toString' : '$_id.contactId' }] },
+              else: '$_id.avatar'
+            }
+          },
+          sendTime: 1,
+          sender: 1,
           latest: 1, // 展示
           count: 1, // 展示
-          _id: 0 // 不展示
+          _id: '$_id.contactId'
         }
       },
       {
@@ -166,8 +181,13 @@ class ChatController {
       },
       {
         $limit: pageSize
+      },
+      {
+        $sort: {
+          sendTime: -1
+        }
       }
-    ])
+    ]);
   }
 };
 

@@ -2,7 +2,7 @@
  * @author: astar
  * @Date: 2020-09-09 13:53:55
  * @LastEditors: astar
- * @LastEditTime: 2021-04-20 14:30:57
+ * @LastEditTime: 2021-05-07 22:38:49
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\user.js
  */
@@ -98,12 +98,12 @@ class UserController {
   }
 
   /**
-   * 根据id查询数据库获取用户信息
+   * 查询数据库获取用户信息
    * @author astar
    * @date 2021-03-03 17:16
    */
-  getUserInfoById ({ _id }) {
-    return this.Model.findOne({ _id });
+  findUser (params) {
+    return this.Model.findOne(params);
   }
 };
 

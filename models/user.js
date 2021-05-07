@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-02-05 15:27:30
  * @LastEditors: astar
- * @LastEditTime: 2021-05-04 21:02:47
+ * @LastEditTime: 2021-05-07 22:40:03
  * @Description: 用户表
  * @FilePath: \koa-chat\models\user.js
  */
@@ -10,6 +10,10 @@
 module.exports = {
   name: 'usermodel',
   schema: {
+    isAdmin: {
+      type: Boolean,
+      default: false
+    },
     userName: {
       type: String,
       required: [true, '用户名不能为空'],

@@ -16,7 +16,7 @@ module.exports = function checkAuth () {
       }
     }
     const userInfoByToken = ctx.userInfo;
-    const userInfo = await userController.getUserInfoById({ _id: userInfoByToken._id });
+    const userInfo = await userController.findUser({ _id: userInfoByToken._id });
     if(new Date(userInfoByToken.lastOnlineTime).getTime() !== new Date(userInfo.lastOnlineTime).getTime()) {
       ctx.throw(401);
     } else {

@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-05-06 11:22:15
  * @LastEditors: astar
- * @LastEditTime: 2021-05-06 16:51:21
+ * @LastEditTime: 2021-05-07 22:55:44
  * @Description: 初始化文档
  * @FilePath: \koa-chat\init\index.js
  */
@@ -12,18 +12,16 @@ const groupController = require('@controllers').group;
 const chatController = require('@controllers').chat;
 const userList = require('./data/user.json');
 const messageList = require('./data/message.json');
-
-const fs = require('fs');
-const path = require('path');
+const defaultGroup = require('./data/group.json');
 
 (async function () {
   async function initDefaultGroup () {
-    let defaultGroup = await groupController.Model.findOne({ isDefault: true });
-    if (defaultGroup) {
+    let group = await groupController.Model.findOne({ isDefault: true });
+    if (group) {
       console.log('存在系统群组');
       return;
     }
-    await groupController.Model.create({ _id: '6093a3f3d108423c7878bf5f', groupName: '系统群组', groupOwner: '6093a3f3d108423c7878bf60', members: [], isDefault: true });
+    await groupController.Model.insertMany([defaultGroup]);
     console.log('初始化系统群组成功');
   }
 
