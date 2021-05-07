@@ -2,13 +2,14 @@
  * @Author: astar
  * @Date: 2021-02-06 15:43:45
  * @LastEditors: astar
- * @LastEditTime: 2021-04-20 14:22:39
+ * @LastEditTime: 2021-05-06 11:19:57
  * @Description: 文件描述
  * @FilePath: \koa-chat\routes\user.js
  */
 const Router = require('koa-router');
 const router = new Router();
 const userController = require('@controllers').user;
+const groupController = require('@controllers').group;
 const svgCaptcha = require('svg-captcha');
 
 
@@ -40,7 +41,15 @@ router.post('/register', async ctx => {
       return ctx.sendError('验证码错误');
     }
   }
-  return dealWithRes(ctx, userController.register.bind(userController, { userName, avatar, password }));
+  try {
+    let res = await userController.register({ userName, avatar, password });
+    // 加入默认群组
+    let defaultGroup = await groupController.findGroup({ isDefault: true });
+    await groupController.joinMember({ groupId: defaultGroup._id, userId: res._id });
+    ctx.send(res);
+  } catch (e) {
+    ctx.sendError(e);
+  }
 });
 
 // 登录页面

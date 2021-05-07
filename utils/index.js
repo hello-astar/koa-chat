@@ -144,84 +144,91 @@ function decodeBaiduImgURL (data = '') {
   return data.split('').map(item => char_table[item] || item).join('');
 }
 
-async function compisiteAvatars (res) {
+/**
+ * 将多张图片合成一张
+ * @author astar
+ * @date 2021-05-07 15:21
+ * @param {Array} picList - 原始图片url列表
+ * @returns {base64} 合成的图片
+ */
+async function mergePics (picList, size = 200) {
   const sharp = require('sharp');
   const axios = require('axios');
-  return await Promise.all(res.map(async item => {
-    // 合成头像
-    let requests = []
-    item.members.forEach(member => {
-      let avatarBuffer = axios({
-        methos: 'get',
-        url: member.avatar,
-        responseType: "arraybuffer"
-      })
-      requests.push(avatarBuffer)
-    });
-    let avatarBuffers = (await axios.all(requests)).map(item => item.data);
-    let size = 200;
-    let columns = Math.ceil(Math.sqrt(avatarBuffers.length));
-    let rows = Math.ceil(avatarBuffers.length / columns);
-    let eachSize = Math.floor(size / columns);
-    let specialLen = avatarBuffers.length % columns;
-    // 获取背景
-    const backgroundBuffer = sharp({
-      create: {
-        width: size,
-        height: rows * eachSize,
-        channels: 4,
-        background: { r: 255, g: 255, b: 255, alpha: 128 }
-      }
-    }).raw().toBuffer();
+  // 获取图片buffer
+  let requests = [];
+  picList.forEach(url => {
+    requests.push(axios({
+      methos: 'get',
+      url: url,
+      responseType: "arraybuffer"
+    }));
+  });
+  let picBuffers = (await axios.all(requests)).map(item => item.data);
 
-    let composite = await (avatarBuffers.reduce((input, overlay, idx) => {
-      return input.then(async function (data) {
-        let left = 0;
-        let top = 0;
-        if (idx < specialLen) {
-          top = 0;
-          left = (size - eachSize * specialLen) / 2 + idx * eachSize;
-        } else {
-          top = eachSize * (Math.floor((idx - specialLen) / columns) + (specialLen ? 1 : 0));
-          left = (idx - specialLen) % columns * eachSize;
-        }
-        let temp = sharp(data, { raw: { width: size, height: rows * eachSize, channels: 4 } })
-                    .composite([{
-                        input: await sharp(overlay).resize(eachSize, eachSize).toBuffer(),
-                        top,
-                        left
-                      }])
-                    .raw()
-                    .toBuffer();
-        return temp;
-      })
-    }, backgroundBuffer));
+  // 计算布局 // 行列大致均匀分布
+  let columns = Math.ceil(Math.sqrt(picBuffers.length)); // 列数
+  let rows = Math.ceil(picBuffers.length / columns); // 行数
+  let eachSize = Math.floor(size / columns); // 每张图片大小
+  let specialLen = picBuffers.length % columns; // 第一行个数跟其他行不同时，第一行个数
 
-    composite = await sharp(composite, { raw: {
+  // 图片背景
+  const backgroundBuffer = sharp({
+    create: {
       width: size,
-      height: eachSize * rows,
-      channels: 4
-    }}).png().toBuffer();
-    
-    composite = await sharp({
-      create: {
-        width: size,
-        height: size,
-        channels: 4,
-        background: { r: 255, g: 255, b: 255, alpha: 128 }
-      }
-    }).composite([{
-      input: composite
-    }]).png().toBuffer();
-
-    return {
-      _id: item._id,
-      groupName: item.groupName,
-      addTime: item.addTime,
-      avatar: 'data:image/png;base64,'+ composite.toString('base64')
+      height: rows * eachSize,
+      channels: 4,
+      background: { r: 255, g: 255, b: 255, alpha: 128 }
     }
-  }));
+  }).raw().toBuffer();
+
+  // 将每张图片合并到背景上
+  let composite = await (picBuffers.reduce((input, overlay, idx) => {
+    return input.then(async function (data) {
+      let left = 0;
+      let top = 0;
+      if (idx < specialLen) {
+        top = 0;
+        left = (size - eachSize * specialLen) / 2 + idx * eachSize;
+      } else {
+        top = eachSize * (Math.floor((idx - specialLen) / columns) + (specialLen ? 1 : 0));
+        left = (idx - specialLen) % columns * eachSize;
+      }
+      let temp = sharp(data, { raw: { width: size, height: rows * eachSize, channels: 4 } })
+                  .composite([{
+                      input: await sharp(overlay).resize(eachSize, eachSize).toBuffer(),
+                      top,
+                      left
+                    }])
+                  .raw()
+                  .toBuffer();
+      return temp;
+    })
+  }, backgroundBuffer));
+
+  // 新生成size*size正方形背景，将以上合并成的size*(rows*eachSize)图片居中
+  composite = await sharp(composite, { raw: {
+    width: size,
+    height: eachSize * rows,
+    channels: 4
+  }}).png().toBuffer();
+  
+  composite = await sharp({
+    create: {
+      width: size,
+      height: size,
+      channels: 4,
+      background: { r: 255, g: 255, b: 255, alpha: 128 }
+    }
+  }).composite([{
+    input: composite
+  }])
+  .png()
+  // .toBuffer();
+
+  // return 'data:image/png;base64,'+ composite.toString('base64');
+  return composite;
 }
+
 module.exports = {
   getKeyPair,
   createKeyPairFile,
@@ -231,5 +238,5 @@ module.exports = {
   // publicVerify,
   getIPAddress,
   decodeBaiduImgURL,
-  compisiteAvatars
+  mergePics
 };

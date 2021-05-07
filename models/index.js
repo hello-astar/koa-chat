@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-02-05 15:28:02
  * @LastEditors: astar
- * @LastEditTime: 2021-02-05 15:58:19
+ * @LastEditTime: 2021-05-07 17:07:00
  * @Description: 连接数据库
  * @FilePath: \koa-chat\models\index.js
  */
@@ -39,6 +39,12 @@ let db = {
 fs.readdirSync(__dirname).filter(file => file !== 'index.js').forEach(file => {
   let modelFile = require(path.join(__dirname, file));
   let schema = new mongoose.Schema(modelFile.schema);
+  if (modelFile.virtual) {
+    for (let key in modelFile.virtual) {
+      schema.virtual(key).get(modelFile.virtual[key].get);
+      schema.set('toJSON', { virtuals: true });
+    }
+  }
   db.models[modelFile.name] = mongoose.model(modelFile.name, schema);
 });
 

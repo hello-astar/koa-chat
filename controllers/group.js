@@ -2,12 +2,12 @@
  * @Author: astar
  * @Date: 2021-04-19 13:54:52
  * @LastEditors: astar
- * @LastEditTime: 2021-05-07 00:39:27
+ * @LastEditTime: 2021-05-07 18:45:59
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\group.js
  */
 const GroupModel = require('@models').getModel('groupmodel');
-const { compisiteAvatars } = require('@utils');
+const { mergePics } = require('@utils');
 class ChatController {
   constructor () {
     this.Model = GroupModel;
@@ -37,31 +37,8 @@ class ChatController {
   * @date 2021-05-04 20:10
   */
   getGroups ({ userId }) {
-    return this.Model.find({ members: { $in: userId } })
-                    .populate({
-                      path: 'members',
-                      select: 'avatar -_id',
-                      options: {
-                        limit: 9
-                      }
-                    }).then(res => compisiteAvatars(res));
+    return this.Model.find({ members: { $in: userId } });
   }
-
-  /**
-  * 获取群组头像
-  * @author astar
-  * @date 2021-05-06 23:30
-  */
-  getGroupAvatar ({ groupId }) {
-    return this.Model.find({ _id: groupId })
-            .populate({
-              path: 'members',
-              select: 'avatar -_id',
-              options: {
-                limit: 9
-              }
-            }).then(res => compisiteAvatars(res));
- }
 
   /**
   * 获取群信息
@@ -69,7 +46,7 @@ class ChatController {
   * @date 2021-05-04 20:10
   */
   getGroupInfoByGroupId ({ groupId }) {
-    return this.Model.findOne({ _id: groupId }).populate('members').populate('groupOwner')
+    return this.Model.findOne({ _id: groupId }).populate('members').populate('groupOwner');
   }
 
   /**

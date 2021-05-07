@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-04-14 16:07:11
  * @LastEditors: astar
- * @LastEditTime: 2021-05-06 10:28:25
+ * @LastEditTime: 2021-05-07 17:09:12
  * @Description: 群组
  * @FilePath: \koa-chat\models\group.js
  */
@@ -33,5 +33,12 @@ module.exports = {
       default: false
     },
     addTime: { type: Date, default: Date.now }
+  },
+  virtual: {
+    avatar: { // 群组头像设置为虚拟值
+      get: function () {
+        return `http://192.168.22.54:3000/group/avatar?groupId=${this._id}`
+      }
+    }
   }
 };

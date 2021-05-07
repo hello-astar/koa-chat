@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-02-07 09:58:06
  * @LastEditors: astar
- * @LastEditTime: 2021-04-21 15:47:16
+ * @LastEditTime: 2021-05-06 16:53:09
  * @Description: 文件描述
  * @FilePath: \koa-chat\middlewares\handleSocket.js
  */
@@ -43,7 +43,6 @@ module.exports = function handleSocket (io) {
       onlineList.splice(index, 1);
       console.log(`${socket.decoded_token.userName}断开了`, reason);
     }
-    // io.emit("online-list", onlineList.map(item => item.decoded_token));
   }
   
   return function (socket) {

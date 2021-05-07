@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-02-06 15:44:30
  * @LastEditors: astar
- * @LastEditTime: 2021-05-07 00:34:43
+ * @LastEditTime: 2021-05-07 16:50:49
  * @Description: 文件描述
  * @FilePath: \koa-chat\routes\chat.js
  */
@@ -36,15 +36,7 @@ router.get('/getRecentConcats', async ctx => {
   const userId = ctx.userInfo._id;
   const { pageNo, pageSize } = ctx.query;
   let res = await chatController.getRecentConcats({ userId, pageNo: Number(pageNo), pageSize: Number(pageSize) });
-  // 获取群组头像
-  const a = await Promise.all(res.map(async concat => {
-    return {
-      ...concat,
-      receiver: (await groupController.getGroupAvatar({ groupId: concat.receiver._id }))[0]
-    }
-  }));
-
-  ctx.send(a);
+  ctx.send(res);
 });
 
 router.get('/searchGifs', async ctx => {

@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-04-19 13:58:06
  * @LastEditors: astar
- * @LastEditTime: 2021-05-04 20:23:34
+ * @LastEditTime: 2021-05-07 17:18:08
  * @Description: 文件描述
  * @FilePath: \koa-chat\routes\group.js
  */
@@ -10,6 +10,7 @@ const Router = require('koa-router');
 const router = new Router();
 const groupController = require('@controllers').group;
 const userController = require('@controllers').user;
+const { mergePics } = require('@utils');
 
 router.get('/getGroups', async ctx => {
   const { _id } = ctx.userInfo;
@@ -59,5 +60,14 @@ router.post('/exitGroup', async ctx => {
   let { _id } = ctx.userInfo;
   await groupController.exitGroupByUserId({ userId: _id, groupId });
   ctx.send();
+})
+
+router.get('/avatar', async ctx => {
+  const { groupId } = ctx.query;
+  let groupInfo = await groupController.getGroupInfoByGroupId({ groupId });
+  let members = groupInfo.members.slice(0, 9);
+  let res = await mergePics(members.map(item => item.avatar)); // 最多获取九张头像
+  ctx.set('Content-Type', 'image/png');
+  ctx.response.body = res;
 })
 module.exports = router.routes();

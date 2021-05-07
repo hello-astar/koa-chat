@@ -2,7 +2,7 @@
  * @author: astar
  * @Date: 2020-09-16 10:47:02
  * @LastEditors: astar
- * @LastEditTime: 2021-05-07 00:38:38
+ * @LastEditTime: 2021-05-07 18:10:39
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\chat.js
  */
@@ -55,7 +55,7 @@ class ChatController {
         $project: {
           sender: 1,
           content: 1,
-          receiverModel: 1,
+          receiver: 1,
           group: {
             $cond: {
               if: { $eq: [ '$receiverModel', 'groupmodel' ] },
@@ -69,6 +69,13 @@ class ChatController {
               then: '$receiver',
               else: null
             }
+          },
+          isGroup: {
+            $cond: {
+              if: { $eq: ['$receiverModel', 'groupmodel'] },
+              then: true,
+              else: false
+            }
           }
         }
       },
@@ -81,7 +88,7 @@ class ChatController {
         }
       },
       {
-        $unwind: '$group'
+        $unwind: { "path": "$group", "preserveNullAndEmptyArrays": true }
       },
       {
         $lookup: {
@@ -95,17 +102,49 @@ class ChatController {
         $unwind: { "path": "$person", "preserveNullAndEmptyArrays": true }
       },
       {
+        $lookup: {
+          from: 'usermodels',
+          localField: 'sender',
+          foreignField: '_id',
+          as: 'sender'
+        }
+      },
+      {
+        $unwind: { "path": "$sender", "preserveNullAndEmptyArrays": true }
+      },
+      {
         $match: {
           $or: [
-            { 'sender': key, receiverModel: 'usermodel' },
-            { 'person._id': key },
-            { 'group.members': key }
+            { 'sender': key, isGroup: false }, // 我发送的数据
+            { 'person._id': key }, // 我接收的数据
+            { 'group.members': key } // 群组中有我
           ]
         }
       },
       {
+        $project: {
+          sender: 1,
+          receiver: 1,
+          isGroup: 1,
+          content: 1,
+          concat: { // 对方
+            $cond: {
+              if: '$isGroup',
+              then: '$group',
+              else: {
+                $cond: {
+                  if: { $eq: [key, '$sender._id'] }, // 我作为sender，联系对象是receiver
+                  then: '$person',
+                  else: '$sender'
+                }
+              }
+            }
+          },
+        }
+      },
+      {
         $group: {
-          _id: { person: '$person', group: '$group' },
+          _id: { concat: '$concat', isGroup: '$isGroup' }, // 将同一联系对象分为一组
           latest: { $last: '$content' },
           count: { $sum: 1 }
         }
@@ -115,20 +154,8 @@ class ChatController {
       },
       {
         $project: {
-          isGroup: {
-            $cond: {
-              if: '$_id.group',
-              then: true,
-              else: false
-            }
-          },
-          receiver: {
-            $cond: {
-              if: '$_id.group',
-              then: '$_id.group',
-              else: '$_id.person'
-            }
-          },
+          isGroup: '$_id.isGroup',
+          concat: '$_id.concat',
           latest: 1, // 展示
           count: 1, // 展示
           _id: 0 // 不展示
@@ -139,8 +166,8 @@ class ChatController {
       },
       {
         $limit: pageSize
-      },
-    ]);
+      }
+    ])
   }
 };
 
