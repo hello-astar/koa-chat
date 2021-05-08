@@ -1,0 +1,13 @@
+{
+  "group": { "_id" : "60955323331e3033105c2d26", "isDefault" : true, "groupName" : "系统群组", "groupOwner" : "60954e26f2014c41acef7ddc", "members": ["60954e26f2014c41acef7ddc"] },
+  "admin": {
+    "isAdmin": true,
+    "_id": "60954e26f2014c41acef7ddc",
+    "userName": "管理员",
+    "avatar": "https://pic1.zhimg.com/80/v2-109708b9ee54a6333e54e91a37bdc4b5_720w.jpg?source=1940ef5c",
+    "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+    "addTime": "2021-05-07T14:26:46.898Z",
+    "lastOnlineTime": "2021-05-07T14:26:54.077Z",
+    "__v": 0
+  }
+}

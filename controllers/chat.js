@@ -2,12 +2,14 @@
  * @author: astar
  * @Date: 2020-09-16 10:47:02
  * @LastEditors: astar
- * @LastEditTime: 2021-05-07 22:25:01
+ * @LastEditTime: 2021-05-08 09:58:11
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\chat.js
  */
 const ChatModel = require('@models').getModel('chatmodel');
 const Mongoose = require('mongoose');
+const { getIPAddress } = require('@utils');
+
 class ChatController {
   constructor () {
     this.Model = ChatModel;
@@ -165,7 +167,7 @@ class ChatController {
           avatar: {
             $cond: {
               if: '$_id.isGroup',
-              then: { $concat: ['http://192.168.0.102:3000/group/avatar?groupId=', { '$toString' : '$_id.contactId' }] },
+              then: { $concat: [`http://${getIPAddress()}:3000/group/avatar?groupId=`, { '$toString' : '$_id.contactId' }] },
               else: '$_id.avatar'
             }
           },

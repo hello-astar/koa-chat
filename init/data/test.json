@@ -1,0 +1,532 @@
+{
+  "user": [
+    {
+      "_id": "6093a3f3d108423c7878bf60",
+      "userName": "园长",
+      "avatar": "http://5b0988e595225.cdn.sohucs.com/images/20180424/9d2dc769a2cd4e67aafe8cbcb8232399.jpeg",
+      "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+      "addTime": "2021-05-06T08:08:19.061Z",
+      "lastOnlineTime": "2021-05-06T08:17:15.719Z",
+      "__v": 0
+    },
+    {
+      "_id": "6093a3f3d108423c7878bf61",
+      "userName": "吉永老师",
+      "avatar": "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1130822459,84226094&fm=26&gp=0.jpg",
+      "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+      "addTime": "2021-05-06T08:08:19.062Z",
+      "lastOnlineTime": "2021-05-06T08:16:43.804Z",
+      "__v": 0
+    },
+    {
+      "_id": "6093a3f3d108423c7878bf62",
+      "userName": "松阪老师",
+      "avatar": "https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3979816364,2800671815&fm=26&gp=0.jpg",
+      "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+      "addTime": "2021-05-06T08:08:19.062Z",
+      "lastOnlineTime": "2021-05-06T08:17:57.549Z",
+      "__v": 0
+    },
+    {
+      "_id": "6093a3f3d108423c7878bf63",
+      "userName": "小新",
+      "avatar": "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=625378734,724788662&fm=26&gp=0.jpg",
+      "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+      "addTime": "2021-05-06T08:08:19.062Z",
+      "lastOnlineTime": "2021-05-06T08:18:43.749Z",
+      "__v": 0
+    },
+    {
+      "_id": "6093a3f3d108423c7878bf64",
+      "userName": "妮妮",
+      "avatar": "https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1497125011,3690775639&fm=26&gp=0.jpg",
+      "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+      "addTime": "2021-05-06T08:08:19.062Z",
+      "lastOnlineTime": "2021-05-06T08:19:49.419Z",
+      "__v": 0
+    },
+    {
+      "_id": "6093a3f3d108423c7878bf65",
+      "userName": "小爱",
+      "avatar": "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Ffjmingfeng.com%2Fimg%2F5%2F1844585851%2F62%2F92068755a7cd4c84926cb08324124a97%2F1248346421%2F018289662.jpg&refer=http%3A%2F%2Ffjmingfeng.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1622879400&t=fa48b3e29016f606345d6d677d771b59",
+      "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+      "addTime": "2021-05-06T08:08:19.062Z",
+      "lastOnlineTime": "2021-05-06T08:21:24.500Z",
+      "__v": 0
+    },
+    {
+      "_id": "6093a3f3d108423c7878bf66",
+      "userName": "风间",
+      "avatar": "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fitem%2F202002%2F18%2F20200218195704_nYCzu.thumb.400_0.jpeg&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1622880410&t=209f6d8aca5be527ab2cdb52d4ee09c2",
+      "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+      "addTime": "2021-05-06T08:08:19.062Z",
+      "lastOnlineTime": "2021-05-06T08:20:46.399Z",
+      "__v": 0
+    },
+    {
+      "_id": "6093a3f3d108423c7878bf67",
+      "userName": "阿呆",
+      "avatar": "https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=480400385,3478999265&fm=26&gp=0.jpg",
+      "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+      "addTime": "2021-05-06T08:08:19.063Z",
+      "lastOnlineTime": "2021-05-06T08:22:02.446Z",
+      "__v": 0
+    },
+    {
+      "_id": "6093a3f3d108423c7878bf68",
+      "userName": "正男",
+      "avatar": "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fitem%2F201710%2F07%2F20171007234324_CLATY.jpeg&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1622880477&t=4f4c5cb82d40612c532674427f59c7e8",
+      "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+      "addTime": "2021-05-06T08:08:19.063Z",
+      "lastOnlineTime": "2021-05-06T08:21:49.533Z",
+      "__v": 0
+    }
+  ],
+  "message": [
+    {
+      "_id": "6093a593afc84b0da88a4d42",
+      "sender": "6093a3f3d108423c7878bf60",
+      "receiver": "60955323331e3033105c2d26",
+      "receiverModel": "groupmodel",
+      "content": [
+        {
+          "_id": "6093a593afc84b0da88a4d43",
+          "kind": "TEXT",
+          "value": "小朋友们下午好啊"
+        }
+      ],
+      "addTime": "2021-05-06T08:15:15.160Z",
+      "__v": 0
+    },
+    {
+      "_id": "6093a5b1afc84b0da88a4d44",
+      "sender": "6093a3f3d108423c7878bf60",
+      "receiver": "60955323331e3033105c2d26",
+      "receiverModel": "groupmodel",
+      "content": [
+        {
+          "_id": "6093a5b1afc84b0da88a4d45",
+          "kind": "TEXT",
+          "value": "哈哈哈"
+        }
+      ],
+      "addTime": "2021-05-06T08:15:45.236Z",
+      "__v": 0
+    },
+    {
+      "_id": "6093a5c3afc84b0da88a4d46",
+      "sender": "6093a3f3d108423c7878bf60",
+      "receiver": "60955323331e3033105c2d26",
+      "receiverModel": "groupmodel",
+      "content": [
+        {
+          "_id": "6093a5c3afc84b0da88a4d47",
+          "kind": "IMG",
+          "value": "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fp4.ssl.cdn.btime.com%2Ft013cdb77301389afe1.gif%3Fsize%3D300x300&refer=http%3A%2F%2Fp4.ssl.cdn.btime.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1622880958&t=f21d445d5d936e5a622e572bde7b17f7"
+        }
+      ],
+      "addTime": "2021-05-06T08:16:03.043Z",
+      "__v": 0
+    },
+    {
+      "_id": "6093a5e0afc84b0da88a4d48",
+      "sender": "6093a3f3d108423c7878bf60",
+      "receiver": "60955323331e3033105c2d26",
+      "receiverModel": "groupmodel",
+      "content": [
+        {
+          "_id": "6093a5e0afc84b0da88a4d49",
+          "kind": "TEXT",
+          "value": "吉永老师"
+        }
+      ],
+      "addTime": "2021-05-06T08:16:32.564Z",
+      "__v": 0
+    },
+    {
+      "_id": "6093a5efafc84b0da88a4d4a",
+      "sender": "6093a3f3d108423c7878bf61",
+      "receiver": "60955323331e3033105c2d26",
+      "receiverModel": "groupmodel",
+      "content": [
+        {
+          "_id": "6093a5efafc84b0da88a4d4b",
+          "kind": "TEXT",
+          "value": "到"
+        }
+      ],
+      "addTime": "2021-05-06T08:16:47.687Z",
+      "__v": 0
+    },
+    {
+      "_id": "6093a5f3afc84b0da88a4d4c",
+      "sender": "6093a3f3d108423c7878bf61",
+      "receiver": "60955323331e3033105c2d26",
+      "receiverModel": "groupmodel",
+      "content": [
+        {
+          "_id": "6093a5f3afc84b0da88a4d4d",
+          "kind": "IMG",
+          "value": "https://gimg2.baidu.com/image_search/src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fq_70%2Cc_zoom%2Cw_640%2Fimages%2F20180807%2F682da6e197164111ba0923f294112a64.gif&refer=http%3A%2F%2F5b0988e595225.cdn.sohucs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1622881007&t=c7a4d591f1f25affeb8404399f91ad11"
+        }
+      ],
+      "addTime": "2021-05-06T08:16:51.997Z",
+      "__v": 0
+    },
+    {
+      "_id": "6093a611afc84b0da88a4d4e",
+      "sender": "6093a3f3d108423c7878bf60",
+      "receiver": "60955323331e3033105c2d26",
+      "receiverModel": "groupmodel",
+      "content": [
+        {
+          "_id": "6093a611afc84b0da88a4d4f",
+          "kind": "TEXT",
+          "value": "松阪老师"
+        }
+      ],
+      "addTime": "2021-05-06T08:17:21.859Z",
+      "__v": 0
+    },
+    {
+      "_id": "6093a62aafc84b0da88a4d50",
+      "sender": "6093a3f3d108423c7878bf60",
+      "receiver": "60955323331e3033105c2d26",
+      "receiverModel": "groupmodel",
+      "content": [
+        {
+          "_id": "6093a62aafc84b0da88a4d51",
+          "kind": "EMOJI",
+          "value": "彩虹"
+        }
+      ],
+      "addTime": "2021-05-06T08:17:46.602Z",
+      "__v": 0
+    },
+    {
+      "_id": "6093a639afc84b0da88a4d52",
+      "sender": "6093a3f3d108423c7878bf62",
+      "receiver": "60955323331e3033105c2d26",
+      "receiverModel": "groupmodel",
+      "content": [
+        {
+          "_id": "6093a639afc84b0da88a4d53",
+          "kind": "TEXT",
+          "value": "到"
+        }
+      ],
+      "addTime": "2021-05-06T08:18:01.845Z",
+      "__v": 0
+    },
+    {
+      "_id": "6093a640afc84b0da88a4d54",
+      "sender": "6093a3f3d108423c7878bf62",
+      "receiver": "60955323331e3033105c2d26",
+      "receiverModel": "groupmodel",
+      "content": [
+        {
+          "_id": "6093a640afc84b0da88a4d55",
+          "kind": "IMG",
+          "value": "https://gimg2.baidu.com/image_search/src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fimages%2F20180808%2F96d2f6fb99cc4729b2dc3505283160d7.gif&refer=http%3A%2F%2F5b0988e595225.cdn.sohucs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1622881085&t=78d88074e8dea3ad8e4588d10895dd19"
+        }
+      ],
+      "addTime": "2021-05-06T08:18:08.266Z",
+      "__v": 0
+    },
+    {
+      "_id": "6093a64dafc84b0da88a4d56",
+      "sender": "6093a3f3d108423c7878bf62",
+      "receiver": "60955323331e3033105c2d26",
+      "receiverModel": "groupmodel",
+      "content": [
+        {
+          "_id": "6093a64dafc84b0da88a4d57",
+          "kind": "IMG",
+          "value": "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Finews.gtimg.com%2Fnewsapp_match%2F0%2F10607367794%2F0.jpg&refer=http%3A%2F%2Finews.gtimg.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1622881098&t=3e7f0ced82d3e4275b971283996f8538"
+        }
+      ],
+      "addTime": "2021-05-06T08:18:21.628Z",
+      "__v": 0
+    },
+    {
+      "_id": "6093a655afc84b0da88a4d58",
+      "sender": "6093a3f3d108423c7878bf62",
+      "receiver": "60955323331e3033105c2d26",
+      "receiverModel": "groupmodel",
+      "content": [
+        {
+          "_id": "6093a655afc84b0da88a4d59",
+          "kind": "TEXT",
+          "value": "小新又去哪里了"
+        }
+      ],
+      "addTime": "2021-05-06T08:18:29.262Z",
+      "__v": 0
+    },
+    {
+      "_id": "6093a65cafc84b0da88a4d5a",
+      "sender": "6093a3f3d108423c7878bf62",
+      "receiver": "60955323331e3033105c2d26",
+      "receiverModel": "groupmodel",
+      "content": [
+        {
+          "_id": "6093a65cafc84b0da88a4d5b",
+          "kind": "TEXT",
+          "value": "快点出来"
+        }
+      ],
+      "addTime": "2021-05-06T08:18:36.807Z",
+      "__v": 0
+    },
+    {
+      "_id": "6093a66fafc84b0da88a4d5c",
+      "sender": "6093a3f3d108423c7878bf63",
+      "receiver": "60955323331e3033105c2d26",
+      "receiverModel": "groupmodel",
+      "content": [
+        {
+          "_id": "6093a66fafc84b0da88a4d5d",
+          "kind": "TEXT",
+          "value": "松阪老师好"
+        }
+      ],
+      "addTime": "2021-05-06T08:18:55.015Z",
+      "__v": 0
+    },
+    {
+      "_id": "6093a697afc84b0da88a4d5e",
+      "sender": "6093a3f3d108423c7878bf63",
+      "receiver": "60955323331e3033105c2d26",
+      "receiverModel": "groupmodel",
+      "content": [
+        {
+          "_id": "6093a697afc84b0da88a4d5f",
+          "kind": "EMOJI",
+          "value": "弱"
+        },
+        {
+          "_id": "6093a697afc84b0da88a4d60",
+          "kind": "EMOJI",
+          "value": "ok"
+        },
+        {
+          "_id": "6093a697afc84b0da88a4d61",
+          "kind": "EMOJI",
+          "value": "弱"
+        },
+        {
+          "_id": "6093a697afc84b0da88a4d62",
+          "kind": "EMOJI",
+          "value": "弱"
+        },
+        {
+          "_id": "6093a697afc84b0da88a4d63",
+          "kind": "EMOJI",
+          "value": "弱"
+        }
+      ],
+      "addTime": "2021-05-06T08:19:35.851Z",
+      "__v": 0
+    },
+    {
+      "_id": "6093a6afafc84b0da88a4d64",
+      "sender": "6093a3f3d108423c7878bf64",
+      "receiver": "60955323331e3033105c2d26",
+      "receiverModel": "groupmodel",
+      "content": [
+        {
+          "_id": "6093a6afafc84b0da88a4d65",
+          "kind": "TEXT",
+          "value": "一个一个登录累死我了"
+        }
+      ],
+      "addTime": "2021-05-06T08:19:59.247Z",
+      "__v": 0
+    },
+    {
+      "_id": "6093a6baafc84b0da88a4d66",
+      "sender": "6093a3f3d108423c7878bf64",
+      "receiver": "60955323331e3033105c2d26",
+      "receiverModel": "groupmodel",
+      "content": [
+        {
+          "_id": "6093a6baafc84b0da88a4d67",
+          "kind": "TEXT",
+          "value": "为了让大家都有机会露脸"
+        }
+      ],
+      "addTime": "2021-05-06T08:20:10.146Z",
+      "__v": 0
+    },
+    {
+      "_id": "6093a6c1afc84b0da88a4d68",
+      "sender": "6093a3f3d108423c7878bf64",
+      "receiver": "60955323331e3033105c2d26",
+      "receiverModel": "groupmodel",
+      "content": [
+        {
+          "_id": "6093a6c1afc84b0da88a4d69",
+          "kind": "AT",
+          "value": "小新"
+        },
+        {
+          "_id": "6093a6c1afc84b0da88a4d6a",
+          "kind": "TEXT",
+          "value": "小新"
+        }
+      ],
+      "addTime": "2021-05-06T08:20:17.344Z",
+      "__v": 0
+    },
+    {
+      "_id": "6093a6c8afc84b0da88a4d6b",
+      "sender": "6093a3f3d108423c7878bf64",
+      "receiver": "60955323331e3033105c2d26",
+      "receiverModel": "groupmodel",
+      "content": [
+        {
+          "_id": "6093a6c8afc84b0da88a4d6c",
+          "kind": "AT",
+          "value": "小新"
+        }
+      ],
+      "addTime": "2021-05-06T08:20:24.333Z",
+      "__v": 0
+    },
+    {
+      "_id": "6093a6d3afc84b0da88a4d6d",
+      "sender": "6093a3f3d108423c7878bf64",
+      "receiver": "60955323331e3033105c2d26",
+      "receiverModel": "groupmodel",
+      "content": [
+        {
+          "_id": "6093a6d3afc84b0da88a4d6e",
+          "kind": "TEXT",
+          "value": "来玩超真实扮家家酒"
+        }
+      ],
+      "addTime": "2021-05-06T08:20:35.156Z",
+      "__v": 0
+    },
+    {
+      "_id": "6093a6e3afc84b0da88a4d6f",
+      "sender": "6093a3f3d108423c7878bf66",
+      "receiver": "60955323331e3033105c2d26",
+      "receiverModel": "groupmodel",
+      "content": [
+        {
+          "_id": "6093a6e3afc84b0da88a4d70",
+          "kind": "TEXT",
+          "value": "好啊"
+        }
+      ],
+      "addTime": "2021-05-06T08:20:51.105Z",
+      "__v": 0
+    },
+    {
+      "_id": "6093a6e9afc84b0da88a4d71",
+      "sender": "6093a3f3d108423c7878bf66",
+      "receiver": "60955323331e3033105c2d26",
+      "receiverModel": "groupmodel",
+      "content": [
+        {
+          "_id": "6093a6e9afc84b0da88a4d72",
+          "kind": "TEXT",
+          "value": "最喜欢玩了"
+        }
+      ],
+      "addTime": "2021-05-06T08:20:57.136Z",
+      "__v": 0
+    },
+    {
+      "_id": "6093a6f3afc84b0da88a4d73",
+      "sender": "6093a3f3d108423c7878bf66",
+      "receiver": "60955323331e3033105c2d26",
+      "receiverModel": "groupmodel",
+      "content": [
+        {
+          "_id": "6093a6f3afc84b0da88a4d74",
+          "kind": "IMG",
+          "value": "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fwww.cdhuaying.com%2FAI_UpFi%2Fliuxue%2F2018%2F4%2F201848162948.gif&refer=http%3A%2F%2Fwww.cdhuaying.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1622881263&t=ded02da79ee03f73c559ef4e411bfdfa"
+        }
+      ],
+      "addTime": "2021-05-06T08:21:07.098Z",
+      "__v": 0
+    },
+    {
+      "_id": "6093a6f8afc84b0da88a4d75",
+      "sender": "6093a3f3d108423c7878bf66",
+      "receiver": "60955323331e3033105c2d26",
+      "receiverModel": "groupmodel",
+      "content": [
+        {
+          "_id": "6093a6f8afc84b0da88a4d76",
+          "kind": "TEXT",
+          "value": "ｸﾞｯ!(๑•̀ㅂ•́)و✧"
+        }
+      ],
+      "addTime": "2021-05-06T08:21:12.833Z",
+      "__v": 0
+    },
+    {
+      "_id": "6093a708afc84b0da88a4d77",
+      "sender": "6093a3f3d108423c7878bf65",
+      "receiver": "60955323331e3033105c2d26",
+      "receiverModel": "groupmodel",
+      "content": [
+        {
+          "_id": "6093a708afc84b0da88a4d78",
+          "kind": "TEXT",
+          "value": "哟呵"
+        }
+      ],
+      "addTime": "2021-05-06T08:21:28.812Z",
+      "__v": 0
+    },
+    {
+      "_id": "6093a724afc84b0da88a4d79",
+      "sender": "6093a3f3d108423c7878bf68",
+      "receiver": "60955323331e3033105c2d26",
+      "receiverModel": "groupmodel",
+      "content": [
+        {
+          "_id": "6093a724afc84b0da88a4d7a",
+          "kind": "TEXT",
+          "value": "那我看着好了"
+        }
+      ],
+      "addTime": "2021-05-06T08:21:56.424Z",
+      "__v": 0
+    },
+    {
+      "_id": "6093a73bafc84b0da88a4d7b",
+      "sender": "6093a3f3d108423c7878bf67",
+      "receiver": "60955323331e3033105c2d26",
+      "receiverModel": "groupmodel",
+      "content": [
+        {
+          "_id": "6093a73bafc84b0da88a4d7c",
+          "kind": "IMG",
+          "value": "https://gimg2.baidu.com/image_search/src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fq_mini%2Cc_zoom%2Cw_640%2Fimages%2F20170930%2F042b6c7e0cb440c683075408a1064b18.gif&refer=http%3A%2F%2F5b0988e595225.cdn.sohucs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1622881333&t=eab94334e3d914723e624cc3e22710e7"
+        }
+      ],
+      "addTime": "2021-05-06T08:22:19.543Z",
+      "__v": 0
+    },
+    {
+      "_id": "6093a743afc84b0da88a4d7d",
+      "sender": "6093a3f3d108423c7878bf67",
+      "receiver": "60955323331e3033105c2d26",
+      "receiverModel": "groupmodel",
+      "content": [
+        {
+          "_id": "6093a743afc84b0da88a4d7e",
+          "kind": "TEXT",
+          "value": "数据够了吗"
+        }
+      ],
+      "addTime": "2021-05-06T08:22:27.482Z",
+      "__v": 0
+    }
+  ]
+}

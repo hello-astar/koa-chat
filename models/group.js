@@ -2,11 +2,13 @@
  * @Author: astar
  * @Date: 2021-04-14 16:07:11
  * @LastEditors: astar
- * @LastEditTime: 2021-05-07 20:45:31
+ * @LastEditTime: 2021-05-08 09:56:45
  * @Description: 群组
  * @FilePath: \koa-chat\models\group.js
  */
 const { Schema } = require('mongoose');
+const { getIPAddress } = require('@utils');
+
 module.exports = {
   name: 'groupmodel',
   schema: {
@@ -37,7 +39,7 @@ module.exports = {
   virtual: {
     avatar: { // 群组头像设置为虚拟值
       get: function () {
-        return `http://192.168.0.102:3000/group/avatar?groupId=${this._id}`
+        return `http://${getIPAddress()}:3000/group/avatar?groupId=${this._id}`
       }
     }
   }
