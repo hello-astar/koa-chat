@@ -2,10 +2,13 @@
  * @author: astar
  * @Date: 2021-01-26 17:39:28
  * @LastEditors: astar
- * @LastEditTime: 2021-04-27 16:52:10
+ * @LastEditTime: 2021-05-08 15:08:02
  * @Description: 增强context对象
  * @FilePath: \koa-chat\middlewares\enhanceCtx.js
  */
+const jwt = require("jsonwebtoken");
+const config = require('@config');
+
 const enhanceCtx = () => {
   // 处理请求成功方法
   const render = ctx => {
@@ -31,10 +34,14 @@ const enhanceCtx = () => {
 
   // 获取用户信息
   const getUserInfo = ctx => {
-      const userController = require('@controllers').user;
-      if (!ctx.headers.authorization) return {}
-      let token = ctx.headers.authorization.split(' ')[1];
-      return { token, ...userController.getUserInfoByToken({ token }) };
+      try {
+        if (!ctx.headers.authorization) return {}
+        let token = ctx.headers.authorization.split(' ')[1];
+        return { token, ...jwt.verify(token, config.JWT_SECRET) };
+      } catch (e) {
+          console.log(e)
+          return {}
+      }
   }
 
   return async (ctx, next) => {

@@ -2,7 +2,7 @@
  * @author: astar
  * @Date: 2020-09-09 13:53:55
  * @LastEditors: astar
- * @LastEditTime: 2021-05-07 22:38:49
+ * @LastEditTime: 2021-05-08 15:05:41
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\user.js
  */
@@ -12,99 +12,100 @@ const privateDecrypt = require('@utils').privateDecrypt;
 const fs = require('fs');
 const crypto = require('crypto');
 const path = require('path');
-const UserModel = require('@models').getModel('usermodel');
 
-class UserController {
-  constructor () {
-    this.Model = UserModel;
-  }
+const getModel = require('@models').getModel;
+const userModel = getModel('usermodel');
+const groupModel = getModel('groupmodel');
 
-  /**
-   * 注册
-   * @author astar
-   * @date 2021-03-03 17:25
-   */
-  register ({ userName, avatar, password }) {
-    const privateKey = fs.readFileSync(path.join(__dirname, '../config/private.pem')).toString('utf8');
-    let originPassword = privateDecrypt(privateKey, 'astar', Buffer.from(password, 'base64'));
-    const hash = crypto.createHash('sha256');
-    // const pepper = 'astar'; // 服务器存一个固定盐，数据库存一个随机盐
-    // let sha256Pass = hash.update(hash.update(password) + salt).digest('hex');
-    let sha256Pass = hash.update(originPassword).digest('hex');
-    return this.Model.create({ userName, avatar, password: sha256Pass }).then(res => {
-      return {
-        _id: res._id,
-        userName: res.userName,
-        avatar: res.avatar,
-        addTime: res.addTime
-      };
-    }).catch((error) => {
-      if (error.name === 'MongoError' && error.code === 11000) {
-        return Promise.reject('该用户名已被占用');
-      }
-      if (error.name === 'ValidationError') {
-        let firstKey = Object.keys(error.errors)[0];
-        return Promise.reject(error.errors[firstKey].message);
-      }
-      return Promise.reject(error);
-    });
-  }
+const user = {};
 
-  /**
-   * 登录
-   * @author astar
-   * @date 2021-03-03 17:25
-   */
-  login ({ userName, password }) {
-    const privateKey = fs.readFileSync(path.join(__dirname, '../config/private.pem')).toString('utf8');
-    let originPassword = privateDecrypt(privateKey, 'astar', Buffer.from(password, 'base64'));
-    const hash = crypto.createHash('sha256');
-    let sha256Pass = hash.update(originPassword).digest('hex');
-    
-    return this.Model.findOne({ userName, password: sha256Pass }).then(async res => {
-      if (res) {
-        let lastOnlineTime = new Date();
-        let token = jwt.sign({
-            _id: res._id,
-            userName,
-            avatar: res.avatar,
-            lastOnlineTime
-          },
-          config.JWT_SECRET,
-          { expiresIn: "24h" }
-        );
-        // 更新最后在线时间
-        await this.Model.updateOne({ _id: res._id }, { lastOnlineTime });
-        return { token };
-      }
-      return Promise.reject('当前用户不存在或密码错误');
-    }).catch(e => {
-      return Promise.reject(e);
-    });
-  }
-
-  /**
-   * 根据token获取用户信息
-   * @author astar
-   * @date 2021-03-03 17:15
-   */
-  getUserInfoByToken ({ token }) {
-    try {
-      return jwt.verify(token, config.JWT_SECRET);
-    } catch (e) {
-      console.log('get_user_info_error: ', e);
-      return null;
+/**
+ * 注册用户
+ * @author astar
+ * @date 2021-05-08 14:31
+ */
+user.register = async ctx => {
+  ctx.verifyParams({
+    userName: { type: 'string', required: true },
+    avatar: { type: 'string', required: true },
+    password: { type: 'string', required: true },
+    captcha: { type: 'string', required: true }
+  });
+  
+  const { userName, avatar, password, captcha } = ctx.request.body;
+  
+  if (process.env.NODE_ENV !== 'development') {
+    if (captcha.toLowerCase() !== ctx.session.captcha.toLowerCase()) {
+      return ctx.sendError('验证码错误');
     }
   }
 
-  /**
-   * 查询数据库获取用户信息
-   * @author astar
-   * @date 2021-03-03 17:16
-   */
-  findUser (params) {
-    return this.Model.findOne(params);
-  }
-};
+  const privateKey = fs.readFileSync(path.join(__dirname, '../config/private.pem')).toString('utf8');
+  let originPassword = privateDecrypt(privateKey, 'astar', Buffer.from(password, 'base64'));
+  const hash = crypto.createHash('sha256');
+  // const pepper = 'astar'; // 服务器存一个固定盐，数据库存一个随机盐
+  // let sha256Pass = hash.update(hash.update(password) + salt).digest('hex');
+  let sha256Pass = hash.update(originPassword).digest('hex');
+  try {
+    let user = await userModel.create({ userName, avatar, password: sha256Pass });
+    // 加入默认群组
+    let defaultGroup = await groupModel.findOne({ isDefault: true });
+    if (defaultGroup) {
+      await groupModel.updateOne({ _id: defaultGroup._id }, { $addToSet: { 'members': user._id }});
+    }
+    ctx.send({
+      _id: user._id,
+      userName: user.userName,
+      avatar: user.avatar,
+      addTime: user.addTime
+    });
+  } catch (error) {
+    if (error.name === 'MongoError' && error.code === 11000) {
+      ctx.sendError('该用户名已被占用');
+    }
+    if (error.name === 'ValidationError') {
+      let firstKey = Object.keys(error.errors)[0];
+      return ctx.sendError(error.errors[firstKey].message);
+    }
+    return ctx.sendError(error);
+  };
+}
 
-module.exports = new UserController();
+user.login = async ctx => {
+  ctx.verifyParams({
+    userName: { type: 'string', required: true },
+    password: { type: 'string', required: true },
+    captcha: { type: 'string', required: true }
+  });
+
+  const { captcha, userName, password } = ctx.request.body;
+
+  if (process.env.NODE_ENV !== 'development') {
+    if (captcha.toLowerCase() !== ctx.session.captcha.toLowerCase()) {
+      return ctx.sendError('验证码错误');
+    }
+  }
+  
+  const privateKey = fs.readFileSync(path.join(__dirname, '../config/private.pem')).toString('utf8');
+  let originPassword = privateDecrypt(privateKey, 'astar', Buffer.from(password, 'base64'));
+  const hash = crypto.createHash('sha256');
+  let sha256Pass = hash.update(originPassword).digest('hex');
+  
+  let user = await userModel.findOne({ userName, password: sha256Pass });
+  if (!user) return ctx.sendError('当前用户不存在或密码错误');
+  // 更新最后在线时间
+  let lastOnlineTime = new Date();
+  let token = jwt.sign({
+      _id: user._id,
+      userName: user.userName,
+      avatar: user.avatar,
+      lastOnlineTime
+    },
+    config.JWT_SECRET,
+    { expiresIn: "24h" }
+  );
+  await userModel.updateOne({ _id: user._id }, { lastOnlineTime });
+  return ctx.send({ token });
+}
+
+module.exports = user;

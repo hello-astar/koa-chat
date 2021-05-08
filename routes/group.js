@@ -2,45 +2,24 @@
  * @Author: astar
  * @Date: 2021-04-19 13:58:06
  * @LastEditors: astar
- * @LastEditTime: 2021-05-07 23:00:53
+ * @LastEditTime: 2021-05-08 18:07:54
  * @Description: 文件描述
  * @FilePath: \koa-chat\routes\group.js
  */
 const Router = require('koa-router');
 const router = new Router();
 const groupController = require('@controllers').group;
-const userController = require('@controllers').user;
-const chatController = require('@controllers').chat;
+const saveController = require('@controllers').save;
+const queryController = require('@controllers').query;
 
-const { mergePics } = require('@utils');
+router.get('/getGroupAvatar', queryController.getGroupAvatar);
+router.post('/getRecentContacts', queryController.getRecentContacts);
+router.get('/getGroupInfo', queryController.getGroupInfo);
+
 
 router.get('/getGroups', async ctx => {
   const { _id } = ctx.userInfo;
   let res = await groupController.getGroups({ userId: _id });
-  ctx.send(res);
-});
-
-router.post('/addGroup', async ctx => {
-  ctx.verifyParams({
-    groupName: { type: 'string', required: true }
-  });
-  const { groupName } = ctx.request.body;
-  let { _id } = ctx.userInfo;
-  let res = await groupController.createGroup({ groupName, groupOwner: _id });
-  // 自动添加管理员提醒
-  const admin = await userController.findUser({ isAdmin: true });
-  const chat = { senderId: admin._id, content: [{ kind: 'TEXT', value: '欢迎' }], receiverId: res._id, receiverModel: 'groupmodel' };
-  await chatController.addChat(chat);
-  ctx.send(res);
-});
-
-router.get('/getGroupInfoByGroupId', async ctx => {
-  ctx.verifyParams({
-    groupId: { type: 'string', required: true }
-  });
-
-  const { groupId } = ctx.query;
-  let res = await groupController.getGroupInfoByGroupId({ groupId });
   ctx.send(res);
 });
 
@@ -49,31 +28,7 @@ router.post('/updateGroupNameByGroupId', async ctx => {
   let res = await groupController.updateGroupNameByGroupId({ groupId, groupName });
   ctx.send(res);
 });
+router.post('/addGroup', saveController.addGroup);
+router.post('/joinMemberToGroup', saveController.joinMemberToGroup);
 
-router.post('/joinMember', async ctx => {
-  const { userId, groupId } = ctx.request.body;
-  // 判断用户是否存在
-  let user = await userController.findUser({ _id: userId });
-  if (!user) {
-    return ctx.sendError('请输入正确用户ID');
-  }
-  let res = await groupController.joinMember({ groupId, userId });
-  ctx.send(res);
-})
-
-router.post('/exitGroup', async ctx => {
-  const { groupId } = ctx.request.body;
-  let { _id } = ctx.userInfo;
-  await groupController.exitGroupByUserId({ userId: _id, groupId });
-  ctx.send();
-})
-
-router.get('/avatar', async ctx => {
-  const { groupId } = ctx.query;
-  let groupInfo = await groupController.getGroupInfoByGroupId({ groupId });
-  let members = groupInfo.members.slice(0, 9);
-  let res = await mergePics(members.map(item => item.avatar)); // 最多获取九张头像
-  ctx.set('Content-Type', 'image/png');
-  ctx.response.body = res;
-})
 module.exports = router.routes();

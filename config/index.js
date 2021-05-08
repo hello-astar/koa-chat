@@ -9,13 +9,16 @@ exports.DATABASE = {
 };
 exports.JWT_SECRET = 'JWT_SECRET';
 
-exports.WHITE_WEBSITES = [];
+exports.WHITE_WEBSITES = ['https://192.168.22.54:2000', 'https://localhost:2000', 'http://192.168.22.54:2000', 'http://localhost:2000'];
 
-exports.NOT_NEED_TOKEN_PATH_REGS = [
+exports.NOT_NEED_TOKEN_PATH_REGS = process.env.NODE_ENV === 'development' ? [
+  /[\s\S]*/
+] : [
   /^\/user\/login/,
   /^\/user\/register/,
-  /^\/user\/getCaptcha/,
-  /^\/qiniu\/getToken/
+  /^\/tool\/getCaptcha/,
+  /^\/tool\/getQiniuToken/,
+  /^\/query\/getGroupAvatar/
 ]
 
 exports.PASSPHRASE = 'astar'
@@ -28,10 +31,10 @@ exports.KOA_SESSION = {
   maxAge: 86400000,
   autoCommit: true, /** (boolean) automatically commit headers (default true) */
   overwrite: true, /** (boolean) can overwrite or not (default true) */
-  httpOnly: true, /** (boolean) httpOnly or not (default true) */
+  httpOnly: true, /** (boolean) httpOnly or not (default true) */ // 只能服务器端访问
   signed: true, /** (boolean) signed or not (default true) */
   rolling: false, /** (boolean) Force a session identifier cookie to be set on every response. The expiration is reset to the original maxAge, resetting the expiration countdown. (default is false) */
   renew: false, /** (boolean) renew session when session is nearly expired, so we can always keep user logged in. (default is false)*/
-  secure: false, /** (boolean) secure cookie*/
-  sameSite: null, /** (string) session cookie sameSite options (default null, don't set it) */
+  secure: false, /** (boolean) secure cookie*/ // 安全/加密连接才能用
+  sameSite: null, /** (string) session cookie sameSite options (default null, don't set it) */ // lax、Strict、None（需要结合secure使用
 }
