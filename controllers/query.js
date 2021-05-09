@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-05-08 11:49:01
  * @LastEditors: astar
- * @LastEditTime: 2021-05-08 16:20:50
+ * @LastEditTime: 2021-05-09 10:25:15
  * @Description: 查询
  * @FilePath: \koa-chat\controllers\query.js
  */
@@ -160,7 +160,7 @@ query.getRecentContacts = async ctx => {
         avatar: {
           $cond: {
             if: '$_id.isGroup',
-            then: { $concat: [`http://${getIPAddress()}:3000/query/getGroupAvatar?groupId=`, { '$toString' : '$_id.contactId' }] },
+            then: { $concat: [`http://${getIPAddress()}:3000/group/getGroupAvatar?groupId=`, { '$toString' : '$_id.contactId' }] },
             else: '$_id.avatar'
           }
         },

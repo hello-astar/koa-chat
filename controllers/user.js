@@ -2,7 +2,7 @@
  * @author: astar
  * @Date: 2020-09-09 13:53:55
  * @LastEditors: astar
- * @LastEditTime: 2021-05-08 15:05:41
+ * @LastEditTime: 2021-05-09 10:21:48
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\user.js
  */
@@ -61,7 +61,7 @@ user.register = async ctx => {
     });
   } catch (error) {
     if (error.name === 'MongoError' && error.code === 11000) {
-      ctx.sendError('该用户名已被占用');
+      return ctx.sendError('该用户名已被占用');
     }
     if (error.name === 'ValidationError') {
       let firstKey = Object.keys(error.errors)[0];

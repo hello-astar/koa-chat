@@ -39,7 +39,7 @@ module.exports = {
   virtual: {
     avatar: { // 群组头像设置为虚拟值
       get: function () {
-        return `http://${getIPAddress()}:3000/query/getGroupAvatar?groupId=${this._id}`
+        return `http://${getIPAddress()}:3000/group/getGroupAvatar?groupId=${this._id}`
       }
     }
   }

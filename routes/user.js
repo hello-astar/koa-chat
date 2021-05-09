@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-02-06 15:43:45
  * @LastEditors: astar
- * @LastEditTime: 2021-05-08 18:11:51
+ * @LastEditTime: 2021-05-09 10:23:41
  * @Description: 文件描述
  * @FilePath: \koa-chat\routes\user.js
  */
@@ -16,6 +16,6 @@ router.post('/login', userController.login);
 router.get('/getUserInfo', ctx => {
   ctx.send(ctx.userInfo);
 });
-router.get('/getRecentContacts', queryController.getRecentContacts);
+router.post('/getRecentContacts', queryController.getRecentContacts);
 
 module.exports = router.routes();
