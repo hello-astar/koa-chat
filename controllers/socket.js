@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-05-08 16:36:51
  * @LastEditors: astar
- * @LastEditTime: 2021-05-09 23:41:18
+ * @LastEditTime: 2021-05-10 00:05:39
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\socket.js
  */
@@ -26,9 +26,9 @@ socket.handleSocketConnect = async (io, socket) => {
 socket.handleReceiveMessage = async (io, socket, msg) => {
   const { _id, lastOnlineTime } = socket.decoded_token;
   const userInfo = await userModel.findOne({ _id });
-  if (!userInfo) return socket.$emit('error', { type: 'logout', msg: '未授权，请重新登录' });
+  if (!userInfo) return socket.emit('error', { type: 'logout', msg: '未授权，请重新登录' });
   if(new Date(lastOnlineTime).getTime() !== new Date(userInfo.lastOnlineTime).getTime()) {
-    return socket.$emit('error', { type: 'logout', msg: '未授权，请重新登录' });
+    return socket.emit('error', { type: 'logout', msg: '未授权，请重新登录' });
   }
 
   try {
