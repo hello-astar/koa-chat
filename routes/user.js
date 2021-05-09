@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-02-06 15:43:45
  * @LastEditors: astar
- * @LastEditTime: 2021-05-09 19:54:03
+ * @LastEditTime: 2021-05-09 23:50:22
  * @Description: 文件描述
  * @FilePath: \koa-chat\routes\user.js
  */
@@ -19,4 +19,5 @@ router.post('/getRecentContacts', userController.getRecentContacts);
 router.post('/addFriend', userController.addFriend);
 router.get('/getMyGroups', userController.getMyGroups);
 router.get('/getMyFriends', userController.getMyFriends);
+router.post('/checkIsMyFriend', userController.checkIsMyFriend);
 module.exports = router.routes();

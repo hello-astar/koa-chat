@@ -2,7 +2,7 @@
  * @author: astar
  * @Date: 2020-09-09 13:53:55
  * @LastEditors: astar
- * @LastEditTime: 2021-05-09 21:03:06
+ * @LastEditTime: 2021-05-09 23:53:22
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\user.js
  */
@@ -314,5 +314,19 @@ user.getMyGroups = async ctx => {
 user.getMyFriends = async ctx => {
   let res = await userModel.findOne({ _id: ctx.userInfo._id }, { friends: 1 }).populate('friends', ['userName', 'avatar']);
   ctx.send(res.friends);
+}
+
+/**
+* 判断是否为我的好友
+* @author astar
+* @date 2021-05-09 23:48
+*/
+user.checkIsMyFriend = async ctx => {
+  ctx.verifyParams({
+    userId: { type: 'string', required: 'true' }
+  });
+  const { userId } = ctx.request.body;
+  let res = await userModel.findOne({ _id: ctx.userInfo._id, friends: { $in: userId }});
+  ctx.send(res ? true : false);
 }
 module.exports = user;
