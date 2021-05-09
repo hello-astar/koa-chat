@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-05-08 16:36:51
  * @LastEditors: astar
- * @LastEditTime: 2021-05-08 17:30:06
+ * @LastEditTime: 2021-05-09 23:41:18
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\socket.js
  */
@@ -55,6 +55,7 @@ socket.handleReceiveMessage = async (io, socket, msg) => {
     } else { // 发送给个人
       let online = io.onlineList.find(item => String(item.decoded_token._id) === String(msg.receiverId));
       online && online.emit('message', chatInfo);
+      socket.emit('message', chatInfo);
     }
   } catch (e) {
     console.log(e)
