@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-05-06 11:22:15
  * @LastEditors: astar
- * @LastEditTime: 2021-05-08 15:03:08
+ * @LastEditTime: 2021-05-09 20:12:12
  * @Description: 初始化文档
  * @FilePath: \koa-chat\init\index.js
  */
@@ -35,13 +35,13 @@ const testData = require('./data/test.json');
   }
 
   async function initTest () {
-    let res = await userModel.insertMany(userList);
+    let res = await userModel.insertMany(testData.user);
     // 加入默认群组
     let defaultGroup = await groupModel.findOne({ isDefault: true });
     if (defaultGroup) {
       await groupModel.updateOne({ _id: defaultGroup._id }, { $addToSet: { members: { $each: res.map(item => item._id) }}})
     }
-    console.log('初始化用户成功');
+    console.log('初始化测试用户成功');
   }
 
   async function initMessage () {
@@ -50,7 +50,7 @@ const testData = require('./data/test.json');
   }
   try {
     await initDefault(); // 初始化系统默认数据
-    // await initTest(); // 初始化测试数据 // 可以不初始化
+    await initTest(); // 初始化测试数据 // 可以不初始化
     console.log('All Done!')
   } catch (e) {
     console.log(e)

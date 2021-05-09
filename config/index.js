@@ -11,14 +11,14 @@ exports.JWT_SECRET = 'JWT_SECRET';
 
 exports.WHITE_WEBSITES = ['https://192.168.22.54:2000', 'https://localhost:2000', 'http://192.168.22.54:2000', 'http://localhost:2000'];
 
-exports.NOT_NEED_TOKEN_PATH_REGS = process.env.NODE_ENV === 'development' ? [
+exports.NOT_NEED_TOKEN_PATH_REGS = process.env.NODE_ENV !== 'development' ? [
   /[\s\S]*/
 ] : [
   /^\/user\/login/,
   /^\/user\/register/,
   /^\/tool\/getCaptcha/,
   /^\/tool\/getQiniuToken/,
-  /^\/query\/getGroupAvatar/
+  /^\/group\/getGroupAvatar/
 ]
 
 exports.PASSPHRASE = 'astar'
