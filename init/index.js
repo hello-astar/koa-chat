@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-05-06 11:22:15
  * @LastEditors: astar
- * @LastEditTime: 2021-05-09 20:12:12
+ * @LastEditTime: 2021-05-10 15:55:48
  * @Description: 初始化文档
  * @FilePath: \koa-chat\init\index.js
  */
@@ -41,14 +41,19 @@ const testData = require('./data/test.json');
     if (defaultGroup) {
       await groupModel.updateOne({ _id: defaultGroup._id }, { $addToSet: { members: { $each: res.map(item => item._id) }}})
     }
+    // 聊天记录
+    await chatModel.insertMany(testData.message);
     console.log('初始化测试用户成功');
   }
 
-  async function initMessage () {
-    await chatModel.insertMany(messageList);
-    console.log('初始化群消息成功');
-  }
+  // async function readDatabase () {
+  //   const fs = require('fs');
+  //   const path = require('path');
+  //   let chat = await userModel.find({ isAdmin: false });
+  //   fs.writeFileSync(path.join(__dirname, './data/database.json'), JSON.stringify(chat), 'utf8');
+  // }
   try {
+    // await readDatabase()
     await initDefault(); // 初始化系统默认数据
     await initTest(); // 初始化测试数据 // 可以不初始化
     console.log('All Done!')
