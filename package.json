@@ -1,6 +1,6 @@
 {
   "name": "koa-chat",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "node koa chat socket.io",
   "main": "app.js",
   "scripts": {
