@@ -61,10 +61,18 @@ app.use(koaCompress({
 }));
 app.use(koaStatic(path.resolve(__dirname, 'static'), { maxage: 10 * 1000, gzip: true })); // 强缓存10s // cache-control // 托管静态文件
 app.use(koaConditional()); // 10smaxage后走last-modified(协商缓存)
-app.use(logger());
-app.use(koaSession(config.KOA_SESSION, app));
-app.use(bodyParser()); // 解析body参数
 app.use(setWhiteList(config.WHITE_WEBSITES)); // 白名单
+app.use(logger());
+app.use(async (ctx, next) => {
+  let koaSessionConfig = {
+    ...config.KOA_SESSION,
+    // https://www.ruanyifeng.com/blog/2019/09/cookie-samesite.html
+    sameSite: config.WHITE_WEBSITES.includes(ctx.request.header.origin) ? 'none' : null,
+    secure: config.WHITE_WEBSITES.includes(ctx.request.header.origin)
+  }
+  return koaSession(koaSessionConfig, app)(ctx, next)
+});
+app.use(bodyParser()); // 解析body参数
 app.use(
   koaJwt({ secret: config.JWT_SECRET }).unless({
     path: config.NOT_NEED_TOKEN_PATH_REGS
