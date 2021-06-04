@@ -67,11 +67,12 @@ app.use(async (ctx, next) => {
   let koaSessionConfig = {
     ...config.KOA_SESSION,
     // https://www.ruanyifeng.com/blog/2019/09/cookie-samesite.html
-    sameSite: config.WHITE_WEBSITES.includes(ctx.request.header.origin) ? 'none' : null,
-    secure: config.WHITE_WEBSITES.includes(ctx.request.header.origin)
+    sameSite: ctx.req.url.includes('/tool/getCaptcha') ? 'none' : null,
+    secure: ctx.req.url.includes('/tool/getCaptcha')
   }
   return koaSession(koaSessionConfig, app)(ctx, next)
 });
+// app.use(koaSession(config.KOA_SESSION, app))
 app.use(bodyParser()); // 解析body参数
 app.use(
   koaJwt({ secret: config.JWT_SECRET }).unless({
