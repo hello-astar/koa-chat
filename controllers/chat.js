@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: astar
  * @Date: 2021-05-09 19:55:25
- * @LastEditTime: 2021-06-16 00:57:41
+ * @LastEditTime: 2021-06-16 01:02:04
  * @LastEditors: astar
  */
 const getModel = require('@models').getModel;
@@ -17,7 +17,7 @@ let chat = {};
  chat.getHistoryChatByCount = async ctx => {
   ctx.verifyParams({
     receiverId: { type: 'string', required: true },
-    isGroup: { type: 'boolean', required: true },
+    isGroup: { type: 'string', required: true },
     fetchCount: { type: 'string', required: true }
   });
 
