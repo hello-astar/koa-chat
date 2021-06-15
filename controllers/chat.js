@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: astar
  * @Date: 2021-05-09 19:55:25
- * @LastEditTime: 2021-05-09 20:00:40
+ * @LastEditTime: 2021-06-16 00:57:41
  * @LastEditors: astar
  */
 const getModel = require('@models').getModel;
@@ -17,11 +17,23 @@ let chat = {};
  chat.getHistoryChatByCount = async ctx => {
   ctx.verifyParams({
     receiverId: { type: 'string', required: true },
+    isGroup: { type: 'boolean', required: true },
     fetchCount: { type: 'string', required: true }
   });
 
-  const { receiverId, startId, fetchCount } = ctx.query;
-  let res = await chatModel.find(startId ? { receiver: receiverId, _id: { $lt: startId } } : { receiver: receiverId })
+  const { receiverId, startId, fetchCount, isGroup } = ctx.query;
+
+  let query = {
+    receiverModel: isGroup ? 'groupmodel' : 'usermodel',
+    receiver: receiverId
+  }
+  if (startId) {
+    params._id = { $lt: startId }
+  }
+  if (!isGroup) {
+    params.sender = ctx.userInfo._id
+  }
+  let res = await chatModel.find(query)
             .sort({ addTime: -1 })
             .limit(Number(fetchCount))
             .populate('sender', ['userName', 'avatar'])
