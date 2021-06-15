@@ -1,12 +1,13 @@
 {
   "name": "koa-chat",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "node koa chat socket.io",
   "main": "app.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon node app.js",
     "dev:debug": "cross-env NODE_ENV=development DEBUG=* nodemon node app.js",
     "init": "node init/index.js",
+    "version": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -60,6 +61,12 @@
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
+    "cz-conventional-changelog": "^3.3.0",
     "nodemon": "^2.0.7"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
