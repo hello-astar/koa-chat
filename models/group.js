@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-04-14 16:07:11
  * @LastEditors: astar
- * @LastEditTime: 2021-06-15 18:18:28
+ * @LastEditTime: 2021-06-15 18:22:24
  * @Description: 群组
  * @FilePath: \koa-chat\models\group.js
  */
@@ -39,7 +39,7 @@ module.exports = {
   virtual: {
     avatar: { // 群组头像设置为虚拟值
       get: function () {
-        return `https://${config.BASE_URL}/group/getGroupAvatar?groupId=${this._id}`
+        return `${config.BASE_URL}/group/getGroupAvatar?groupId=${this._id}`
       }
     }
   }
