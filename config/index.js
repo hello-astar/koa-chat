@@ -1,5 +1,5 @@
 exports.PORT = 3000;
-exports.BASE_URL = 'http://192.168.22.173';
+exports.BASE_URL = 'https://1.15.88.142';
 exports.DATABASE = {
   dbName: 'chat_db',
   host: 'localhost',

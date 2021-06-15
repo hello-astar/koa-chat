@@ -2,7 +2,7 @@
  * @author: astar
  * @Date: 2020-09-09 13:53:55
  * @LastEditors: astar
- * @LastEditTime: 2021-05-09 23:53:22
+ * @LastEditTime: 2021-06-15 18:17:50
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\user.js
  */
@@ -13,9 +13,9 @@ const fs = require('fs');
 const crypto = require('crypto');
 const path = require('path');
 const Mongoose = require('mongoose');
-const { getIPAddress } = require('@utils');
 
 const getModel = require('@models').getModel;
+const { BASE_URL } = require("../config");
 const userModel = getModel('usermodel');
 const groupModel = getModel('groupmodel');
 const chatModel = getModel('chatmodel');
@@ -216,7 +216,7 @@ user.addFriend = async ctx => {
             $project: {
               name: '$groupName',
               isDefault: 1,
-              avatar: { $concat: [`http://${getIPAddress()}:3000/group/getGroupAvatar?groupId=`, { '$toString' : '$_id' }] }
+              avatar: { $concat: [`https://${config.BASE_URL}/group/getGroupAvatar?groupId=`, { '$toString' : '$_id' }] }
             }
           }
         ],
