@@ -44,7 +44,7 @@ const httpsio = require('socket.io')(serverhttps, {
 parameter(app); // 参数校验
 
 // 中间件
-app.use(handleError());
+app.use(koaStatic(path.resolve(__dirname, 'static'), { maxage: 10 * 1000, gzip: true })); // 强缓存10s // cache-control // 托管静态文件
 app.use(koaCompress({
   filter (content_type) {
     // console.log(/image/gi.test(content_type))
@@ -59,8 +59,8 @@ app.use(koaCompress({
   },
   br: false // disable brotli
 }));
-app.use(koaStatic(path.resolve(__dirname, 'static'), { maxage: 10 * 1000, gzip: true })); // 强缓存10s // cache-control // 托管静态文件
 app.use(koaConditional()); // 10smaxage后走last-modified(协商缓存)
+app.use(handleError());
 app.use(setWhiteList(config.WHITE_WEBSITES)); // 白名单
 app.use(logger());
 app.use(async (ctx, next) => {
