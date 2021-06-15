@@ -2,6 +2,7 @@ require('module-alias/register');
 const Koa = require('koa');
 const koaStatic = require('koa-static'); // 静态文件
 const koaConditional = require('koa-conditional-get'); // 协商缓存
+const koaEtag = require('koa-etag');
 const path = require('path');
 const config = require('@config');
 const { getIPAddress } = require('@utils');
@@ -44,6 +45,8 @@ const httpsio = require('socket.io')(serverhttps, {
 parameter(app); // 参数校验
 
 // 中间件
+app.use(koaConditional()); // 10smaxage后走last-modified(协商缓存)
+app.use(koaEtag());
 app.use(koaStatic(path.resolve(__dirname, 'static'), { maxage: 10 * 1000, gzip: true })); // 强缓存10s // cache-control // 托管静态文件
 app.use(koaCompress({
   filter (content_type) {
@@ -59,7 +62,6 @@ app.use(koaCompress({
   },
   br: false // disable brotli
 }));
-app.use(koaConditional()); // 10smaxage后走last-modified(协商缓存)
 app.use(handleError());
 app.use(setWhiteList(config.WHITE_WEBSITES)); // 白名单
 app.use(logger());
@@ -102,10 +104,10 @@ httpsio.on('connection', handleSocket(httpsio));
 //   console.error('server error')
 // );
 
-server.listen(config.PORT, () => {
+server.listen(config.HTTP_PORT, () => {
   console.log(`http://${getIPAddress()}:${config.PORT}`)
 });
 
-serverhttps.listen(443, () => {
+serverhttps.listen(config.HTTPS_PORT, () => {
   console.log(`https://${getIPAddress()}`)
 });

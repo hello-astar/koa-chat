@@ -34,6 +34,7 @@
     "koa-bodyparser": "^4.3.0",
     "koa-compress": "^5.0.1",
     "koa-conditional-get": "^3.0.0",
+    "koa-etag": "^4.0.0",
     "koa-json-error": "^3.1.2",
     "koa-jwt": "^4.0.0",
     "koa-logger": "^3.2.1",

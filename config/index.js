@@ -1,4 +1,5 @@
-exports.PORT = 3000;
+exports.HTTP_PORT = 3000;
+exports.HTTPS_PORT = 3001;
 exports.BASE_URL = 'https://1.15.88.142';
 exports.DATABASE = {
   dbName: 'chat_db',
