@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: astar
  * @Date: 2021-05-09 19:55:25
- * @LastEditTime: 2021-06-16 01:02:04
+ * @LastEditTime: 2021-06-16 10:15:24
  * @LastEditors: astar
  */
 const getModel = require('@models').getModel;
@@ -24,14 +24,14 @@ let chat = {};
   const { receiverId, startId, fetchCount, isGroup } = ctx.query;
 
   let query = {
-    receiverModel: isGroup ? 'groupmodel' : 'usermodel',
-    receiver: receiverId
+    receiverModel: isGroup ? 'groupmodel' : 'usermodel'
   }
   if (startId) {
-    params._id = { $lt: startId }
+    query._id = { $lt: startId }
+    query.receiver = receiverId
   }
   if (!isGroup) {
-    params.sender = ctx.userInfo._id
+    query.sender = {$or: [{ sender: ctx.userInfo._id, receiver: receiverId }, { sender: receiverId, receiver: ctx.userInfo._id }] } 
   }
   let res = await chatModel.find(query)
             .sort({ addTime: -1 })
