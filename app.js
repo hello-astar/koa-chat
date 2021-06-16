@@ -67,10 +67,13 @@ app.use(setWhiteList(config.WHITE_WEBSITES)); // 白名单
 app.use(logger());
 app.use(async (ctx, next) => {
   let koaSessionConfig = {
-    ...config.KOA_SESSION,
-    // https://www.ruanyifeng.com/blog/2019/09/cookie-samesite.html
-    sameSite: ctx.req.url.includes('/tool/getCaptcha') ? 'none' : null,
-    secure: ctx.req.url.includes('/tool/getCaptcha')
+    ...config.KOA_SESSION
+  }
+  // 测试环境支持跨站请求cookie
+  // https://www.ruanyifeng.com/blog/2019/09/cookie-samesite.html
+  if (process.env.NODE_ENV === 'development') {
+    koaSessionConfig.sameSite = ctx.req.url.includes('/tool/getCaptcha') ? 'none' : null
+    koaSessionConfig.secure = ctx.req.url.includes('/tool/getCaptcha')
   }
   return koaSession(koaSessionConfig, app)(ctx, next)
 });
