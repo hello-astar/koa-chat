@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-05-08 17:48:49
  * @LastEditors: astar
- * @LastEditTime: 2021-05-09 10:39:02
+ * @LastEditTime: 2021-06-18 15:45:53
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\tool.js
  */
@@ -79,5 +79,10 @@ tool.getBaiduImage = async ctx => {
   } else {
     ctx.send([]);
   }
+}
+
+tool.uploadImg = async ctx => {
+  console.log(ctx.request.files, ctx.request.files.file.path);
+  ctx.send(ctx.request.files.file.path);
 }
 module.exports = tool;

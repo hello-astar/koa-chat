@@ -6,7 +6,7 @@ const koaEtag = require('koa-etag');
 const path = require('path');
 const config = require('@config');
 const { getIPAddress } = require('@utils');
-const bodyParser = require('koa-bodyparser'); // 解析post请求body
+const koaBody = require('koa-body'); // 解析post请求body
 const parameter = require('koa-parameter'); // 校验接口参数
 const koaSession = require('koa-session'); // 使用session,保存验证码数据
 const koaCompress = require('koa-compress'); // 开启gzip
@@ -45,9 +45,10 @@ const httpsio = require('socket.io')(serverhttps, {
 parameter(app); // 参数校验
 
 // 中间件
-app.use(koaConditional()); // 10smaxage后走last-modified(协商缓存)
+app.use(koaConditional()); // 使协商缓存返回304 // koa-static自动加上了last-modified
 app.use(koaEtag());
 app.use(koaStatic(path.resolve(__dirname, 'static'), { maxage: 10 * 1000, gzip: true })); // 强缓存10s // cache-control // 托管静态文件
+app.use(koaStatic(path.resolve(__dirname, 'public'), { maxage: 10 * 1000, gzip: true })); // 强缓存10s // cache-control // 托管静态文件
 app.use(koaCompress({
   filter (content_type) {
     // console.log(/image/gi.test(content_type))
@@ -71,14 +72,25 @@ app.use(async (ctx, next) => {
   }
   // 测试环境支持跨站请求cookie
   // https://www.ruanyifeng.com/blog/2019/09/cookie-samesite.html
-  if (process.env.NODE_ENV === 'development') {
-    koaSessionConfig.sameSite = ctx.req.url.includes('/tool/getCaptcha') ? 'none' : null
-    koaSessionConfig.secure = ctx.req.url.includes('/tool/getCaptcha')
+  if (process.env.NODE_ENV === 'development'
+      && ctx.request.origin.includes('https')
+      && ctx.request.header['sec-fetch-site'] === 'cross-site'
+      && ctx.req.url.includes('/tool/getCaptcha')) {
+    koaSessionConfig.sameSite = 'none'
+    koaSessionConfig.secure = true
   }
   return koaSession(koaSessionConfig, app)(ctx, next)
 });
 // app.use(koaSession(config.KOA_SESSION, app))
-app.use(bodyParser()); // 解析body参数
+app.use(koaBody({
+  multipart: true,
+  formidable:{
+    uploadDir:path.join(__dirname,'public/upload/'), // 设置文件上传目录
+    keepExtensions: true,    // 保持文件的后缀
+    onFileBegin:(name,file) => { // 文件上传前的设置
+    }
+  }
+})); // 解析body参数
 app.use(
   koaJwt({ secret: config.JWT_SECRET }).unless({
     path: config.NOT_NEED_TOKEN_PATH_REGS
@@ -108,9 +120,9 @@ httpsio.on('connection', handleSocket(httpsio));
 // );
 
 server.listen(config.HTTP_PORT, () => {
-  console.log(`http://${getIPAddress()}:${config.PORT}`)
+  console.log(`http://${getIPAddress()}:${config.HTTP_PORT}`)
 });
 
 serverhttps.listen(config.HTTPS_PORT, () => {
-  console.log(`https://${getIPAddress()}`)
+  console.log(`https://${getIPAddress()}:${config.HTTPS_PORT}`)
 });
