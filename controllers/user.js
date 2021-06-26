@@ -2,7 +2,7 @@
  * @author: astar
  * @Date: 2020-09-09 13:53:55
  * @LastEditors: astar
- * @LastEditTime: 2021-06-15 18:22:16
+ * @LastEditTime: 2021-06-26 17:02:33
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\user.js
  */
@@ -37,10 +37,8 @@ user.register = async ctx => {
   
   const { userName, avatar, password, captcha } = ctx.request.body;
   
-  if (process.env.NODE_ENV !== 'development') {
-    if (captcha.toLowerCase() !== ctx.session.captcha.toLowerCase()) {
-      return ctx.sendError('验证码错误');
-    }
+  if (captcha.toLowerCase() !== ctx.session.captcha.toLowerCase()) {
+    return ctx.sendError('验证码错误');
   }
 
   const privateKey = fs.readFileSync(path.join(__dirname, '../config/private.pem')).toString('utf8');
@@ -56,6 +54,7 @@ user.register = async ctx => {
     if (defaultGroup) {
       await groupModel.updateOne({ _id: defaultGroup._id }, { $addToSet: { 'members': user._id }});
     }
+    ctx.session = null
     ctx.send({
       _id: user._id,
       userName: user.userName,
@@ -83,12 +82,9 @@ user.login = async ctx => {
 
   const { captcha, userName, password } = ctx.request.body;
 
-  if (process.env.NODE_ENV !== 'development') {
-    if (captcha.toLowerCase() !== ctx.session.captcha.toLowerCase()) {
-      return ctx.sendError('验证码错误');
-    }
+  if (captcha.toLowerCase() !== ctx.session.captcha.toLowerCase()) {
+    return ctx.sendError('验证码错误');
   }
-  
   const privateKey = fs.readFileSync(path.join(__dirname, '../config/private.pem')).toString('utf8');
   let originPassword = privateDecrypt(privateKey, 'astar', Buffer.from(password, 'base64'));
   const hash = crypto.createHash('sha256');
@@ -108,6 +104,7 @@ user.login = async ctx => {
     { expiresIn: "24h" }
   );
   await userModel.updateOne({ _id: user._id }, { lastOnlineTime });
+  ctx.session = null
   return ctx.send({ token });
 }
 
