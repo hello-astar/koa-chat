@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-05-08 17:48:49
  * @LastEditors: astar
- * @LastEditTime: 2021-06-18 15:45:53
+ * @LastEditTime: 2021-07-04 17:06:52
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\tool.js
  */
@@ -10,6 +10,7 @@ const svgCaptcha = require('svg-captcha');
 const qiniu = require('qiniu');
 const axios = require('axios');
 const { decodeBaiduImgURL } = require('@utils');
+const { BASE_URL } = require('../config');
 
 const tool = {};
 
@@ -83,6 +84,7 @@ tool.getBaiduImage = async ctx => {
 
 tool.uploadImg = async ctx => {
   console.log(ctx.request.files, ctx.request.files.file.path);
-  ctx.send(ctx.request.files.file.path);
+  let name = ctx.request.files.file.path.split('\\').pop()
+  ctx.send(`${BASE_URL}/upload/${name}`);
 }
 module.exports = tool;

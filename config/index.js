@@ -1,3 +1,10 @@
+/*
+ * @Description: 
+ * @Author: astar
+ * @Date: 2021-07-02 17:54:23
+ * @LastEditTime: 2021-07-04 17:06:26
+ * @LastEditors: astar
+ */
 exports.HTTP_PORT = 3000;
 exports.HTTPS_PORT = 3001;
 exports.BASE_URL = 'https://1.15.88.142';
@@ -10,7 +17,9 @@ exports.DATABASE = {
 };
 exports.JWT_SECRET = 'JWT_SECRET';
 
-exports.WHITE_WEBSITES = ['https://192.168.22.54:2000', 'https://localhost:2000', 'http://192.168.22.54:2000', 'http://localhost:2000'];
+exports.WHITE_WEBSITES = ['https://192.168.0.102:2000', 'https://localhost:2000'];
+
+exports.DEFAULT_VAVTAR = 'https://tupian.qqw21.com/article/UploadPic/2018-1/20181721495856428.gif';
 
 exports.NOT_NEED_TOKEN_PATH_REGS = process.env.NODE_ENV !== 'development' ? [
   /[\s\S]*/
