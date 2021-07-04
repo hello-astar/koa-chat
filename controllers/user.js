@@ -2,7 +2,7 @@
  * @author: astar
  * @Date: 2020-09-09 13:53:55
  * @LastEditors: astar
- * @LastEditTime: 2021-07-04 16:57:02
+ * @LastEditTime: 2021-07-05 01:58:03
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\user.js
  */
@@ -104,8 +104,27 @@ user.login = async ctx => {
     { expiresIn: "24h" }
   );
   await userModel.updateOne({ _id: user._id }, { lastOnlineTime });
-  ctx.session = null
+  ctx.session = null;
   return ctx.send({ token });
+}
+
+user.editUser = async ctx => {
+  const { userName, avatar, oldPassword, newPassword, signature } = ctx.request.body;
+  let sha256NewPass = ''
+  if (newPassword) {
+    const privateKey = fs.readFileSync(path.join(__dirname, '../config/private.pem')).toString('utf8');
+    let originPassword = privateDecrypt(privateKey, 'astar', Buffer.from(oldPassword, 'base64'));
+    let originNewPass = privateDecrypt(privateKey, 'astar', Buffer.from(newPassword, 'base64'));
+    let sha256Pass = crypto.createHash('sha256').update(originPassword).digest('hex');
+    sha256NewPass = crypto.createHash('sha256').update(originNewPass).digest('hex');
+    
+    let user = await userModel.findOne({ _id: ctx.userInfo._id, password: sha256Pass });
+    if (!user) return ctx.sendError('旧密码输入错误，无法修改密码！');
+  }
+  let params = { signature: signature || '', userName, avatar, lastOnlineTime: new Date() };
+  if (newPassword) params.password = sha256NewPass;
+  await userModel.updateOne({ _id: ctx.userInfo._id }, params);
+  return ctx.send('修改成功，请重新登录');
 }
 
 user.addFriend = async ctx => {

@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-02-05 15:27:30
  * @LastEditors: astar
- * @LastEditTime: 2021-05-09 11:12:54
+ * @LastEditTime: 2021-07-04 23:34:40
  * @Description: 用户表
  * @FilePath: \koa-chat\models\user.js
  */
@@ -31,6 +31,7 @@ module.exports = {
     ],
     password: { type: String, required: [true, '密码不能为空'] },
     avatar: { type: String, required: [true, '用户头像不能为空'] },
+    signature: { type: String },
     addTime: { type: Date, default: Date.now },
     lastOnlineTime: { type: Date, default: Date.now }
   }

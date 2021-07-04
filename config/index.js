@@ -2,12 +2,12 @@
  * @Description: 
  * @Author: astar
  * @Date: 2021-07-02 17:54:23
- * @LastEditTime: 2021-07-04 17:06:26
+ * @LastEditTime: 2021-07-04 21:54:59
  * @LastEditors: astar
  */
 exports.HTTP_PORT = 3000;
 exports.HTTPS_PORT = 3001;
-exports.BASE_URL = 'https://1.15.88.142';
+exports.BASE_URL = process.env.NODE_ENV === 'development' ? 'https://192.168.0.102:3001' : 'https://hello-astar.asia';
 exports.DATABASE = {
   dbName: 'chat_db',
   host: 'localhost',
