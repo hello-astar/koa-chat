@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-04-19 13:54:52
  * @LastEditors: astar
- * @LastEditTime: 2021-05-09 20:05:17
+ * @LastEditTime: 2021-07-05 02:25:56
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\group.js
  */
@@ -59,7 +59,12 @@ group.getGroupInfo = async ctx => {
   ])
   if (!groupInfo || !groupInfo.length) return ctx.sendError('当前群组不存在');
   let members = groupInfo[0].members;
-  let res = await mergePics(members.map(item => item.avatar)); // 最多获取九张头像
+  let res = '';
+  try {
+    res = await mergePics(members.map(item => item.avatar)); // 最多获取九张头像
+  } catch (e) {
+    res = await mergePics(['https://p.qqan.com/up/2021-2/16137992359659254.jpg']); // 本地调试暂用此图
+  }
   ctx.set('Content-Type', 'image/png');
   ctx.response.body = res;
 }
