@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-04-19 13:54:52
  * @LastEditors: astar
- * @LastEditTime: 2021-07-05 02:25:56
+ * @LastEditTime: 2021-07-05 18:48:52
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\group.js
  */
@@ -75,7 +75,7 @@ group.updateGroupNameByGroupId = async ctx => {
     groupName: { type: 'string', required: true }
   });
   const { groupId, groupName } = ctx.request.body;
-  let res = await groupModel.updateOne({ _id: groupId }, { groupName });
+  let res = await groupModel.updateOne({ _id: groupId }, { groupName }, { runValidators: true });
   ctx.send(res);
 }
 

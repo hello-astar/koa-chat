@@ -2,7 +2,7 @@
  * @author: astar
  * @Date: 2020-09-09 13:53:55
  * @LastEditors: astar
- * @LastEditTime: 2021-07-05 18:20:45
+ * @LastEditTime: 2021-07-05 18:55:03
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\user.js
  */
@@ -150,7 +150,7 @@ user.editUser = async ctx => {
   let lastOnlineTime = new Date();
   let params = { signature: signature || '', userName, avatar, lastOnlineTime };
   if (newPassword) params.password = sha256NewPass;
-  await userModel.updateOne({ _id: ctx.userInfo._id }, params);
+  await userModel.updateOne({ _id: ctx.userInfo._id }, params, { runValidators: true });
   let token = jwt.sign({
       _id: ctx.userInfo._id,
       userName: userName,
@@ -359,7 +359,7 @@ user.addFriend = async ctx => {
 */
 user.getMyGroups = async ctx => {
   const { _id } = ctx.userInfo;
-  let res = await groupModel.find({ members: { $in: _id } }, { groupName: 1, avatar: 1 });
+  let res = await groupModel.find({ members: { $in: _id } }, { groupName: 1, avatar: 1, members: 1 });
   ctx.send(res);
 }
 
