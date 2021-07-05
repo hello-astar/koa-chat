@@ -2,7 +2,7 @@
  * @author: astar
  * @Date: 2020-09-09 13:53:55
  * @LastEditors: astar
- * @LastEditTime: 2021-07-05 15:25:09
+ * @LastEditTime: 2021-07-05 18:20:45
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\user.js
  */
@@ -369,7 +369,7 @@ user.getMyGroups = async ctx => {
 * @date 2021-05-09 11:32
 */
 user.getMyFriends = async ctx => {
-  let res = await userModel.findOne({ _id: ctx.userInfo._id }, { friends: 1 }).populate('friends', ['userName', 'avatar']);
+  let res = await userModel.findOne({ _id: ctx.userInfo._id }, { friends: 1 }).populate('friends', ['userName', 'avatar', 'signature']);
   ctx.send(res.friends);
 }
 
