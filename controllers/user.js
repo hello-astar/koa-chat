@@ -2,7 +2,7 @@
  * @author: astar
  * @Date: 2020-09-09 13:53:55
  * @LastEditors: astar
- * @LastEditTime: 2021-07-05 01:58:03
+ * @LastEditTime: 2021-07-05 15:25:09
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\user.js
  */
@@ -73,6 +73,11 @@ user.register = async ctx => {
   };
 }
 
+/**
+* 登录
+* @author astar
+* @date 2021-07-05 15:09
+*/
 user.login = async ctx => {
   ctx.verifyParams({
     userName: { type: 'string', required: true },
@@ -108,6 +113,26 @@ user.login = async ctx => {
   return ctx.send({ token });
 }
 
+/**
+* 获取最新用户详情信息
+* @author astar
+* @date 2021-07-05 15:10
+*/
+user.getUserDetail = async ctx => {
+  let user = await userModel.findOne({ _id: ctx.userInfo._id });
+  ctx.send(user && {
+    userName: user.userName,
+    avatar: user.avatar,
+    signature: user.signature,
+    isAdmin: user.isAdmin
+  });
+}
+
+/**
+* 编辑用户信息
+* @author astar
+* @date 2021-07-05 15:10
+*/
 user.editUser = async ctx => {
   const { userName, avatar, oldPassword, newPassword, signature } = ctx.request.body;
   let sha256NewPass = ''
@@ -121,12 +146,28 @@ user.editUser = async ctx => {
     let user = await userModel.findOne({ _id: ctx.userInfo._id, password: sha256Pass });
     if (!user) return ctx.sendError('旧密码输入错误，无法修改密码！');
   }
-  let params = { signature: signature || '', userName, avatar, lastOnlineTime: new Date() };
+  // 更新最后在线时间
+  let lastOnlineTime = new Date();
+  let params = { signature: signature || '', userName, avatar, lastOnlineTime };
   if (newPassword) params.password = sha256NewPass;
   await userModel.updateOne({ _id: ctx.userInfo._id }, params);
-  return ctx.send('修改成功，请重新登录');
+  let token = jwt.sign({
+      _id: ctx.userInfo._id,
+      userName: userName,
+      avatar: avatar,
+      lastOnlineTime
+    },
+    config.JWT_SECRET,
+    { expiresIn: "24h" }
+  );
+  return ctx.send(token);
 }
 
+/**
+* 添加好友
+* @author astar
+* @date 2021-07-05 15:10
+*/
 user.addFriend = async ctx => {
   // 目前简易版本：无需好友确认，直接双向添加
   ctx.verifyParams({
