@@ -154,13 +154,15 @@ function decodeBaiduImgURL (data = '') {
 async function mergePics (picList, size = 200) {
   const sharp = require('sharp');
   const axios = require('axios');
+  const https = require('https');
   // 获取图片buffer
   let requests = [];
   picList.forEach(url => {
     requests.push(axios({
       methos: 'get',
       url: url,
-      responseType: "arraybuffer"
+      responseType: "arraybuffer",
+      httpsAgent: process.env.NODE_ENV === 'development' ? new https.Agent({ rejectUnauthorized: false }) : null // ignore ssl certificate validation in env-development
     }));
   });
   let picBuffers = (await axios.all(requests)).map(item => item.data);
