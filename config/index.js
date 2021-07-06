@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: astar
  * @Date: 2021-07-02 17:54:23
- * @LastEditTime: 2021-07-04 21:54:59
+ * @LastEditTime: 2021-07-06 17:22:57
  * @LastEditors: astar
  */
 exports.HTTP_PORT = 3000;
@@ -21,14 +21,14 @@ exports.WHITE_WEBSITES = ['https://192.168.0.102:2000', 'https://localhost:2000'
 
 exports.DEFAULT_VAVTAR = 'https://tupian.qqw21.com/article/UploadPic/2018-1/20181721495856428.gif';
 
-exports.NOT_NEED_TOKEN_PATH_REGS = process.env.NODE_ENV !== 'development' ? [
+exports.NOT_NEED_TOKEN_PATH_REGS = process.env.NODE_ENV === 'development' ? [
   /[\s\S]*/
 ] : [
-  /^\/user\/login/,
-  /^\/user\/register/,
-  /^\/tool\/getCaptcha/,
-  /^\/tool\/getQiniuToken/,
-  /^\/group\/getGroupAvatar/
+  /\/user\/login/,
+  /\/user\/register/,
+  /\/tool\/getCaptcha/,
+  /\/tool\/getQiniuToken/,
+  /\/group\/getGroupAvatar/
 ]
 
 exports.PASSPHRASE = 'astar'
@@ -48,3 +48,5 @@ exports.KOA_SESSION = {
   secure: false, /** (boolean) secure cookie*/ // 安全/加密连接才能用
   sameSite: null, /** (string) session cookie sameSite options (default null, don't set it) */ // lax、Strict、None（需要结合secure使用
 }
+
+exports.ROUTER_PREFIX = '/api'
