@@ -273,7 +273,7 @@ user.addFriend = async ctx => {
             $project: {
               name: '$groupName',
               isDefault: 1,
-              avatar: { $concat: [`${config.BASE_URL}/api/group/getGroupAvatar?groupId=`, { '$toString' : '$_id' }] }
+              avatar: { $concat: [`${config.BASE_URL}/group/getGroupAvatar?groupId=`, { '$toString' : '$_id' }] }
             }
           }
         ],

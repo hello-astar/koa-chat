@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-05-08 17:48:49
  * @LastEditors: astar
- * @LastEditTime: 2021-07-06 18:13:08
+ * @LastEditTime: 2021-07-06 19:31:51
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\tool.js
  */
@@ -85,6 +85,6 @@ tool.getBaiduImage = async ctx => {
 tool.uploadImg = async ctx => {
   console.log(ctx.request.files, ctx.request.files.file.path);
   let name = ctx.request.files.file.path.split('upload_').pop();
-  ctx.send(`${BASE_URL}/api/upload/upload_${name}`);
+  ctx.send(`${BASE_URL}/upload/upload_${name}`);
 }
 module.exports = tool;
