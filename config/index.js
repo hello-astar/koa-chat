@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: astar
  * @Date: 2021-07-02 17:54:23
- * @LastEditTime: 2021-07-06 17:22:57
+ * @LastEditTime: 2021-07-06 17:59:46
  * @LastEditors: astar
  */
 exports.HTTP_PORT = 3000;
@@ -48,5 +48,3 @@ exports.KOA_SESSION = {
   secure: false, /** (boolean) secure cookie*/ // 安全/加密连接才能用
   sameSite: null, /** (string) session cookie sameSite options (default null, don't set it) */ // lax、Strict、None（需要结合secure使用
 }
-
-exports.ROUTER_PREFIX = '/api'

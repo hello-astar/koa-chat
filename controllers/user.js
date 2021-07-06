@@ -2,7 +2,7 @@
  * @author: astar
  * @Date: 2020-09-09 13:53:55
  * @LastEditors: astar
- * @LastEditTime: 2021-07-06 17:15:49
+ * @LastEditTime: 2021-07-06 17:59:55
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\user.js
  */
@@ -273,7 +273,7 @@ user.addFriend = async ctx => {
             $project: {
               name: '$groupName',
               isDefault: 1,
-              avatar: { $concat: [`${config.BASE_URL}${config.ROUTER_PREFIX}/group/getGroupAvatar?groupId=`, { '$toString' : '$_id' }] }
+              avatar: { $concat: [`${config.BASE_URL}/group/getGroupAvatar?groupId=`, { '$toString' : '$_id' }] }
             }
           }
         ],
