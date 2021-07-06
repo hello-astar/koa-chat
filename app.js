@@ -24,23 +24,17 @@ const options = {
   cert: fs.readFileSync("./server.cert", "utf8")
 };
 const serverhttps = require('https').createServer(options, app.callback());
-const io = require('socket.io')(server, {
+let socketOptions = {
+  path: '/chat-room',
   cors: {
     origin: config.WHITE_WEBSITES, // from the screenshot you provided
     methods: ["GET", "POST"],
     allowedHeaders: ["authorization"],
     credentials: true
   }
-});
-
-const httpsio = require('socket.io')(serverhttps, {
-  cors: {
-    origin: config.WHITE_WEBSITES, // from the screenshot you provided
-    methods: ["GET", "POST"],
-    allowedHeaders: ["authorization"],
-    credentials: true
-  }
-})
+}
+const io = require('socket.io')(server, socketOptions);
+const httpsio = require('socket.io')(serverhttps, socketOptions);
 
 parameter(app); // 参数校验
 
