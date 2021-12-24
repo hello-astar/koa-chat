@@ -2,12 +2,12 @@
  * @Description: 
  * @Author: astar
  * @Date: 2021-07-02 17:54:23
- * @LastEditTime: 2021-07-06 19:32:24
+ * @LastEditTime: 2021-12-11 15:19:32
  * @LastEditors: astar
  */
 exports.HTTP_PORT = 3000;
 exports.HTTPS_PORT = 3001;
-exports.BASE_URL = process.env.NODE_ENV === 'development' ? 'https://192.168.0.102:3001' : 'https://hello-astar.asia/api';
+exports.BASE_URL = process.env.NODE_ENV === 'development' ? 'https://localhost:3001' : 'https://hello-astar.asia/api';
 exports.DATABASE = {
   dbName: 'chat_db',
   host: 'localhost',
@@ -17,7 +17,7 @@ exports.DATABASE = {
 };
 exports.JWT_SECRET = 'JWT_SECRET';
 
-exports.WHITE_WEBSITES = ['https://192.168.0.102:2000', 'https://localhost:2000'];
+exports.WHITE_WEBSITES = ['https://113.104.235.170:2000', 'https://localhost:2000'];
 
 exports.DEFAULT_VAVTAR = 'https://tupian.qqw21.com/article/UploadPic/2018-1/20181721495856428.gif';
 
