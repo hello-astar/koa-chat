@@ -2,7 +2,7 @@
  * @author: astar
  * @Date: 2020-09-09 13:53:55
  * @LastEditors: astar
- * @LastEditTime: 2022-01-05 15:41:34
+ * @LastEditTime: 2022-01-05 16:44:09
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\user.js
  */
@@ -51,7 +51,7 @@ user.register = async ctx => {
     if (defaultGroup) {
       await groupModel.updateOne({ _id: defaultGroup._id }, { $addToSet: { 'members': user._id }});
     }
-    ctx.session = null
+    ctx.session.captcha = ''
     ctx.send({
       _id: user._id,
       userName: user.userName,
