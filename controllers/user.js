@@ -2,20 +2,19 @@
  * @author: astar
  * @Date: 2020-09-09 13:53:55
  * @LastEditors: astar
- * @LastEditTime: 2021-07-06 18:12:40
+ * @LastEditTime: 2022-01-05 15:41:34
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\user.js
  */
 const jwt = require("jsonwebtoken");
 const config = require('@config');
-const privateDecrypt = require('@utils').privateDecrypt;
+const { privateDecrypt, genSalt, sha512 } = require('@utils');
 const fs = require('fs');
 const crypto = require('crypto');
 const path = require('path');
 const Mongoose = require('mongoose');
 
 const getModel = require('@models').getModel;
-const { BASE_URL } = require("../config");
 const userModel = getModel('usermodel');
 const groupModel = getModel('groupmodel');
 const chatModel = getModel('chatmodel');
@@ -42,13 +41,11 @@ user.register = async ctx => {
 
   const privateKey = fs.readFileSync(path.join(__dirname, '../config/private.pem')).toString('utf8');
   let originPassword = privateDecrypt(privateKey, 'astar', Buffer.from(password, 'base64'));
-  const hash = crypto.createHash('sha256');
-  // const pepper = 'astar'; // 服务器存一个固定盐，数据库存一个随机盐
-  // let sha256Pass = hash.update(hash.update(password) + salt).digest('hex');
-  let sha256Pass = hash.update(originPassword).digest('hex');
+  const salt = genSalt(16); // 生成16位的盐
+  let sha512Pass = sha512(originPassword, salt);
   let avatar = config.DEFAULT_VAVTAR;
   try {
-    let user = await userModel.create({ userName, avatar, password: sha256Pass });
+    let user = await userModel.create({ userName, avatar, password: sha512Pass, salt });
     // 加入默认群组
     let defaultGroup = await groupModel.findOne({ isDefault: true });
     if (defaultGroup) {
@@ -90,13 +87,12 @@ user.login = async ctx => {
   if (captcha.toLowerCase() !== ctx.session.captcha.toLowerCase()) {
     return ctx.sendError('验证码错误');
   }
+  let user = await userModel.findOne({ userName });
+  if (!user) return ctx.sendError('当前用户不存在');
   const privateKey = fs.readFileSync(path.join(__dirname, '../config/private.pem')).toString('utf8');
   let originPassword = privateDecrypt(privateKey, 'astar', Buffer.from(password, 'base64'));
-  const hash = crypto.createHash('sha256');
-  let sha256Pass = hash.update(originPassword).digest('hex');
-  
-  let user = await userModel.findOne({ userName, password: sha256Pass });
-  if (!user) return ctx.sendError('当前用户不存在或密码错误');
+  let sha512Pass = sha512(originPassword, user.salt);
+  if (user.password !== sha512Pass) return ctx.sendError('密码错误');
   // 更新最后在线时间
   let lastOnlineTime = new Date();
   let token = jwt.sign({
@@ -135,26 +131,24 @@ user.getUserDetail = async ctx => {
 */
 user.editUser = async ctx => {
   const { userName, avatar, oldPassword, newPassword, signature } = ctx.request.body;
-  let sha256NewPass = ''
+  let params = { signature: signature || '', userName, avatar };
   if (newPassword) {
+    let user = await userModel.findOne({ _id: ctx.userInfo._id });
     const privateKey = fs.readFileSync(path.join(__dirname, '../config/private.pem')).toString('utf8');
     let originPassword = privateDecrypt(privateKey, 'astar', Buffer.from(oldPassword, 'base64'));
     let originNewPass = privateDecrypt(privateKey, 'astar', Buffer.from(newPassword, 'base64'));
-    let sha256Pass = crypto.createHash('sha256').update(originPassword).digest('hex');
-    sha256NewPass = crypto.createHash('sha256').update(originNewPass).digest('hex');
-    
-    let user = await userModel.findOne({ _id: ctx.userInfo._id, password: sha256Pass });
-    if (!user) return ctx.sendError('旧密码输入错误，无法修改密码！');
+    let sha512Pass = sha512(originPassword, user.salt);
+    if (user.password !== sha512Pass) return ctx.sendError('旧密码输入错误，无法修改密码！');
+    params.password = sha512(originNewPass, user.salt);
   }
   // 更新最后在线时间
   let lastOnlineTime = new Date();
-  let params = { signature: signature || '', userName, avatar, lastOnlineTime };
-  if (newPassword) params.password = sha256NewPass;
+  params.lastOnlineTime = lastOnlineTime;
   await userModel.updateOne({ _id: ctx.userInfo._id }, params, { runValidators: true });
   let token = jwt.sign({
       _id: ctx.userInfo._id,
-      userName: userName,
-      avatar: avatar,
+      userName,
+      avatar,
       lastOnlineTime
     },
     config.JWT_SECRET,

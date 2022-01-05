@@ -81,6 +81,18 @@ function privateDecrypt(privateKey, passphrase, encryptBuffer) {
 //   return verify.verify(publicKey, signatureBuffer);
 // }
 
+// 生成盐
+function genSalt (length = 16) {
+  return crypto.randomBytes(Math.ceil(length / 2)).toString('hex').slice(0, length);
+}
+
+// 哈希算法
+function sha512 (origin, salt) {
+  const hash = crypto.createHmac('sha512', salt);
+  hash.update(origin)
+  return hash.digest('hex');
+}
+
 function getIPAddress () {
   let interfaces = require('os').networkInterfaces();
   for (let devName in interfaces) {
@@ -236,6 +248,8 @@ module.exports = {
   createKeyPairFile,
   // publicEncrypt,
   privateDecrypt,
+  genSalt,
+  sha512,
   // privateSign,
   // publicVerify,
   getIPAddress,
