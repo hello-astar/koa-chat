@@ -2,7 +2,7 @@
  * @author: astar
  * @Date: 2020-09-09 13:53:55
  * @LastEditors: astar
- * @LastEditTime: 2022-01-05 16:44:09
+ * @LastEditTime: 2022-01-27 18:16:12
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\user.js
  */
@@ -28,12 +28,13 @@ const user = {};
  */
 user.register = async ctx => {
   ctx.verifyParams({
+    avatar: { type: 'string', required: true },
     userName: { type: 'string', required: true },
     password: { type: 'string', required: true },
     captcha: { type: 'string', required: true }
   });
   
-  const { userName, password, captcha } = ctx.request.body;
+  const { userName, password, captcha, avatar } = ctx.request.body;
   
   if (captcha.toLowerCase() !== ctx.session.captcha.toLowerCase()) {
     return ctx.sendError('验证码错误');
@@ -43,7 +44,6 @@ user.register = async ctx => {
   let originPassword = privateDecrypt(privateKey, 'astar', Buffer.from(password, 'base64'));
   const salt = genSalt(16); // 生成16位的盐
   let sha512Pass = sha512(originPassword, salt);
-  let avatar = config.DEFAULT_VAVTAR;
   try {
     let user = await userModel.create({ userName, avatar, password: sha512Pass, salt });
     // 加入默认群组
