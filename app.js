@@ -18,12 +18,11 @@ const koaJwt = require('koa-jwt');
 const socketioJwt = require('socketio-jwt');
 const app = new Koa();
 app.keys = ['koaChatApplication'];
-let server = require('http').createServer(app.callback());
-const options = {
-  key: fs.readFileSync("./server.key", "utf8"),
-  cert: fs.readFileSync("./server.cert", "utf8")
-};
-const serverhttps = require('https').createServer(options, app.callback());
+const server = require('http').createServer(app.callback());
+const serverhttps = require('https').createServer({
+  key: fs.readFileSync('./server.key', "utf8"),
+  cert: fs.readFileSync('./server.cert', "utf8")
+}, app.callback());
 let socketOptions = {
   path: '/chat-room',
   cors: {
@@ -67,8 +66,6 @@ app.use(async (ctx, next) => {
   // 测试环境支持跨站请求cookie
   // https://www.ruanyifeng.com/blog/2019/09/cookie-samesite.html
   if (process.env.NODE_ENV === 'development'
-      && ctx.request.origin.includes('https')
-      && ctx.request.header['sec-fetch-site'] === 'cross-site'
       && ctx.req.url.includes('/tool/getCaptcha')) {
     koaSessionConfig.sameSite = 'none'
     koaSessionConfig.secure = true
