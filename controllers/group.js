@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-04-19 13:54:52
  * @LastEditors: astar
- * @LastEditTime: 2021-07-05 18:48:52
+ * @LastEditTime: 2022-01-30 19:06:11
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\group.js
  */
@@ -26,7 +26,15 @@ group.getGroupInfo = async ctx => {
   });
 
   const { groupId } = ctx.query;
-  let res = await groupModel.findOne({ _id: groupId }).populate('members').populate('groupOwner');
+  let res = await groupModel.findOne({ _id: groupId })
+                            .populate({
+                              path: 'members',
+                              select: 'userName avatar',
+                              options: {
+                                // limit: 25
+                              }
+                            })
+                            .populate('groupOwner', ['userName']);
   ctx.send(res);
 }
 

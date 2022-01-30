@@ -2,7 +2,7 @@
  * @author: astar
  * @Date: 2020-09-09 13:53:55
  * @LastEditors: astar
- * @LastEditTime: 2022-01-27 18:16:12
+ * @LastEditTime: 2022-01-30 19:31:58
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\user.js
  */
@@ -51,7 +51,7 @@ user.register = async ctx => {
     if (defaultGroup) {
       await groupModel.updateOne({ _id: defaultGroup._id }, { $addToSet: { 'members': user._id }});
     }
-    ctx.session.captcha = ''
+    ctx.session = null;
     ctx.send({
       _id: user._id,
       userName: user.userName,
@@ -115,13 +115,8 @@ user.login = async ctx => {
 * @date 2021-07-05 15:10
 */
 user.getUserDetail = async ctx => {
-  let user = await userModel.findOne({ _id: ctx.userInfo._id });
-  ctx.send(user && {
-    userName: user.userName,
-    avatar: user.avatar,
-    signature: user.signature,
-    isAdmin: user.isAdmin
-  });
+  let user = await userModel.findOne({ _id: ctx.userInfo._id }, { userName: 1, avatar: 1, signature: 1, isAdmin: 1 });
+  ctx.send(user);
 }
 
 /**
