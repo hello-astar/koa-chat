@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/hello-astar/koa-chat#readme",
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.7.0",
     "koa-body": "^4.2.0",
