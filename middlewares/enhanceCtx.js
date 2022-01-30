@@ -2,7 +2,7 @@
  * @author: astar
  * @Date: 2021-01-26 17:39:28
  * @LastEditors: astar
- * @LastEditTime: 2021-07-05 15:06:49
+ * @LastEditTime: 2022-01-30 19:47:27
  * @Description: 增强context对象
  * @FilePath: \koa-chat\middlewares\enhanceCtx.js
  */
@@ -39,7 +39,6 @@ const enhanceCtx = () => {
       let token = ctx.headers.authorization.split(' ')[1];
       return { token, ...jwt.verify(token, config.JWT_SECRET) };
     } catch (e) {
-      console.log('get userinfo by jwt error')
       return null
     }
   }

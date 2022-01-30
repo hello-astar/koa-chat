@@ -2,7 +2,7 @@
  * @author: astar
  * @Date: 2020-09-09 13:53:55
  * @LastEditors: astar
- * @LastEditTime: 2022-01-30 19:31:58
+ * @LastEditTime: 2022-01-30 21:22:21
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\user.js
  */
@@ -10,7 +10,6 @@ const jwt = require("jsonwebtoken");
 const config = require('@config');
 const { privateDecrypt, genSalt, sha512 } = require('@utils');
 const fs = require('fs');
-const crypto = require('crypto');
 const path = require('path');
 const Mongoose = require('mongoose');
 
@@ -44,30 +43,19 @@ user.register = async ctx => {
   let originPassword = privateDecrypt(privateKey, 'astar', Buffer.from(password, 'base64'));
   const salt = genSalt(16); // 生成16位的盐
   let sha512Pass = sha512(originPassword, salt);
-  try {
-    let user = await userModel.create({ userName, avatar, password: sha512Pass, salt });
-    // 加入默认群组
-    let defaultGroup = await groupModel.findOne({ isDefault: true });
-    if (defaultGroup) {
-      await groupModel.updateOne({ _id: defaultGroup._id }, { $addToSet: { 'members': user._id }});
-    }
-    ctx.session = null;
-    ctx.send({
-      _id: user._id,
-      userName: user.userName,
-      avatar: user.avatar,
-      addTime: user.addTime
-    });
-  } catch (error) {
-    if (error.name === 'MongoError' && error.code === 11000) {
-      return ctx.sendError('该用户名已被占用');
-    }
-    if (error.name === 'ValidationError') {
-      let firstKey = Object.keys(error.errors)[0];
-      return ctx.sendError(error.errors[firstKey].message);
-    }
-    return ctx.sendError(error);
-  };
+  let user = await userModel.create({ userName, avatar, password: sha512Pass, salt });
+  // 加入默认群组
+  let defaultGroup = await groupModel.findOne({ isDefault: true });
+  if (defaultGroup) {
+    await groupModel.updateOne({ _id: defaultGroup._id }, { $addToSet: { 'members': user._id }});
+  }
+  ctx.session = null;
+  ctx.send({
+    _id: user._id,
+    userName: user.userName,
+    avatar: user.avatar,
+    addTime: user.addTime
+  });
 }
 
 /**

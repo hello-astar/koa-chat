@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-04-14 16:07:11
  * @LastEditors: astar
- * @LastEditTime: 2021-07-06 19:31:42
+ * @LastEditTime: 2022-01-30 21:45:40
  * @Description: 群组
  * @FilePath: \koa-chat\models\group.js
  */
@@ -16,8 +16,8 @@ module.exports = {
       type: String,
       required: [true, '群名不能为空'],
       validate: {
-        validator: (value) => /^[a-zA-Z0-9a-zA-Z_\u4e00-\u9eff]{1,12}$/.test(value), // 1-12位字母数字下划线汉字
-        message: '群名存在非法字符或长度过长'
+        validator: (value) => /^[\w\u4e00-\u9eff]{1,12}$/.test(value), // 1-12位字母数字下划线汉字
+        message: '群名只能由1-12位字母、数字、汉字、下划线_组成'
       }
     },
     groupOwner: {

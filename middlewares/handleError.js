@@ -1,8 +1,10 @@
+const { analyzeMongooseError } = require('../utils');
+
 /*
  * @Author: astar
  * @Date: 2021-02-04 18:01:08
  * @LastEditors: astar
- * @LastEditTime: 2021-02-24 14:25:21
+ * @LastEditTime: 2022-01-30 19:48:57
  * @Description: 文件描述
  * @FilePath: \koa-chat\middlewares\handleError.js
  */
@@ -21,7 +23,11 @@ module.exports = function handleError () {
     let errStatus = err.status || err.statusCode || 500
     return {
       code: errStatus,
-      msg: typeof err.message === 'String' ? err.message : mapError[`e_${errStatus}`] || '未知错误',
+      msg: typeof err.message === 'String'
+              ? err.message
+              : analyzeMongooseError(err)
+                || mapError[`e_${errStatus}`]
+                || '未知错误',
       data: null
     }
   });

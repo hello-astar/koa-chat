@@ -40,8 +40,8 @@ parameter(app); // 参数校验
 // 中间件
 app.use(koaConditional()); // 使协商缓存返回304 // koa-static自动加上了last-modified
 app.use(koaEtag());
-app.use(koaStatic(path.resolve(__dirname, 'static'), { maxage: 10 * 1000, gzip: true })); // 强缓存10s // cache-control // 托管静态文件
-app.use(koaStatic(path.resolve(__dirname, 'public'), { maxage: 10 * 1000, gzip: true })); // 强缓存10s // cache-control // 托管静态文件
+app.use(koaStatic(path.resolve(__dirname, 'static'), { maxage: 60 * 60 * 24 * 30 * 1000, gzip: true })); // 强缓存30天 // cache-control // 托管静态文件
+app.use(koaStatic(path.resolve(__dirname, 'public'), { maxage: 60 * 60 * 24 * 30 * 1000, gzip: true })); // 强缓存30天 // cache-control // 托管静态文件
 app.use(koaCompress({
   filter (content_type) {
     // console.log(/image/gi.test(content_type))

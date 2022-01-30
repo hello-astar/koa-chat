@@ -243,6 +243,18 @@ async function mergePics (picList, size = 200) {
   return composite;
 }
 
+function analyzeMongooseError (error) {
+  if (error.name === 'MongoError' && error.code === 11000) {
+    const value = Object.values(error.keyValue)
+    return `${value}已被占用`;
+  }
+  if (error.name === 'ValidationError') {
+    let firstKey = Object.keys(error.errors)[0];
+    return error.errors[firstKey].message;
+  }
+  return ''
+}
+
 module.exports = {
   getKeyPair,
   createKeyPairFile,
@@ -254,5 +266,6 @@ module.exports = {
   // publicVerify,
   getIPAddress,
   decodeBaiduImgURL,
-  mergePics
+  mergePics,
+  analyzeMongooseError
 };
