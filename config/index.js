@@ -6,7 +6,7 @@
  * @LastEditors: astar
  */
 exports.HTTP_PORT = 3000;
-exports.BASE_URL = process.env.NODE_ENV === 'development' ? 'https://localhost:3001' : 'https://hello-astar.asia/api';
+exports.BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://hello-astar.asia/api';
 exports.DATABASE = {
   dbName: 'chat_db',
   host: 'localhost',
@@ -27,6 +27,7 @@ exports.NOT_NEED_TOKEN_PATH_REGS = process.env.NODE_ENV === 'development' ? [
   /\/user\/register/,
   /\/tool\/getCaptcha/,
   /\/tool\/getQiniuToken/,
+  /\/tool\/uploadImg/,
   /\/group\/getGroupAvatar/
 ]
 
