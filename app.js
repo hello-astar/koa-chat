@@ -19,10 +19,6 @@ const socketioJwt = require('socketio-jwt');
 const app = new Koa();
 app.keys = ['koaChatApplication'];
 const server = require('http').createServer(app.callback());
-const serverhttps = require('https').createServer({
-  key: fs.readFileSync('./server.key', "utf8"),
-  cert: fs.readFileSync('./server.cert', "utf8")
-}, app.callback());
 let socketOptions = {
   path: '/chat-room',
   cors: {
@@ -33,7 +29,6 @@ let socketOptions = {
   }
 }
 const io = require('socket.io')(server, socketOptions);
-const httpsio = require('socket.io')(serverhttps, socketOptions);
 
 parameter(app); // 参数校验
 
@@ -57,22 +52,9 @@ app.use(koaCompress({
   br: false // disable brotli
 }));
 app.use(handleError());
-app.use(setWhiteList(config.WHITE_WEBSITES)); // 白名单
+// app.use(setWhiteList(config.WHITE_WEBSITES)); // 白名单 // 前端代理
 app.use(logger());
-app.use(async (ctx, next) => {
-  let koaSessionConfig = {
-    ...config.KOA_SESSION
-  }
-  // 测试环境支持跨站请求cookie
-  // https://www.ruanyifeng.com/blog/2019/09/cookie-samesite.html
-  if (process.env.NODE_ENV === 'development'
-      && ctx.req.url.includes('/tool/getCaptcha')) {
-    koaSessionConfig.sameSite = 'none'
-    koaSessionConfig.secure = true
-  }
-  return koaSession(koaSessionConfig, app)(ctx, next)
-});
-// app.use(koaSession(config.KOA_SESSION, app))
+app.use(koaSession(config.KOA_SESSION, app));
 app.use(koaBody({
   multipart: true,
   formidable:{
@@ -98,13 +80,7 @@ io.use(socketioJwt.authorize({
   handshake: true,
   auth_header_required: true
 }));
-httpsio.use(socketioJwt.authorize({
-  secret: config.JWT_SECRET,
-  handshake: true,
-  auth_header_required: true
-}));
 io.on('connection', handleSocket(io));
-httpsio.on('connection', handleSocket(httpsio));
 
 // app.on('error', () =>
 //   console.error('server error')
@@ -112,8 +88,4 @@ httpsio.on('connection', handleSocket(httpsio));
 
 server.listen(config.HTTP_PORT, () => {
   console.log(`http://${getIPAddress()}:${config.HTTP_PORT}`)
-});
-
-serverhttps.listen(config.HTTPS_PORT, () => {
-  console.log(`https://${getIPAddress()}:${config.HTTPS_PORT}`)
 });
