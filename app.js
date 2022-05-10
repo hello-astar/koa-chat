@@ -58,10 +58,15 @@ app.use(koaSession(config.KOA_SESSION, app));
 app.use(koaBody({
   multipart: true,
   formidable:{
-    uploadDir:path.join(__dirname,'public/upload/'), // 设置文件上传目录
+    uploadDir:path.join(__dirname,'public/temp/'), // 设置文件上传目录
     keepExtensions: true,    // 保持文件的后缀
-    onFileBegin:(name,file) => { // 文件上传前的设置
-    }
+    onFileBegin: (name, file) => { // 文件上传前的设置
+      // 新建文件夹
+      let paths = [path.join(__dirname, 'public/temp'), path.join(__dirname, 'public/upload')];
+      paths.forEach(path => {
+        !fs.existsSync(path) && fs.mkdirSync(path);
+      })
+    },
   }
 })); // 解析body参数
 app.use(

@@ -2,15 +2,17 @@
  * @Author: astar
  * @Date: 2021-05-08 17:48:49
  * @LastEditors: astar
- * @LastEditTime: 2021-07-06 19:31:51
+ * @LastEditTime: 2022-01-10 03:00:38
  * @Description: 文件描述
  * @FilePath: \koa-chat\controllers\tool.js
  */
 const svgCaptcha = require('svg-captcha');
 const qiniu = require('qiniu');
 const axios = require('axios');
-const { decodeBaiduImgURL } = require('@utils');
-const { BASE_URL } = require('../config');
+const fs = require('fs');
+const path = require('path');
+const { decodeBaiduImgURL, pipeReadWrite } = require('@utils');
+const redisClient = require('@utils/redis');
 
 const tool = {};
 
@@ -83,8 +85,45 @@ tool.getBaiduImage = async ctx => {
 }
 
 tool.uploadImg = async ctx => {
-  console.log(ctx.request.files, ctx.request.files.file.path);
-  let name = ctx.request.files.file.path.split('upload_').pop();
-  ctx.send(`${BASE_URL}/upload/upload_${name}`);
+  let file = ctx.request.files.file;
+  let size = file.size
+  let name = `upload_${ctx.request.files.file.path.split('upload_').pop()}`;
+  let redisKey = `${ctx.userInfo._id}_upload`;
+  let { total, index, sign } = ctx.request.body;
+  await redisClient.sAdd(redisKey, `${sign}-${name}-${size}-${index}`);
+  ctx.send(`http://localhost:3000/upload/${sign}`);
+  let chunks = (await redisClient.sMembers(redisKey)) || [];
+  console.log(chunks)
+  let loaded = chunks.reduce((loaded, item) => {
+    let [,,size] = item.split('-');
+    return Number(size) + loaded
+  }, 0);
+  console.log(loaded, total)
+  if (loaded === Number(total)) {
+    console.log('上传成功, 开始拼接图片')
+    chunks.sort((a, b) => {
+      let aidx = a.split('-').pop();
+      let bidx = b.split('-').pop();
+      return aidx - bidx
+    })
+    await mergePieces(sign, chunks.map(tem => tem.split('-')[1]));
+    redisClient.sRem(redisKey, chunks);
+  }
+}
+// 分片合并
+async function mergePieces (name, chunks) {
+  const writeable = fs.createWriteStream(path.join(__dirname, `../public/upload/${name}`));
+  for (let i = 0, len = chunks.length; i < len; i++) {
+    let filePath = path.join(__dirname, `../public/temp/${chunks[i]}`)
+    const readable = fs.createReadStream(filePath);
+    await pipeReadWrite(readable, writeable, i === len);
+    fs.unlink(filePath,(err,data)=>{
+      if (err) {
+        console.log(err);
+      } else {
+        console.log('删除文件成功');
+      }
+    })
+  }
 }
 module.exports = tool;

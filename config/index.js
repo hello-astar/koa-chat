@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: astar
  * @Date: 2021-07-02 17:54:23
- * @LastEditTime: 2021-12-11 15:19:32
+ * @LastEditTime: 2022-01-27 17:11:08
  * @LastEditors: astar
  */
 exports.HTTP_PORT = 3000;
@@ -14,6 +14,10 @@ exports.DATABASE = {
   user: 'root',
   password: '123456'
 };
+exports.REDIS = {
+	host: '127.0.0.1', // 默认 host
+  port: '6379' // 默认端口
+}
 exports.JWT_SECRET = 'JWT_SECRET';
 
 exports.WHITE_WEBSITES = ['http://113.104.235.170:2000', 'http://localhost:2000', 'http://127.0.0.1:2000'];

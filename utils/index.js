@@ -255,6 +255,17 @@ function analyzeMongooseError (error) {
   return ''
 }
 
+// 管道读写文件
+function pipeReadWrite (readable, writeable, end) {
+  return new Promise((resolve, reject) => {
+    readable.pipe(writeable, { end })
+    readable.on('end', () => {
+      console.log('读取完毕')
+      resolve()
+    })
+  })
+}
+
 module.exports = {
   getKeyPair,
   createKeyPairFile,
@@ -267,5 +278,6 @@ module.exports = {
   getIPAddress,
   decodeBaiduImgURL,
   mergePics,
-  analyzeMongooseError
+  analyzeMongooseError,
+  pipeReadWrite
 };

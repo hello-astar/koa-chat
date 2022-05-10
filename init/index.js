@@ -2,7 +2,7 @@
  * @Author: astar
  * @Date: 2021-05-06 11:22:15
  * @LastEditors: astar
- * @LastEditTime: 2022-01-05 15:13:40
+ * @LastEditTime: 2022-01-30 16:12:23
  * @Description: 初始化文档
  * @FilePath: \koa-chat\init\index.js
  */
@@ -46,6 +46,29 @@ const testData = require('./data/test.json');
     console.log('初始化测试用户成功');
   }
 
+  async function init () {
+    let users = []
+    for (let i = 0; i < 100; i++) {
+      users.push({
+        "isAdmin": false,
+        "friends": [],
+        "userName": `机器人_${i + 1}`,
+        "avatar": "https://hello-astar.asia/api/upload/upload_83676b1cca61c5975c8619fc45ef879b.jpg",
+        "password": "ca46b95efb167871faa7f5f8f1a1878cdf9ddde0c8de47a7e829f9e077a0ef49742acea53ab019a670cc15c20a0f0828faf555af6fb88fb4d50c569e21805b24",
+        "salt": "4b5a1db10f2716fc"
+      })
+    }
+    let res = await userModel.insertMany(users);
+    // 加入默认群组
+    let defaultGroup = await groupModel.findOne({ isDefault: true });
+    if (defaultGroup) {
+      await groupModel.updateOne({ _id: defaultGroup._id }, { $addToSet: { members: { $each: res.map(item => item._id) }}})
+    }
+    // 聊天记录
+    await chatModel.insertMany(testData.message);
+    console.log('初始化测试用户成功');
+  }
+
   // async function readDatabase () {
   //   const fs = require('fs');
   //   const path = require('path');
@@ -54,8 +77,9 @@ const testData = require('./data/test.json');
   // }
   try {
     // await readDatabase()
-    await initDefault(); // 初始化系统默认数据
-    await initTest(); // 初始化测试数据 // 可以不初始化
+    // await initDefault(); // 初始化系统默认数据
+    // await initTest(); // 初始化测试数据 // 可以不初始化
+    await init()
     console.log('All Done!')
   } catch (e) {
     console.log(e)
